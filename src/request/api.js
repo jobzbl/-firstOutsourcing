@@ -17,8 +17,8 @@ const article = {
     login (params) {        
         return axios.post(`${base.sq}/sys/login`, params);    
     },
-    signIn (params) {        
-        return axios.post(`${base.sq}/sys/user/save`, params);    
+    signIn (params) {
+        return axios.post(`${base.sq}/regedit`, params);    
     },
     // 其他接口…………
 }
