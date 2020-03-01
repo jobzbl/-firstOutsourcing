@@ -8,10 +8,78 @@
 				SiCf/SiC陶瓷基复合材料典型界面相数据库，学术期刊设计所需的高达1000种材料的晶体结构、电子结构、X-射线衍射谱/拉曼/红外、弹性性能、合成方法、力学性能、复合材料类型、复合材料性能、数据等。
 			</div>
 		</div>
-		<div>
+		<div style="margin-top:40px;">
 			<el-row :gutter="20">
-				<el-col :span="12">231</el-col>
-				<el-col :span="6" :offset="6">123</el-col>
+				<el-col :span="22">
+					<div class="selectContentBox" @click="selectTitCli()"><!--  下拉框选中值box -->
+						<span>BN基界面相-掺杂元素</span>
+						<i class="iconfont iconxiala"></i>
+					</div>
+					<div class="selectItemBigBox" :class="animationSwitch?'unfold':'close'">
+						<div class="fl stairItem itemBox">
+							<div @click="stairItemCli($event)" :style="selectList.stairItemIsCli=='bn'?'color:#33B0B5':'color:#4D4D4D'" data-type="bn">BN基界面相</div>
+							<div @click="stairItemCli($event)" :style="selectList.stairItemIsCli=='pyc'?'color:#33B0B5':'color:#4D4D4D'" data-type="pyc">PyC基界面相</div>
+							<div @click="stairItemCli($event)" :style="selectList.stairItemIsCli=='new'?'color:#33B0B5':'color:#4D4D4D'" data-type="new">新型抗氧化界面相</div>
+							<div @click="stairItemCli($event)" :style="selectList.stairItemIsCli=='else'?'color:#33B0B5':'color:#4D4D4D'" data-type="else">其他界面相</div>
+						</div>
+						<div class="fl itemBox secondLevelBox" v-if="selectList.stairItemIsCli!='else'">
+							<div
+								v-if="selectList.stairItemIsCli=='bn'||selectList.stairItemIsCli=='pyc'"
+								@click="selectList.isElementList='1'"
+								:style="selectList.isElementList=='1'?'color:#33B0B5':'color:#4D4D4D'"
+								>掺杂元素</div>
+							<div
+								v-if="selectList.stairItemIsCli=='bn'||selectList.stairItemIsCli=='pyc'"
+								@click="selectList.isElementList='2'"
+								:style="selectList.isElementList=='2'?'color:#33B0B5':'color:#4D4D4D'"
+								>多层界面相</div>
+							<div
+								v-if="selectList.stairItemIsCli=='new'"
+								@click="selectList.isElementList='3'" 
+								:style="selectList.isElementList=='3'?'color:#33B0B5':'color:#4D4D4D'"
+							>稀土元素</div>
+						</div>
+						<div class="fl listElements">
+							<div class="ul" v-if="selectList.isElementList==1">
+								<div style="overflow:hidden">
+									<span
+										@click="selectList.nowElement=item.value"
+										:style="[{'font-size':(item.value.length==2?'20px':'24px')},{'backgroundColor':(selectList.nowElement==item.value?'#EF992A':'#33B0B5')}]"
+										v-for="(item,index) in alloyingElement1" :key="index"
+										:data-id="item.value">{{item.name}}</span>
+								</div>
+								<div style="overflow:hidden">
+									<span
+										@click="selectList.nowElement=item.value"
+										:style="[{'font-size':(item.value.length==2?'20px':'24px')},{background:(selectList.nowElement==item.value?'#EF992A':'#33B0B5')}]"
+										v-for="(item,index) in alloyingElement2" :key="index"
+										:data-id="item.value">{{item.name}}</span>
+								</div>
+							</div>
+							<div class="ul" v-if="selectList.isElementList==3">
+								<div>
+									<span
+										@click="selectList.nowElement=item.value"
+										:style="[{'font-size':(item.value.length==2?'20px':'24px')},{background:(selectList.nowElement==item.value?'#EF992A':'#33B0B5')}]"
+										v-for="(item,index) in rareEarth1" :key="index"
+										:data-id="item.value">{{item.name}}</span>
+								</div>
+								<div>
+									<span
+										@click="selectList.nowElement=item.value"
+										:style="[{'font-size':(item.value.length==2?'20px':'24px')},{background:(selectList.nowElement==item.value?'#EF992A':'#33B0B5')}]"
+										v-for="(item,index) in rareEarth2" :key="index"
+										:data-id="item.value">{{item.name}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</el-col>
+				<el-col :span="2">
+					<div @click="search()" style="width:40px;height:36px;background:#33B0B5;border-radius:4px;text-align:center;line-height:36px;">
+						<i class="iconfont iconsousuo" style="font-size:20px;color:#fff;"></i>
+					</div>
+				</el-col>
 			</el-row>
 		</div>
 		<div class="searchBigBox">
@@ -73,6 +141,57 @@ export default {
   name: 'layOut',
   data() {
     return {
+		animationSwitch:false,
+		selectList:{
+			stairItemIsCli:'bn', // 下拉框第一级点击
+			isElementList: 1, // 下拉二级菜单点击
+			nowElement:''
+		},
+		rareEarth1: [
+			{value:'sc',name:'Sc'},
+			{value:'la',name:'La'},
+			{value:'ce',name:'Ce'},
+			{value:'pr',name:'Pr'},
+			{value:'nd',name:'Nd'},
+			{value:'pm',name:'Pm'},
+			{value:'sm',name:'Sm'},
+			{value:'eu',name:'Eu'},
+			{value:'gd',name:'Gd'},
+			{value:'tb',name:'Tb'},
+			{value:'dy',name:'Dy'},
+			{value:'ho',name:'Ho'},
+			{value:'er',name:'Er'},
+			{value:'tm',name:'Tm'},
+			{value:'yb',name:'Yb'},
+			{value:'lu',name:'Lu'},
+		],
+		rareEarth2: [
+			{value:'y',name:'Y'},
+			{value:'ac',name:'Ac'},
+			{value:'th',name:'Th'},
+			{value:'pa',name:'Pa'},
+			{value:'u',name:'U'},
+			{value:'np',name:'Np'},
+			{value:'pu',name:'Pu'},
+			{value:'am',name:'Am'},
+			{value:'cm',name:'Cm'},
+			{value:'bk',name:'Bk'},
+			{value:'cf',name:'Cf'},
+			{value:'es',name:'Es'},
+			{value:'fm',name:'Fm'},
+			{value:'md',name:'Md'},
+			{value:'no',name:'No'},
+			{value:'lr',name:'Lr'},
+		],
+		alloyingElement1: [
+			{value:'b',name:'B'},
+			{value:'c',name:'C'},
+		],
+		alloyingElement2: [
+			{value:'n',name:'N'},
+			{value:'o',name:'O'},
+			{value:'si',name:'Si'},
+		],
 		dataAmount:0,
 		currentPage: 1,
 		searchValue: ['asdasd','asd','dsret','sdfert','sdfg','asdasd','asd','dsret','sdfert',
@@ -83,7 +202,23 @@ export default {
   created() {
   },
   methods: {
-		handleSizeChange(val) {
+	search() { // 单机搜索
+		console.log(this.selectList)
+	},
+	stairItemCli(e){
+		this.selectList.stairItemIsCli = e.target.dataset.type;
+		this.selectList.isElementList = 1;
+		if(e.target.dataset.type=='new'){
+			this.selectList.isElementList = 3;
+		}
+		if(e.target.dataset.type=='else'){
+			this.selectList.isElementList = 4;
+		}
+	},
+	selectTitCli() { // 点击下拉框
+		this.animationSwitch = !this.animationSwitch
+	},
+	handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
@@ -151,6 +286,77 @@ export default {
 
 </style>
 <style scoped>
+	.unfold{
+		height: auto;
+	}
+	.close{
+		height: 0;
+	}
+	.listElements{
+		margin-left: 16px;
+	}
+	.listElements .ul{
+		overflow: hidden;
+	}
+	.listElements span{
+		cursor: pointer;
+		float: left;
+		margin-left: 2px;
+		margin-bottom: 2px;
+		width:34px;
+		height:34px;
+		background:rgba(51,176,181,1);
+		border-radius:2px;
+		font-size: 24px;
+		color: #fff;
+		line-height: 34px;
+		text-align: center;
+	}
+	.secondLevelBox{
+		height:144px;
+		border:1px solid rgba(204,204,204,1);
+		border-radius:0px 0px 4px 4px;
+		border-left: none;
+		height: 174px;
+		width: 100px;
+	}
+	.itemBox div{
+		font-size: 14px;
+		color: #4D4D4D;
+		padding: 12px;
+		cursor: pointer;
+	}
+	.itemBox div:hover{
+		color: #33B0B5
+	}
+	.selectItemBigBox{
+		overflow: hidden;
+		/* 清除浮动 */
+		transition:all 2s ease;
+		-moz-transition:all 2s ease; /* Firefox 4 */
+		-webkit-transition:all 2s ease; /* Safari and Chrome */
+		-o-transition:all 2s ease; /* Opera */
+	}
+	.stairItem{
+		width: 240px;
+		border:1px solid rgba(204,204,204,1);
+		border-radius:0px 0px 4px 4px;
+		border-top: none;
+		height: 174px;
+	}
+	.fl{
+		float: left;
+	}
+	.selectContentBox{
+		cursor: pointer;
+		display: flex;
+		justify-content: space-between;
+		padding: 11px 12px;
+		color: #4D4D4D;
+		width: 240px;
+		border: 1px solid rgba(204,204,204,1);
+		border-radius:4px 4px 0px 0px;
+	}
 	.flootBoxTit img{
 		display: inline-block;
 		width: 15px;
@@ -206,10 +412,9 @@ export default {
 	.searchConTit{
 		font-size: 12px;
 		color: #4D4D4D;
-
 	}
 	.searchBigBox{
-		margin-top: 16px
+		margin-top: 24px
 	}
 	.searchTit{
 		font-weight: bold;
