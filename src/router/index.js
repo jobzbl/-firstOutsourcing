@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import login from '../views/login.vue'
 import layOut from '../views/layOut.vue'
-import indexPage from '../views/pages/indexPage.vue'
+import indexPage from '../views/pages/homePage/indexPage.vue'
+import searchResult from '../views/pages/homePage/searchResult.vue'
 
 
 
@@ -19,16 +20,18 @@ const routes = [
     path: '/',
     name: 'layOut',
     component: layOut,
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     // component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
     children: [
       {
         path: '/',
         name: 'indexPage',
         component: indexPage,
-      }
+      },
+      {
+        path: '/result',
+        name: 'searchResult',
+        component: searchResult,
+      },
     ]
   }
 ]

@@ -2,7 +2,7 @@
   <div class="wrap">
 		<div class="sqlBox">
 			<div class="sqlTit">
-				<img src="../../assets/images/sql.png" alt=""><span>数据库介绍</span>
+				<img src="../../../assets/images/sql.png" alt=""><span>数据库介绍</span>
 			</div>
 			<div class="sqlText">
 				SiCf/SiC陶瓷基复合材料典型界面相数据库，学术期刊设计所需的高达1000种材料的晶体结构、电子结构、X-射线衍射谱/拉曼/红外、弹性性能、合成方法、力学性能、复合材料类型、复合材料性能、数据等。
@@ -107,7 +107,7 @@
 			<el-row :gutter="20">
 				<el-col :span="8">
 					<div class="flootBoxTit">
-						<img src="../../assets/images/sql.png" alt="">
+						<img src="../../../assets/images/sql.png" alt="">
 						<span>数据库描述</span>
 					</div>
 					<div class="flootTextBox">
@@ -116,7 +116,7 @@
 				</el-col>
 				<el-col :span="8">
 					<div class="flootBoxTit">
-						<img src="../../assets/images/laiyuan.png" alt="">
+						<img src="../../../assets/images/laiyuan.png" alt="">
 						<span>项目来源</span>
 					</div>
 					<div class="flootTextBox">
@@ -125,7 +125,7 @@
 				</el-col>
 				<el-col :span="8">
 					<div class="flootBoxTit">
-						<img src="../../assets/images/user.png" alt="">
+						<img src="../../../assets/images/user.png" alt="">
 						<span>参与人员</span>
 					</div>
 					<div class="flootTextBox">
