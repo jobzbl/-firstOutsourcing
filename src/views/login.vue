@@ -3,7 +3,7 @@
     <img src="../assets/images/loginBg.png" class="loginBg" alt="login">
     <div class="loginBox">
       <div class="loginName">{{loginText}}</div>
-      <el-form v-if="isLogin" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form v-if="isLogin==1" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="用户名" prop="username">
             <el-input v-model="ruleForm.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
@@ -21,7 +21,7 @@
             <el-radio-group v-model="autoLogin">
               <el-radio label="下次自动登录"></el-radio>
             </el-radio-group>
-            <span>忘记密码？</span>
+            <span @click="forgetPW">忘记密码？</span>
           </div>
         <div class="forgetPasBox">
           <el-button style="width:100%;height:46px;font-size:18px" type="primary" @click="submitForm('ruleForm')">登录</el-button>
@@ -30,7 +30,7 @@
           <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="registerBut1('ruleForm')">注册</el-button>
         </div>
       </el-form>
-      <el-form v-if="!isLogin" :model="register" :rules="ruleRegister" ref="ruleRegister" label-width="100px" class="demo-ruleForm">
+      <el-form v-if="isLogin==2" :model="register" :rules="ruleRegister" ref="ruleRegister" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="username">
             <el-input v-model="register.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
@@ -62,7 +62,40 @@
             <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="registerBut2('ruleRegister')">注册</el-button>
           </div>
       </el-form>
-          
+      <el-form v-if="isforgetPW" :model="forgetPWArr" :rules="ruleforgetPWArr" ref="forgetPW" label-width="100px" class="demo-ruleForm">
+        <div v-if="!mailDelivery">
+          <div class="goLogin">
+            <el-form-item label="用户名" prop="name">
+              <el-input v-model="forgetPWArr.name" placeholder="请输入用户名"></el-input>
+              <span>去注册<i class="iconfont icongengduo"></i></span>
+            </el-form-item>
+          </div>
+          <el-form-item label="邮箱" prop="name">
+            <el-input v-model="forgetPWArr.name" placeholder="请输入姓名"></el-input>
+          </el-form-item>
+        </div>
+        <div v-if="mailDelivery" style="font-size:16px;color:#999;text-align:center;margin-bottom:60px">
+          邮件已发送至你的邮箱<span style="color:#333">shy@izengshi.com</span>快去查收邮件吧
+        </div>
+        <div class="forgetPasBox">
+          <el-button v-if="!mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="forgetSubmitForm('forgetPW')">发送验证邮件</el-button>
+          <el-button v-if="mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="forgetSubmitForm('forgetPW')">邮件已发送 <i style="color:#fff" class="iconfont icondui"></i> </el-button>
+        </div>
+        <div class="forgetPasBox">
+          <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="registerforget('forgetPW')">去登录</el-button>
+        </div>
+       </el-form>
+      <el-form v-if="!init" :model="setPassword" :rules="rulesetPassword" ref="setPassword" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="新密码" prop="name">
+            <el-input v-model="setPassword.name" placeholder="请输入用户名"></el-input>
+          </el-form-item>
+          <el-form-item label="再次输入新密码" prop="name">
+            <el-input v-model="setPassword.name" placeholder="请输入用户名"></el-input>
+          </el-form-item>
+          <div class="forgetPasBox">
+            <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="setPasswordOk('setPassword')">确定</el-button>
+          </div>
+      </el-form>
     </div>
   </div>
 </template>
@@ -74,9 +107,16 @@ export default {
     name: 'login',
   data() {
     return {
+      setPassword:{
+        name:''
+      },
+      forgetPWArr:{
+        name:'',
+      },
+      isforgetPW:false,
       url:base.sq,
       loginText:'账号登录',
-      isLogin: true,
+      isLogin: 1,
       autoLogin:'',
       ruleForm: {
         username: '',
@@ -93,6 +133,16 @@ export default {
         email: '',
         password: '',
         confirmPassword: ''
+      },
+      rulesetPassword:{
+        name: [
+            { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
+      },
+      ruleforgetPWArr:{
+        name: [
+            { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
       },
       rules: {
         username: [
@@ -127,13 +177,45 @@ export default {
         confirmPassword: [
             { required: true, message: '请再次输入密码', trigger: 'blur' },
         ],
-      }
+      },
+      mailDelivery:false,
+      init:true,
     }
   },
   created() {
       this.getUuid()
+      this.initFun()
   },
   methods: {
+    initFun(){
+      if(!this.init){
+        this.loginText = '设置新密码'
+        this.isLogin = 3
+      }
+    },
+    setPasswordOk(){
+      this.mailDelivery = false
+      this.isforgetPW = false
+      this.isLogin = 1
+      this.loginText = '账号登录'
+      this.init= true
+    },
+    forgetSubmitForm(){
+      this.mailDelivery = true
+    },
+    registerforget(){
+      if(this.mailDelivery){
+        this.mailDelivery = false
+        this.isforgetPW = false
+        this.isLogin = 1
+        this.loginText = '账号登录'
+      }
+    },
+    forgetPW(){
+      this.isforgetPW = true
+      this.loginText = '忘记密码'
+      this.isLogin = 3
+    },
     getUuid() {
       function S4() {
           return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -141,7 +223,7 @@ export default {
       this.ruleForm.uuid = (S4() + S4() + "-" + S4() + "-" + S4());
     },
     submitForm(formName) {
-      this.isLogin = true
+      this.isLogin = 1
       // 点击登录 跳转到登录界面
       this.$refs[formName].validate((valid) => {
         // 判断是否存在空的必填项
@@ -165,7 +247,7 @@ export default {
         this.$refs['ruleRegister'].resetFields();
       })
       this.loginText = '账号登录'
-      this.isLogin = true
+      this.isLogin = 1
       this.$nextTick(()=>{
         this.$refs['ruleForm'].resetFields();
       })
@@ -182,7 +264,7 @@ export default {
       this.$nextTick(()=>{
         this.$refs[formName].resetFields();
       })
-        this.isLogin = false
+        this.isLogin = 2
         this.loginText = '账号注册'
       this.$nextTick(()=>{
         this.$refs['ruleRegister'].resetFields();
@@ -224,6 +306,22 @@ export default {
   }
 </style>
 <style scoped>
+  .goLogin{
+    position: relative;
+  }
+  .goLogin i{
+    color:#33B0B5;
+    display: inline-block;
+    transform:rotate(-90deg)!important
+  }
+  .goLogin span{
+    font-size:16px;
+    color:#33B0B5;
+    position: absolute;
+    top:50%;
+    right:-80px;
+    transform: translate(0,-50%);
+  }
   .register{
     border: 1px solid #33B0B5;
     color: #33B0B5;

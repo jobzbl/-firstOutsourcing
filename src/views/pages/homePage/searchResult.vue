@@ -2,7 +2,7 @@
     <div class="wrap">
         <div style="margin-top:12px;">
             <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item class="elsePage" :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item class="elsePage" :to="{ path: '/' }"> <i style="color:#33B0B5" class="iconfont iconiconfontzhizuobiaozhun023101"></i> 首页</el-breadcrumb-item>
                 <el-breadcrumb-item class="nowPage">搜索结果页</el-breadcrumb-item>
             </el-breadcrumb>
         </div>

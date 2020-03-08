@@ -19,25 +19,15 @@
           </div>
         </div>
       </div>
-      
-      <div class="wrap flexStrat headerMenu">
-        <div :class="{headerMenuHover:headerMenu==1}" @click="menuClick(1)" style="margin-left:0"><router-link :to="{path:'/'}"></router-link>首页</div>
-        <div :class="{headerMenuHover:headerMenu==2}" @click="menuClick(2)"><router-link :to="{path:'/'}"></router-link>界面相介绍</div>
-        <div :class="{headerMenuHover:headerMenu==3}" @click="menuClick(3)"><router-link :to="{path:'/'}"></router-link>界面相筛选</div>
-        <div :class="{headerMenuHover:headerMenu==4}" @click="menuClick(4)"><router-link :to="{path:'/dataManage'}"></router-link>数据管理</div>
-        <div :class="{headerMenuHover:headerMenu==5}" @click="menuClick(5)"><router-link :to="{path:'/dataStructure'}"></router-link>数据结构管理</div>
-        <div :class="{headerMenuHover:headerMenu==6}" @click="menuClick(6)"><router-link :to="{path:'/userManage'}"></router-link>用户管理</div>
-      </div>
     </header>
     <router-view/>
   </div>
 </template>
 <script>
 export default {
-  name: 'layOut',
+  name: 'header',
   data() {
     return {
-      headerMenu:1,
       input3:''
     }
   },
@@ -45,9 +35,6 @@ export default {
       this.init()
   },
   methods: {
-    menuClick(e) {
-      this.headerMenu = e
-    },
     init() {
         // this.$router.push('/login') 
      }
@@ -56,30 +43,6 @@ export default {
 </script>
 
 <style>
-  .headerMenu div{
-    height: 40px;
-    line-height: 40px;
-    margin-top: 12px;
-    padding: 0 35px;
-    margin-left: 40px;
-    border-radius: 30px;
-    font-size: 18px;
-    color: #333333;
-    cursor: pointer;
-    position: relative;
-  }
-  .headerMenu a{
-    color: inherit;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .headerMenuHover{
-    background: #33B0B5;
-    color: #fff!important
-  }
   .userButton{
     color: #fff;
     width: 200px;

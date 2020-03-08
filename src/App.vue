@@ -18,7 +18,10 @@
 #nav {
   padding: 30px;
 }
-
+a{
+  text-decoration: none;
+  color: inherit
+}
 #nav a {
   font-weight: bold;
   color: #2c3e50;

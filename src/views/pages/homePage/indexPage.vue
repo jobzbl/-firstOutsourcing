@@ -88,7 +88,9 @@
 				<div class="searchConTit">搜索到相关数据共<span style="color:#ef992a">{{dataAmount}}</span>条</div>
 				<div class="searchConBox">
 					<div class="searchConBoxOver">
-						<div v-for="(item, index) in searchValue" :key="index">{{item}}</div>
+						<div v-for="(item, index) in searchValue" :key="index">
+							<router-link :to="{path:'/result',query:{id:item}}">{{item}}</router-link>
+						</div>
 					</div>
 				</div>
 				<div class="paginationDiv">
@@ -383,6 +385,10 @@ export default {
 		border-radius:10px;
 		margin: 40px 0 136px;
 		padding: 43px 48px;
+	}
+	.searchConBoxOver a{
+		text-decoration: none;
+		color: inherit;
 	}
 	.searchConBoxOver div{
 		cursor: pointer;
