@@ -17,8 +17,27 @@ const article = {
     login (params) {        
         return axios.post(`${base.sq}/sys/login`, params);    
     },
+    //注册
     signIn (params) {
         return axios.post(`${base.sq}/regedit`, params);    
+    },
+    //获取一级分类列表
+    stairList () {
+        return axios.get(`${base.sq}/sys/sysComposition/queryFirst`);    
+    },
+    //获取二级分类列表
+    secondList (id) {
+        return axios.get(`${base.sq}/sys/sysComposition/querySecond/${id}`);    
+    },
+    //获取三级分类列表
+    threeLeve (id) {
+        return axios.get(`${base.sq}/sys/sysComposition/queryThree/${id}`);    
+    },
+    // 根绝分类查询详情
+    getSysDataList (params) {
+        return axios.get(`${base.sq}/sys/sysData/list`,{
+            params
+        });    
     },
     // 其他接口…………
 }

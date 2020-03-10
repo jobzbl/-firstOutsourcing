@@ -17,59 +17,26 @@
 					</div>
 					<div class="selectItemBigBox" :class="animationSwitch?'unfold':'close'">
 						<div class="fl stairItem itemBox">
-							<div @click="stairItemCli($event)" :style="selectList.stairItemIsCli=='bn'?'color:#33B0B5':'color:#4D4D4D'" data-type="bn">BN基界面相</div>
-							<div @click="stairItemCli($event)" :style="selectList.stairItemIsCli=='pyc'?'color:#33B0B5':'color:#4D4D4D'" data-type="pyc">PyC基界面相</div>
-							<div @click="stairItemCli($event)" :style="selectList.stairItemIsCli=='new'?'color:#33B0B5':'color:#4D4D4D'" data-type="new">新型抗氧化界面相</div>
-							<div @click="stairItemCli($event)" :style="selectList.stairItemIsCli=='else'?'color:#33B0B5':'color:#4D4D4D'" data-type="else">其他界面相</div>
+							<div v-for="(item, index) in stairListArr"
+							:key="index" @click="stairItemCli(item.id)"
+							:style="selectList.stairItemIsCli==item.id?'color:#33B0B5':'color:#4D4D4D'"
+							:data-type="item.id">{{item.content}}</div>
 						</div>
-						<div class="fl itemBox secondLevelBox" v-if="selectList.stairItemIsCli!='else'">
-							<div
-								v-if="selectList.stairItemIsCli=='bn'||selectList.stairItemIsCli=='pyc'"
-								@click="selectList.isElementList='1'"
-								:style="selectList.isElementList=='1'?'color:#33B0B5':'color:#4D4D4D'"
-								>掺杂元素</div>
-							<div
-								v-if="selectList.stairItemIsCli=='bn'||selectList.stairItemIsCli=='pyc'"
-								@click="selectList.isElementList='2'"
-								:style="selectList.isElementList=='2'?'color:#33B0B5':'color:#4D4D4D'"
-								>多层界面相</div>
-							<div
-								v-if="selectList.stairItemIsCli=='new'"
-								@click="selectList.isElementList='3'" 
-								:style="selectList.isElementList=='3'?'color:#33B0B5':'color:#4D4D4D'"
-							>稀土元素</div>
+						<div class="fl itemBox secondLevelBox" v-if="secondListArr&&secondListArr.length>0">
+							<div v-for="(item, index) in secondListArr" :key='index'
+								@click="selectItemCli(item.id)"
+								:style="selectList.isElementList==item.id?'color:#33B0B5':'color:#4D4D4D'"
+								>{{item.content}}</div>
 						</div>
 						<div class="fl listElements">
-							<div class="ul" v-if="selectList.isElementList==1">
+							<div class="ul">
 								<div style="overflow:hidden">
 									<span
-										@click="selectList.nowElement=item.value"
-										:style="[{'font-size':(item.value.length==2?'20px':'24px')},{'backgroundColor':(selectList.nowElement==item.value?'#EF992A':'#33B0B5')}]"
-										v-for="(item,index) in alloyingElement1" :key="index"
-										:data-id="item.value">{{item.name}}</span>
-								</div>
-								<div style="overflow:hidden">
-									<span
-										@click="selectList.nowElement=item.value"
-										:style="[{'font-size':(item.value.length==2?'20px':'24px')},{background:(selectList.nowElement==item.value?'#EF992A':'#33B0B5')}]"
-										v-for="(item,index) in alloyingElement2" :key="index"
-										:data-id="item.value">{{item.name}}</span>
-								</div>
-							</div>
-							<div class="ul" v-if="selectList.isElementList==3">
-								<div>
-									<span
-										@click="selectList.nowElement=item.value"
-										:style="[{'font-size':(item.value.length==2?'20px':'24px')},{background:(selectList.nowElement==item.value?'#EF992A':'#33B0B5')}]"
-										v-for="(item,index) in rareEarth1" :key="index"
-										:data-id="item.value">{{item.name}}</span>
-								</div>
-								<div>
-									<span
-										@click="selectList.nowElement=item.value"
-										:style="[{'font-size':(item.value.length==2?'20px':'24px')},{background:(selectList.nowElement==item.value?'#EF992A':'#33B0B5')}]"
-										v-for="(item,index) in rareEarth2" :key="index"
-										:data-id="item.value">{{item.name}}</span>
+										@click="threeLeveCli(item.id,item.centent)"
+										:style="[{'font-size':(item.content.length>1?'20px':'24px')},
+										{'backgroundColor':(selectList.nowElement==item.id?'#EF992A':'#33B0B5')}]"
+										v-for="(item,index) in threeLeveArr" :key="index"
+										:data-id="item.id">{{item.content}}</span>
 								</div>
 							</div>
 						</div>
@@ -85,22 +52,21 @@
 		<div class="searchBigBox">
 			<div class="searchTit">检索结果列表：</div>
 			<div class="searchConBigBox">
-				<div class="searchConTit">搜索到相关数据共<span style="color:#ef992a">{{dataAmount}}</span>条</div>
+				<div class="searchConTit">搜索到相关数据共<span style="color:#ef992a">{{searchData.totalCount}}</span>条</div>
 				<div class="searchConBox">
 					<div class="searchConBoxOver">
-						<div v-for="(item, index) in searchValue" :key="index">
-							<router-link :to="{path:'/result',query:{id:item}}">{{item}}</router-link>
+						<div v-for="(item, index) in searchData.list" :key="index">
+							<router-link :to="{path:'/result',query:{id:item.dataContail}}">{{item.dataContail}}</router-link>
 						</div>
 					</div>
 				</div>
 				<div class="paginationDiv">
-					<el-pagination
-						@size-change="handleSizeChange"
-						@current-change="handleCurrentChange"
-						:current-page.sync="currentPage"
-						:page-size="100"
+					<el-pagination 
+					@current-change="handleCurrentChange"
+						:current-page.sync="searchData.currPage"
+						:page-size="searchData.pageSize"
 						layout="prev, pager, next, jumper"
-						:total="1000">
+						:total="searchData.totalCount">
 					</el-pagination>
 				</div>
 			</div>
@@ -145,86 +111,92 @@ export default {
     return {
 		animationSwitch:false,
 		selectList:{
-			stairItemIsCli:'bn', // 下拉框第一级点击
-			isElementList: 1, // 下拉二级菜单点击
-			nowElement:''
+			stairItemIsCli:'1', // 下拉框第一级点击
+			isElementList:'', // 下拉二级菜单点击
+			nowElement:'',
+			threeContent:''
 		},
-		rareEarth1: [
-			{value:'sc',name:'Sc'},
-			{value:'la',name:'La'},
-			{value:'ce',name:'Ce'},
-			{value:'pr',name:'Pr'},
-			{value:'nd',name:'Nd'},
-			{value:'pm',name:'Pm'},
-			{value:'sm',name:'Sm'},
-			{value:'eu',name:'Eu'},
-			{value:'gd',name:'Gd'},
-			{value:'tb',name:'Tb'},
-			{value:'dy',name:'Dy'},
-			{value:'ho',name:'Ho'},
-			{value:'er',name:'Er'},
-			{value:'tm',name:'Tm'},
-			{value:'yb',name:'Yb'},
-			{value:'lu',name:'Lu'},
-		],
-		rareEarth2: [
-			{value:'y',name:'Y'},
-			{value:'ac',name:'Ac'},
-			{value:'th',name:'Th'},
-			{value:'pa',name:'Pa'},
-			{value:'u',name:'U'},
-			{value:'np',name:'Np'},
-			{value:'pu',name:'Pu'},
-			{value:'am',name:'Am'},
-			{value:'cm',name:'Cm'},
-			{value:'bk',name:'Bk'},
-			{value:'cf',name:'Cf'},
-			{value:'es',name:'Es'},
-			{value:'fm',name:'Fm'},
-			{value:'md',name:'Md'},
-			{value:'no',name:'No'},
-			{value:'lr',name:'Lr'},
-		],
-		alloyingElement1: [
-			{value:'b',name:'B'},
-			{value:'c',name:'C'},
-		],
-		alloyingElement2: [
-			{value:'n',name:'N'},
-			{value:'o',name:'O'},
-			{value:'si',name:'Si'},
-		],
-		dataAmount:0,
 		currentPage: 1,
 		searchValue: ['asdasd','asd','dsret','sdfert','sdfg','asdasd','asd','dsret','sdfert',
 		'sdfg','asdasd','asd','dsret','sdfert','sdfg','asdasd','asd','dsret','sdfert','sdfg',
-		'asdasd','asd','dsret','sdfert','sdfg','asdasd','asd','dsret','sdfert','sdfg']
+		'asdasd','asd','dsret','sdfert','sdfg','asdasd','asd','dsret','sdfert','sdfg'],
+		// 一级菜单
+		stairListArr:[],
+		// 二级菜单
+		secondListArr:[],
+		// 三级菜单
+		threeLeveArr:[],
+		// 分类查询结果
+		searchData:{
+			totalCount:0,
+			pageSize:100,
+			totalPage:0,
+			currPage:1,
+			list:[]
+		},
+		
     }
   },
   created() {
+	this.getSelect()
   },
   methods: {
+	getSelect(){
+		this.$api.stairList().then( res => {
+			this.stairListArr = res.data.data
+			this.getSecondList(res.data.data[0].id)
+        })
+	},
+	// 获取一级列表数据
+	stairItemCli(e){
+		this.secondListArr = []
+		this.getSecondList(e)
+		this.selectList.stairItemIsCli = e;
+	},
+	getSecondList(id) { // 获取二级列表
+		this.threeLeveArr = [] // 每次选择先清空三级列表
+		this.selectList.isElementList = '' // 每次选择先清空二级列表的选项
+		this.$api.secondList(id).then( res => {
+			this.secondListArr = res.data.data
+        })
+	},
+	selectItemCli(id){ // 获取三级列表
+		this.selectList.nowElement = ''  // 每次选择先清空三级列表的选项
+		this.selectList.isElementList = id
+		this.$api.threeLeve(id).then( res => {
+			this.threeLeveArr = res.data.data
+        })
+	},
+	threeLeveCli(id,value){
+		this.selectList.nowElement = id
+		this.selectList.threeLeveArr = value
+		this.$api.getSysDataList({page:this.searchData.currPage,limit:this.searchData.pageSize,dataContail:value}).then( res => {
+			console.log(res.data.page)
+			this.searchData = res.data.page
+        })
+		
+	},
 	search() { // 单机搜索
 		console.log(this.selectList)
 	},
-	stairItemCli(e){
-		this.selectList.stairItemIsCli = e.target.dataset.type;
-		this.selectList.isElementList = 1;
-		if(e.target.dataset.type=='new'){
-			this.selectList.isElementList = 3;
-		}
-		if(e.target.dataset.type=='else'){
-			this.selectList.isElementList = 4;
-		}
-	},
+	
 	selectTitCli() { // 点击下拉框
+		if(this.animationSwitch){
+			this.getSelect()
+			this.threeLeveArr = []
+			this.selectList = {
+				stairItemIsCli:'1', // 下拉框第一级点击
+				isElementList:'', // 下拉二级菜单点击
+				nowElement:'',
+				threeContent:''
+			}
+		}
 		this.animationSwitch = !this.animationSwitch
 	},
-	handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-    },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+	console.log(`当前页: ${val}`)
+	console.log(this.searchData)
+	this.threeLeveCli(this.selectList.nowElement,this.selectList.threeLeveArr)
     },
     init() {
     }
@@ -410,7 +382,7 @@ export default {
 	.searchConBox{
 		width: 1135px;
 		margin-top: 21px;
-		max-height: 397px;
+		/* max-height: 397px; */
 		overflow: hidden;
 		border-top: 1px solid rgba(221,221,221,1);
 		border-left: 1px solid rgba(221,221,221,1);
@@ -429,7 +401,6 @@ export default {
 		margin-bottom: 16px;
 	}
 	.searchConBigBox{
-		height:538px;
 		background:rgba(255,255,255,1);
 		border:2px solid rgba(243,243,243,1);
 		border-radius:10px;
