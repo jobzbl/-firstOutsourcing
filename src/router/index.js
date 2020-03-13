@@ -7,6 +7,7 @@ import indexPage from '../views/pages/homePage/indexPage.vue'
 import searchResult from '../views/pages/homePage/searchResult.vue'
 import dataManage from '../views/pages/dataManage/index.vue'
 import dataEdit from '../views/pages/dataManage/dataEdit.vue'
+import upData from '../views/pages/dataManage/updataFile.vue'
 import userManage from '../views/pages/userManage/index.vue'
 import dataStructure from '../views/pages/dataStructure/index.vue'
 import personalCenter from '../views/pages/personalCenter/index.vue'
@@ -39,6 +40,11 @@ const routes = [
         path: '/data-cen/user/personalCenter',
         name: 'personalCenter',
         component: personalCenter,
+      },
+      {
+        path: '/data-cen/dataManage/updata',
+        name: 'upData',
+        component: upData,
       },
     ]
   },

@@ -39,6 +39,39 @@ const article = {
             params
         });    
     },
-    // 其他接口…………
+    // 搜索结果页
+    searchResult(params){
+        return axios.get(`${base.sq}/sys/sysData/info`,{
+            params
+        })
+    },
+    // 数据管理列表
+    dataManage(params){
+        return axios.get(`${base.sq}/sys/sysData/querylist`,{
+            params
+        })
+    },
+    // 获取数据类型
+    dataTypelist(){
+        return axios.get(`${base.sq}/sys/config/typeList`)
+    },
+    // 获取数据分类
+    dataClassify(){
+        return axios.get(`${base.sq}/sys/config/classList`)
+    },
+    // 获取关键词
+    getKeyword(params){
+        return axios.get(`${base.sq}/sys/sysDatastructure/queryKey`,{
+            params
+        })
+    },
+    // 获取数据来源
+    getDataSource(){
+        return axios.get(`${base.sq}/sys/sysDatastructure/querySource`)
+    },
+    // 获取数据结构管理
+    getdataStrutureData(params){
+        return axios.get(`${base.sq}/sys/sysDatastructure/list`,{params})
+    },
 }
 export default article;

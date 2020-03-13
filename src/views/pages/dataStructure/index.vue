@@ -37,11 +37,19 @@
             <el-button @click="mergeKeyWord"> <i class="iconfont iconxiazai"></i> 合并关键词</el-button>
         </div>
         <div class="tableBox">
-            <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData" tooltip-effect="dark" style="width: 100%" 
+            <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
-                <el-table-column prop="keyword" label="关键词" width="391"></el-table-column>
-                <el-table-column prop="dataClassify" label="数据分类" width="319"></el-table-column>
-                <el-table-column prop="dataType" label="数据类型" width="295"></el-table-column>
+                <el-table-column prop="stKey" label="关键词" width="391"></el-table-column>
+                <el-table-column label="数据分类" width="319">
+                    <template slot-scope="scope">
+                        {{dataClassifyArr[scope.row.stClassification]}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="数据类型" width="295">
+                    <template slot-scope="scope">
+                        {{dataTypeArr[scope.row.stType]}}
+                    </template>
+                </el-table-column>
                 <el-table-column label="勾选合并关键词">
                     <template slot-scope="scope">
                         <el-checkbox v-model="scope.row.merge"></el-checkbox>
@@ -50,15 +58,14 @@
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
-                    共<span style="color:#33B0B5">18</span>条数据，当前页显示 <span style="color:#33B0B5">10</span> 条树
+                    共<span style="color:#33B0B5">{{tableData.totalPage}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条树
                 </span>
 				<el-pagination
-					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
-					:current-page.sync="currentPage"
-					:page-size="100"
+					:current-page.sync="tableData.currPage"
+					:page-size="tableData.pageSize"
 					layout="prev, pager, next, jumper"
-					:total="1000">
+					:total="tableData.totalCount">
 				</el-pagination>
 			</div>
         </div>
@@ -147,6 +154,7 @@
 export default {
     data() {
         return {
+        
         addKeyWordArr:{
             dataType:'',
             dataClassify:'',
@@ -168,20 +176,66 @@ export default {
             dataClassify:'',
             dataType:''
         },
-        tableData:[
-            {
-                keyword:'12',
-                dataClassify:'123',
-                dataType:'qwe',
-                merge:false
-            }
-        ],
+        tableData:{
+            totalCount:0,
+			pageSize:10,
+			totalPage:0,
+			currPage:1,
+            list:[]
+        },
+        dataClassifyObj:[], // 数据分类
+        dataTypeObj:[], // 数据类型
+        dataSourceObj:[], // 数据来源
+        dataClassifyArr:{},
+        dataTypeArr:{},
+        dataSourceArr:{},
         }
     },
     created(){
-
+        this.getListdata()
+        this.getSelectObj()
     },
     methods:{
+        getSelectObj(){
+            this.$api.dataTypelist().then(res=>{ // 数据类型
+                this.dataTypeObj = res.data.data
+                this.dataTypeObj.map(x=>{
+                    Object.assign(this.dataTypeArr,{[x.id]: x.paramValue})
+                })
+                console.log(this.dataTypeArr)
+            })
+            this.$api.dataClassify().then(res=>{ // 数据分类
+                this.dataClassifyObj = res.data.data
+                this.dataClassifyObj.map(x=>{
+                    Object.assign(this.dataClassifyArr,{[x.id]: x.paramValue})
+                })
+                console.log(this.dataClassifyArr)
+
+            })
+            this.$api.getDataSource().then(res=>{ // 数据来源
+                this.dataSourceObj = res.data.data
+                this.dataSourceObj.map(x=>{
+                    Object.assign(this.dataSourceArr,{[x.structureId]: x.stKey})
+                })
+                
+                console.log(this.dataSourceArr)
+            })
+            
+        },
+        getListdata(){
+            this.$api.getdataStrutureData({
+                page:this.tableData.currPage,
+                limit:this.tableData.pageSize,
+                // dataNum:this.formInline.dataNum,
+                // dataContail:this.formInline.dataContail,
+                // classification:this.formInline.classification,
+                // dataSource:this.formInline.dataSource,
+                // dataType:this.formInline.dataType,
+                }).then(res=>{
+                this.tableData = res.data.page
+                console.log(this.tableData)
+            })
+        },
         addkeyWordFun(){
             this.addKeyWord = true
         },
@@ -195,6 +249,7 @@ export default {
         console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
+        this.getListdata()
         console.log(`当前页: ${val}`);
         },
         submitForm(formName){

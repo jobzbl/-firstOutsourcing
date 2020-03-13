@@ -1,4 +1,5 @@
 <template>
+    <div>
     <div class="wrap">
         <div style="margin-top:12px;">
             <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -17,144 +18,203 @@
                 <span style="color:#33B0B5">DOI:123343.3435/adbc</span>
             </div>
         </div>
-        <div class="subfield">
-            <i></i>
-            界面相材料晶体结构：
-        </div>
-        <div style="overflow:hidden">
-            <div class="fl crystalImg">
-                <img class="fangda" src="../../../assets/images/fangdafff.png" alt="">
-                <img class="xiazai" src="../../../assets/images/downicon.png" alt="">
+    </div>
+    <div class="wrap" v-for="(data,index) in pageData" :key="index">
+        <template v-if="data.classId==7">
+            <div class="subfield">
+                <i></i>
+                界面相材料晶体结构：
             </div>
-            <div class="fl crystalParameter">
-                <div class="parameterTit">品格参数</div>
-                <div class="tableBorer">
-                    <el-row type="flex" class="row-bg">
-                        <el-col :span="6" class="parameterBox bgColor">a (Å)</el-col>
-                        <el-col :span="6" class="parameterBox"></el-col>
-                        <el-col :span="6" class="parameterBox bgColor">α (°)</el-col>
-                        <el-col :span="6" class="parameterBox borNot"><div></div></el-col>
-                    </el-row>
-                    <el-row type="flex" class="row-bg">
-                        <el-col :span="6" class="parameterBox bgColor">b (Å)</el-col>
-                        <el-col :span="6" class="parameterBox"></el-col>
-                        <el-col :span="6" class="parameterBox bgColor">β (°)</el-col>
-                        <el-col :span="6" class="parameterBox borNot"><div></div></el-col>
-                    </el-row>
-                    <el-row type="flex" class="row-bg">
-                        <el-col :span="6" class="parameterBox bgColor">c (Å)</el-col>
-                        <el-col :span="6" class="parameterBox"></el-col>
-                        <el-col :span="6" class="parameterBox bgColor">γ (°)</el-col>
-                        <el-col :span="6" class="parameterBox borNot"><div></div></el-col>
-                    </el-row>
+            <div style="overflow:hidden">
+                <div class="fl crystalImg">
+                    <img class="fangda" src="../../../assets/images/fangdafff.png" alt="">
+                    <img class="xiazai" src="../../../assets/images/downicon.png" alt="">
                 </div>
-                <div class="parameterTit">原子位置(分数坐标)</div>
-                <div class="bgColor atomtit">B</div>
-                <el-table class="atomTable" :data="tableData" height="130" border style="width: 100%">
-                    <el-table-column align="center" prop="x" label="x" width="220"></el-table-column>
-                    <el-table-column align="center" prop="y" label="y" width="220"></el-table-column>
-                    <el-table-column align="center" prop="z" label="z"></el-table-column>
-                </el-table>
-                <div class="bgColor atomtit" style="margin-top:30px">N</div>
-                <el-table class="atomTable" :data="tableData" height="130" border style="width: 100%">
-                    <el-table-column align="center" prop="x" label="x" width="220"></el-table-column>
-                    <el-table-column align="center" prop="y" label="y" width="220"></el-table-column>
-                    <el-table-column align="center" prop="z" label="z"></el-table-column>
-                </el-table>
+                <div class="fl crystalParameter">
+                    <div class="parameterTit">品格参数</div>
+                    <div class="tableBorer">
+                        <el-row type="flex" class="row-bg">
+                            <el-col :span="24">
+                                <el-row v-for="itm in paramLenght.dataChildList" :key="itm.dataId">
+                                    <el-col :span="12" class="parameterBox bgColor">a (Å)</el-col>
+                                    <el-col :span="12" class="parameterBox">{{itm.dataValue}}</el-col>
+                                </el-row>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-row v-for="itm in paramAngle.dataChildList" :key="itm.dataId">
+                                    <el-col :span="12" class="parameterBox bgColor">{{itm.dataTips}} (°)</el-col>
+                                    <el-col :span="12" class="parameterBox">{{itm.dataValue}}</el-col>
+                                </el-row>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <div class="parameterTit">原子位置(分数坐标)</div>
+                    <div class="bgColor atomtit">B</div>
+                    <el-table class="atomTable" :data="tableData" height="130" border style="width: 100%">
+                        <el-table-column align="center" prop="x" label="x" width="220"></el-table-column>
+                        <el-table-column align="center" prop="y" label="y" width="220"></el-table-column>
+                        <el-table-column align="center" prop="z" label="z"></el-table-column>
+                    </el-table>
+                    <div class="bgColor atomtit" style="margin-top:30px">N</div>
+                    <el-table class="atomTable" :data="tableData" height="130" border style="width: 100%">
+                        <el-table-column align="center" prop="x" label="x" width="220"></el-table-column>
+                        <el-table-column align="center" prop="y" label="y" width="220"></el-table-column>
+                        <el-table-column align="center" prop="z" label="z"></el-table-column>
+                    </el-table>
+                </div>
             </div>
-        </div>
+        </template>
 
-        <div class="subfield" style="margin-top:42px">
-            <i></i>
-            界面相材料电子结构：
-        </div>
-        <div class="erpTit">
-            <div class="fl parameterTit" style="border-right:1px solid #fff;">能带结构</div>
-            <div class="fl parameterTit">电子能态密度</div>
-        </div>
-        <div class="erpBigBox">
-            <div class="fl" style="border-right:1px solid #ddd;">
-                <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                <img src="../../../assets/images/take.png" alt="">
+        <template v-if="data.classId==0">
+            <div class="subfield" style="margin-top:42px">
+                <i></i>
+                界面相材料电子结构：
             </div>
-            <div class="fl">
-                <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                <img src="../../../assets/images/take.png" alt="">
+            <div class="erpTit">
+                <div class="fl parameterTit" style="border-right:1px solid #fff;">能带结构</div>
+                <div class="fl parameterTit">电子能态密度</div>
             </div>
-        </div>
-        <div class="subfield" style="margin-top:42px">
-            <i></i>
-            界面相材料力学性能：
-        </div>
-        <el-radio-group v-model="tabPosition" class="tabPosition" style="margin-bottom:20px;font-size:16px">
-            <el-radio-button label="left">刚度矩阵C<sub>ij </sub>(GPa)</el-radio-button>
-            <el-radio-button label="right">柔度矩阵S<sub>ij </sub>(1/GPa)</el-radio-button>
-        </el-radio-group>
-        <div class="clearFloat clearFloat">
-            <div class="fl matrixBigBox">
-                <div class="matrixMask"></div>
-                <div class="matrixbox borderTL">
-                    <div class="matrixRowBox" v-for="(item, index) in matrixData" :key="index">
-                        <div v-for="(data, index2) in item" :key="index2">{{data}}</div>
+            <div class="erpBigBox">
+                <div class="fl" style="border-right:1px solid #ddd;">
+                    <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                    <img src="../../../assets/images/take.png" alt="">
+                </div>
+                <div class="fl">
+                    <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                    <img src="../../../assets/images/take.png" alt="">
+                </div>
+            </div>
+        </template>
+
+        <template v-if="data.classId==8">
+            <div class="subfield" style="margin-top:42px">
+                <i></i>
+                界面相材料力学性能：
+            </div>
+            <el-radio-group v-model="tabPosition" class="tabPosition" style="margin-bottom:20px;font-size:16px">
+                <el-radio-button label="left">刚度矩阵C<sub>ij </sub>(GPa)</el-radio-button>
+                <el-radio-button label="right">柔度矩阵S<sub>ij </sub>(1/GPa)</el-radio-button>
+            </el-radio-group>
+            <div class="clearFloat clearFloat">
+                <div class="fl matrixBigBox">
+                    <div class="matrixMask"></div>
+                    <div class="matrixbox borderTL">
+                        <div class="matrixRowBox" v-for="(item, index) in matrixData" :key="index">
+                            <div v-for="(data, index2) in item" :key="index2">{{data}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fl matrixDataBigBox borderTL">
+                    <div v-for="item in data.keyParentList" :key="item.dataKey">
+                        <div class="matrixRSmallBox fl" v-if="item.dataKey!=31&&item.dataKey!=32">
+                            <div class="matrixBgBox" >
+                                <span>{{item.dataKeyName}}</span>
+                                <!-- <sub>{{item.sub}}</sub> -->
+                                <!-- <span>{{item.bracket}}</span> -->
+                            </div>
+                            <div>{{item.dataValue}}</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="fl matrixDataBigBox borderTL">
-                <div class="matrixRSmallBox fl" v-for="(item, index) in matrixRightData" :key="index">
-                    <div class="matrixBgBox" >
-                        <span>{{item.name}}</span>
-                        <sub>{{item.sub}}</sub>
-                        <span>{{item.bracket}}</span>
+        </template>
+
+        <template v-if="data.classId==10">
+            <div class="subfield" style="margin-top:42px">
+                <i></i>
+                界面相合成：
+            </div>
+            <div class="hechengBigBox borderTL" :style="data.keyParentList.length>10?'overflow-y: scroll;':''">
+                <div v-if="data.keyParentList.length>3" @click="classId10=!classId10" class="downIcon"><img :style="!classId10?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
+                <div v-for="(item, index) in data.keyParentList" :key="index">
+                    <div class="hechengRowBox" v-if="classId10?index<3:true">
+                        <span>{{item.dataKeyName}}</span>{{item.dataValue}}
                     </div>
-                    <div>{{item.value}}</div>
+                </div>
+
+                <!-- <div><span>界面相合成热处理温度</span>1000 °C</div> -->
+                <!-- <div><span>界面相合成原料</span>BF3-NH3-H2</div> -->
+            </div>
+        </template>
+        
+        <template v-if="data.classId==9">
+            <div class="subfield" style="margin-top:42px">
+                <i></i>
+                界面相结构和成分：
+            </div>
+            <div class="chengfenTable borderTL">
+                <ul class="chengfenTitle clearFloat">
+                    <li>
+                        <span style="right:4px;top:4px">成分</span>
+                        <span style="left:4px;bottom:4px">表征方法</span>
+                        <span class="hr"></span>
+                    </li>
+                    <li>B</li><li>N</li><li>O</li><li>--</li><li>--</li>
+                </ul>
+                <ul class="chengfenTrs clearFloat" v-for="(data,index) in chenfenTable" :key="index">
+                    <li>{{data.name}}</li>
+                    <li v-for="(item,i) in data.data" :key="i">{{item}}</li>
+                </ul>
+            </div>
+            <div class="erpTit">
+                <div class="fl parameterTit" style="border-right:1px solid #fff;width:33%">XRD图谱</div>
+                <div class="fl parameterTit" style="border-right:1px solid #fff;width:33%">拉曼吸收峰</div>
+                <div class="fl parameterTit" style="width:33%">红外吸收峰</div>
+            </div>
+            <div class="erpBigBox">
+                <div class="fl" style="border-right:1px solid #ddd;width:33%"><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/take.png" alt=""></div>
+                <div class="fl" style="border-right:1px solid #ddd;width:33%"><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/take.png" alt=""></div>
+                <div class="fl" style="width:33%"><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/take.png" alt=""></div>
+            </div>
+            <div class=" parameterTit" style="border-right:1px solid #fff;margin-top:20px">界面相形貌</div>
+            <div class="xingmaoBorder">
+                <div class="hechengBigBox borderTL">
+                    <div v-for="(item, index) in data.keyParentList" :key="index">
+                        <div class="hechengRowBox" v-if="item.dataKey==4||item.dataKey==5">
+                            <span>{{item.dataKeyName}}</span>{{item.dataValue}}
+                        </div>
+                    </div>
+                </div>
+                <div class="borderTL imgDatailsList">
+                    <ul class="clearFloat">
+                        <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
+                        <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
+                        <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
+                        <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
+                        <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-        <div class="subfield" style="margin-top:42px">
-            <i></i>
-            界面相合成：
-        </div>
-        <div class="hechengBigBox borderTL">
-            <div class="downIcon"><img src="../../../assets/images/downPull.png" alt=""></div>
-            <div><span>界面相合成方法</span>TG-CVI, "Thermal Gradient Chemical vapour infiltration"</div>
-            <div><span>界面相合成热处理温度</span>1000 °C</div>
-            <div><span>界面相合成原料</span>BF3-NH3-H2</div>
-        </div>
-        <div class="subfield" style="margin-top:42px">
-            <i></i>
-            界面相结构和成分：
-        </div>
-        <div class="chengfenTable borderTL">
-            <ul class="chengfenTitle clearFloat">
-                <li>
-                    <span style="right:4px;top:4px">成分</span>
-                    <span style="left:4px;bottom:4px">表征方法</span>
-                    <span class="hr"></span>
-                </li>
-                <li>B</li><li>N</li><li>O</li><li>--</li><li>--</li>
-            </ul>
-            <ul class="chengfenTrs clearFloat" v-for="(data,index) in chenfenTable" :key="index">
-                <li>{{data.name}}</li>
-                <li v-for="(item,i) in data.data" :key="i">{{item}}</li>
-            </ul>
-        </div>
-        <div class="erpTit">
-            <div class="fl parameterTit" style="border-right:1px solid #fff;width:33%">XRD图谱</div>
-            <div class="fl parameterTit" style="border-right:1px solid #fff;width:33%">拉曼吸收峰</div>
-            <div class="fl parameterTit" style="width:33%">红外吸收峰</div>
-        </div>
-        <div class="erpBigBox">
-            <div class="fl" style="border-right:1px solid #ddd;width:33%"><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/take.png" alt=""></div>
-            <div class="fl" style="border-right:1px solid #ddd;width:33%"><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/take.png" alt=""></div>
-            <div class="fl" style="width:33%"><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/take.png" alt=""></div>
-        </div>
-        <div class=" parameterTit" style="border-right:1px solid #fff;margin-top:20px">界面相形貌</div>
-        <div class="xingmaoBorder">
-            <div class="hechengBigBox borderTL">
-                <div><span>界面相厚度</span>0.1~5 μm</div>
-                <div><span>界面相形貌</span>Turbostratic structure (t-BN)</div>
+        </template>
+        <template v-if="data.classId==11">
+            <div class="subfield" style="margin-top:42px">
+                <i></i>
+                复合材料结构和成分:
             </div>
-            <div class="borderTL imgDatailsList">
+            <div class="hechengBigBox borderTL" :style="data.keyParentList.length>10?'overflow-y: scroll;':''">
+                <div v-if="data.keyParentList.length>3" @click="classId11=!classId11" class="downIcon"><img :style="!classId11?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
+                <div v-for="(item, index) in data.keyParentList" :key="index">
+                    <div class="hechengRowBox" v-if="classId11?index<3:true">
+                        <span>{{item.dataKeyName}}</span>{{item.dataValue}}
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template v-if="data.classId==13">
+            <div class="subfield" style="margin-top:42px">
+                <i></i>
+                界面力学性能：
+            </div>
+            <div class="hechengBigBox borderTL" :style="data.keyParentList.length>10?'overflow-y: scroll;':''">
+                <div v-if="data.keyParentList.length>3" @click="classId13=!classId13" class="downIcon"><img :style="!classId13?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
+                <div v-for="(item, index) in data.keyParentList" :key="index">
+                    <div class="hechengRowBox" v-if="classId13?index<3:true">
+                        <span>{{item.dataKeyName}}</span>{{item.dataValue}}
+                    </div>
+                </div>
+            </div>
+            <div class="borderTL imgDatailsList" style="margin-top:50px;">
                 <ul class="clearFloat">
                     <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
                     <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
@@ -163,80 +223,57 @@
                     <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
                 </ul>
             </div>
-        </div>
+        </template>
 
-        <div class="subfield" style="margin-top:42px">
-            <i></i>
-            复合材料结构和成分:
-        </div>
-        <div class="hechengBigBox borderTL">
-            <div><span>复合材料类型</span>2D composite</div>
-            <div><span>基体</span>SiC fiber, Su ZhouSaiLiFei (SLF) Ceramic Fiber Co., LTD, China.</div>
-            <div><span>纤维成分</span>SiC, CVI</div>
-            <div><span>纤维型号</span>SiC, CVI</div>
-        </div>
+        <template v-if="data.classId==14">
+            <div class="subfield" style="margin-top:42px">
+                <i></i>
+                复合材料力学性能：
+            </div>
+            
+            <div class="hechengBigBox borderTL" :style="data.keyParentList.length>10?'overflow-y: scroll;':''">
+                <div v-if="data.keyParentList.length>3" @click="classId14=!classId14" class="downIcon"><img :style="!classId14?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
+                <div v-for="(item, index) in data.keyParentList" :key="index">
+                    <div class="hechengRowBox" v-if="classId14?index<3:true">
+                        <span>{{item.dataKeyName}}</span>{{item.dataValue}}
+                    </div>
+                </div>
+            </div>
+            <div class="borderTL imgDatailsList" style="margin-top:50px;">
+                <ul class="clearFloat">
+                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
+                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
+                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
+                    <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
+                    <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
+                </ul>
+            </div>
+        </template>
 
-        <div class="subfield" style="margin-top:42px">
-            <i></i>
-            界面力学性能：
-        </div>
-        <div class="hechengBigBox borderTL">
-            <div class="downIcon"><img src="../../../assets/images/downPull.png" alt=""></div>
-            <div><span>界面剪切应力</span>329.91 MPa</div>
-        </div>
-        <div class="borderTL imgDatailsList" style="margin-top:50px;">
-            <ul class="clearFloat">
-                <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-            </ul>
-        </div>
-
-        <div class="subfield" style="margin-top:42px">
-            <i></i>
-            复合材料力学性能：
-        </div>
-        <div class="hechengBigBox borderTL">
-            <div class="downIcon"><img src="../../../assets/images/downPull.png" alt=""></div>
-            <div><span>拉伸强度</span>329.91 MPa</div>
-            <div><span>剪切强度</span>329.91 MPa</div>
-            <div><span>界面剪切应力</span>329.91 MPa</div>
-            <div><span>拉伸失效应变</span>329.91 MPa</div>
-            <div><span>拉伸失效应力</span>329.91 MPa</div>
-        </div>
-        <div class="borderTL imgDatailsList" style="margin-top:50px;">
-            <ul class="clearFloat">
-                <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-            </ul>
-        </div>
-
-        <div class="subfield" style="margin-top:42px">
-            <i></i>
-            复合材料抗氧化性能：
-        </div>
-        <div class="hechengBigBox borderTL">
-            <div class="downIcon"><img src="../../../assets/images/downPull.png" alt=""></div>
-            <div><span>氧化材料抗氧化性能</span>329.91 MPa</div>
-            <div><span>氧化处理温度</span>329.91 MPa</div>
-            <div><span>氧化处理时间</span>329.91 MPa</div>
-            <div><span>氧化处理气氛</span>329.91 MPa</div>
-            <div><span>氧化后残余弯曲强度</span>329.91 MPa</div>
-        </div>
-        <div class="borderTL imgDatailsList" style="margin-top:50px;margin-bottom:250px">
-            <ul class="clearFloat">
-                <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-            </ul>
-        </div>
+        <template v-if="data.classId==15">
+            <div class="subfield" style="margin-top:42px">
+                <i></i>
+                复合材料抗氧化性能：
+            </div>
+            <div class="hechengBigBox borderTL" :style="data.keyParentList.length>10?'overflow-y: scroll;':''">
+                <div v-if="data.keyParentList.length>3" @click="classId15=!classId15" class="downIcon"><img :style="!classId15?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
+                <div v-for="(item, index) in data.keyParentList" :key="index">
+                    <div class="hechengRowBox" v-if="classId15?index<3:true">
+                        <span>{{item.dataKeyName}}</span>{{item.dataValue}}
+                    </div>
+                </div>
+            </div>
+            <div class="borderTL imgDatailsList" style="margin-top:50px;margin-bottom:250px">
+                <ul class="clearFloat">
+                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
+                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
+                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
+                    <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
+                    <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
+                </ul>
+            </div>
+        </template>
+    </div>
     </div>
 </template>
 
@@ -245,6 +282,12 @@ export default {
     name: 'searchResult',
     data() {
         return {
+            classId10:true,
+            classId11:true,
+            classId14:true,
+            classId15:true,
+            classId13:true,
+            pageData:[],
             chenfenTable:[
                 {name:'名义',data:['--','--','--','--','--']},
                 {name:'XPS',data:['23','45','54','--','--']},
@@ -279,14 +322,39 @@ export default {
                 { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
                 { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
                 { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-            ]
+            ],
+            searchKeyWord:this.$route.query.id,
+            paramLenght:{dataChildList:[]},
+            paramAngle:{dataChildList:[]},
+            paramPositionB:[{x:'',y:'',z:''}],
+            paramPositionN:[{x:'',y:'',z:''}],
         }
     },
     created() {
-        console.log(this.chenfenTable)
+        this.init()
     },
     methods: {
-
+        init(){
+            this.$api.searchResult({dataContail:this.searchKeyWord}).then(res=>{
+                var resData = res.data.data
+                this.pageData = resData
+                for(var i=0;i<resData.length;i++){
+                    if(resData[i].classId==7){
+                        this.paramLenght = resData[i].keyParentList.filter(x=>x.dataKey==27)[0]
+                        this.paramAngle = resData[i].keyParentList.filter(x=>x.dataKey==28)[0]
+                        // this.paramPositionB = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='B')
+                        // this.paramPositionB.x = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='B').filter(x=>x.dataTips=='x')[0].dataValue
+                        // this.paramPositionB.y = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='B').filter(x=>x.dataTips=='y')[0].dataValue
+                        // this.paramPositionB.z = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='B').filter(x=>x.dataTips=='z')[0].dataValue
+                        
+                        // this.paramPositionN.x = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='N').filter(x=>x.dataTips=='x')[0].dataValue
+                        // this.paramPositionN.y = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='N').filter(x=>x.dataTips=='y')[0].dataValue
+                        // this.paramPositionN.z = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='N').filter(x=>x.dataTips=='z')[0].dataValue
+                        
+                    }
+                }
+            })
+        }
     }
 }
 </script>
@@ -294,6 +362,7 @@ export default {
 <style lang="less">
     .atomTable {
         td{
+            
             padding: 0px!important;
             height: 40px!important;
             line-height: 40px
@@ -433,8 +502,9 @@ export default {
     }
     .hechengBigBox{
         position: relative;
+        max-height:400px;
     }
-    .hechengBigBox>div{
+    .hechengBigBox .hechengRowBox{
         height: 40px;
         border-bottom: 1px solid #ddd;
         border-right: 1px solid #ddd;

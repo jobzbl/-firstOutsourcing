@@ -5,63 +5,73 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="数据编号">
-                            <el-input v-model="formInline.dataNumber" style="width:280px" placeholder="例如：0002，0003-0023，0027"></el-input>
+                            <el-input v-model="formInline.dataNum" style="width:280px" placeholder="例如：0002，0003-0023，0027"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="界面相成分">
-                            <el-select v-model="formInline.chenfen" style="width:200px" placeholder="请选择界面相成分">
+                            <el-input v-model="formInline.dataContail" style="width:280px" placeholder="例如：0002，0003-0023，0027"></el-input>
+                            <!-- <el-select v-model="formInline.dataContail" style="width:200px" placeholder="请选择界面相成分">
                                 <el-option label="区域一" value="shanghai"></el-option>
                                 <el-option label="区域二" value="beijing"></el-option>
-                            </el-select>
+                            </el-select> -->
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="数据分类">
-                            <el-select v-model="formInline.chenfen" style="width:300px" placeholder="请选择数据分类">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="formInline.classification" style="width:300px" placeholder="请选择数据分类">
+                                <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>  
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="数据来源">
-                            <el-select v-model="formInline.chenfen" placeholder="请选择数据来源">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="formInline.dataSource" placeholder="请选择数据来源">
+                                <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="数据类型">
-                            <el-select v-model="formInline.chenfen" placeholder="请选择数据类型">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="formInline.dataType" placeholder="请选择数据类型">
+                                <el-option v-for="item in dataTypeObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" style="text-align:right">
                         <el-form-item>
-                            <el-button type="primary" @click="onSubmit">查询</el-button>
+                            <el-button type="primary" @click="getListdata()">查询</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
         </div>
         <div class="buttonRow">
-            <el-button> <i class="iconfont iconshangchuan"></i> 上传文件</el-button>
+            <el-button @click="updata()"> <i class="iconfont iconshangchuan"></i> 上传文件</el-button>
             <el-button @click="delect('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
             <el-button> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
         </div>
         <div class="tableBox">
-            <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData" tooltip-effect="dark" style="width: 100%" 
+            <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="dataNumber" label="数据编号" width="190"></el-table-column>
-                <el-table-column prop="chenfen" label="界面相成分" width="190"></el-table-column>
-                <el-table-column prop="dataClass" label="数据分类" width="320"></el-table-column>
-                <el-table-column prop="dataFrom" label="数据来源" width="130"></el-table-column>
-                <el-table-column prop="dataType" label="数据类型" width="106"></el-table-column>
+                <el-table-column prop="dataNum" label="数据编号" width="190"></el-table-column>
+                <el-table-column prop="dataContail" label="界面相成分" width="190"></el-table-column>
+                <el-table-column label="数据分类" width="320">
+                    <template slot-scope="scope">
+                        {{dataClassifyArr[scope.row.classification]}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="数据来源" width="130">
+                    <template slot-scope="scope">
+                        {{dataSourceArr[scope.row.dataSource]}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="数据类型" width="106">
+                    <template slot-scope="scope">
+                        {{dataTypeArr[scope.row.dataType]}}
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <div class="caozuoBox" style="text-align:center">
@@ -80,15 +90,14 @@
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
-                    共<span style="color:#33B0B5">18</span>条数据，当前页显示 <span style="color:#33B0B5">10</span> 条树
+                    共<span style="color:#33B0B5">{{tableData.totalPage}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条树
                 </span>
 				<el-pagination
-					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
-					:current-page.sync="currentPage"
-					:page-size="100"
+					:current-page.sync="tableData.currPage"
+					:page-size="tableData.pageSize"
 					layout="prev, pager, next, jumper"
-					:total="1000">
+					:total="tableData.totalCount">
 				</el-pagination>
 			</div>
         </div>
@@ -105,30 +114,78 @@ export default {
         isBoxData:'',
 		currentPage: 1,
         formInline:{
-            dataNumber:'',
-            chenfen:'',
-            dataClass:'',
-            dataFrom:'',
+            dataNum:'',
+            dataContail:'',
+            classification:'',
+            dataSource:'',
             dataType:''
         },
-        tableData:[
-            {
-                dataNumber:'12',
-                chenfen:'123',
-                dataClass:'qwe',
-                dataFrom:'qwe',
-                dataType:'qwe'
-            }
-        ],
+        tableData:{
+            totalCount:0,
+			pageSize:10,
+			totalPage:0,
+			currPage:1,
+            list:[]
+        },
+        dataClassifyObj:[], // 数据分类
+        dataTypeObj:[], // 数据类型
+        dataSourceObj:[], // 数据来源
+        dataClassifyArr:{},
+        dataTypeArr:{},
+        dataSourceArr:{}
         }
     },
     components: {
         removeComponent:removeComponent
     },
     created(){
-
+        this.getSelectObj()
+        this.getListdata()
     },
     methods:{
+        getSelectObj(){
+            this.$api.dataTypelist().then(res=>{ // 数据类型
+                this.dataTypeObj = res.data.data
+                this.dataTypeObj.map(x=>{
+                    Object.assign(this.dataTypeArr,{[x.id]: x.paramValue})
+                })
+                console.log(this.dataTypeArr)
+            })
+            this.$api.dataClassify().then(res=>{ // 数据分类
+                this.dataClassifyObj = res.data.data
+                this.dataClassifyObj.map(x=>{
+                    Object.assign(this.dataClassifyArr,{[x.id]: x.paramValue})
+                })
+                console.log(this.dataClassifyArr)
+
+            })
+            this.$api.getDataSource().then(res=>{ // 数据来源
+                this.dataSourceObj = res.data.data
+                this.dataSourceObj.map(x=>{
+                    Object.assign(this.dataSourceArr,{[x.structureId]: x.stKey})
+                })
+                
+                console.log(this.dataSourceArr)
+            })
+            
+        },
+        getListdata(){
+            this.$api.dataManage({
+                page:this.tableData.currPage,
+                limit:this.tableData.pageSize,
+                dataNum:this.formInline.dataNum,
+                dataContail:this.formInline.dataContail,
+                classification:this.formInline.classification,
+                dataSource:this.formInline.dataSource,
+                dataType:this.formInline.dataType,
+                }).then(res=>{
+                this.tableData = res.data.page
+                console.log(res)
+            })
+        },
+        updata(){
+            this.$router.push({path:'/data-cen/dataManage/updata'})
+        },
         changeShow(val){
             this.isBoxShow = val;
             console.log(val)
@@ -141,11 +198,11 @@ export default {
             console.log('已删除')
         },
         handleSelectionChange(){},
-        onSubmit(){},
         handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
+            this.getListdata()
         console.log(`当前页: ${val}`);
         },
     }

@@ -174,7 +174,6 @@ export default {
 			console.log(res.data.page)
 			this.searchData = res.data.page
         })
-		
 	},
 	search() { // 单机搜索
 		console.log(this.selectList)
@@ -382,7 +381,7 @@ export default {
 	.searchConBox{
 		width: 1135px;
 		margin-top: 21px;
-		/* max-height: 397px; */
+		min-height: 508px;
 		overflow: hidden;
 		border-top: 1px solid rgba(221,221,221,1);
 		border-left: 1px solid rgba(221,221,221,1);
