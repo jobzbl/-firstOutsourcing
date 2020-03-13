@@ -52,7 +52,7 @@
                 </el-table-column>
                 <el-table-column label="勾选合并关键词">
                     <template slot-scope="scope">
-                        <el-checkbox v-model="scope.row.merge"></el-checkbox>
+                        <el-checkbox :checked="isCheck" @change="checkout(scope.row,$event)"></el-checkbox>
                     </template>
                 </el-table-column>
             </el-table>
@@ -104,16 +104,16 @@
                 <el-dialog title="确认提示" :visible.sync="mergeName" width="400px" :show-close='false'>
                     <div style="font-size:14px;color:#666;margin-bottom:37px">请选择合并关键词后的关键词名称：</div>
                     <div style="display:flex;justify-content: space-between;padding:0 70px">
-                        <el-radio v-model="radio" label="1">关键词1</el-radio>
-                        <el-radio v-model="radio" label="2">数据类型1</el-radio>
+                        <el-radio v-if="checkArr.length>1" v-model="radio" label="0">{{checkArr[0].stKey}}</el-radio>
+                        <el-radio v-if="checkArr.length>1" v-model="radio1" label="0">{{dataTypeArr[checkArr[0].stType]}}</el-radio>
                     </div>
                     <div style="display:flex;justify-content: space-between;padding:0 70px;margin-top:13px">
-                        <el-radio v-model="radio" label="3">关键词2</el-radio>
-                        <el-radio v-model="radio" label="4">数据类型2</el-radio>
+                        <el-radio v-if="checkArr.length>1" v-model="radio" label="1">{{checkArr[1].stKey}}</el-radio>
+                        <el-radio v-if="checkArr.length>1" v-model="radio1" label="1">{{dataTypeArr[checkArr[1].stType]}}</el-radio>
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <div class="formButtonBox">
-                            <el-button type="primary" @click="handleClose3(true)">确定</el-button>
+                            <el-button type="primary" @click="mergeKey(checkArr[0].structureId,checkArr[1].structureId)">确定</el-button>
                             <el-button @click="handleClose3">取 消</el-button>
                         </div>
                     </span>
@@ -122,25 +122,23 @@
             <div class="removeDialog addKeyWordBox">
                 <el-dialog title="关键词信息" :visible.sync="addKeyWord" width="400px" :show-close='false'>
                     <el-form ref="addKeyWord" :rules="addKeyWordRules" :model="addKeyWordArr" label-width="80px">
-                        <el-form-item label="关键词" prop="keyword">
-                            <el-input v-model="addKeyWordArr.keyword"></el-input>
+                        <el-form-item label="关键词" prop="stKey">
+                            <el-input v-model="addKeyWordArr.stKey"></el-input>
                         </el-form-item>
                         <el-form-item label="数据分类">
-                            <el-select v-model="addKeyWordArr.dataClassify" style="width:240px" placeholder="请选择数据分类">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="addKeyWordArr.stClassification" style="width:240px" placeholder="请选择数据分类">
+                                <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="数据类型">
-                            <el-select v-model="addKeyWordArr.dataType" style="width:240px" placeholder="请选择数据类型">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="addKeyWordArr.stType" style="width:240px" placeholder="请选择数据类型">
+                                <el-option v-for="item in dataTypeObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
                         <div class="formButtonBox">
-                            <el-button type="primary" @click="submitForm('addKeyWord')">确定</el-button>
+                            <el-button type="primary" @click="saveKey('addKeyWord')">确定</el-button>
                             <el-button @click="handleClose4">取 消</el-button>
                         </div>
                     </span>
@@ -154,18 +152,20 @@
 export default {
     data() {
         return {
-        
+        isCheck:false,
+        isdisabled:false,
         addKeyWordArr:{
-            dataType:'',
-            dataClassify:'',
-            keyword:'',
+            stKey:'',
+            stClassification:'',
+            stType:'',
         },
         addKeyWordRules:{
-            keyword: [
+            stKey: [
                    { required: true, message: '请输入关键词', trigger: 'blur' },
                ],
         },
-        radio:'1',
+        radio:'0',
+        radio1:'0',
         addKeyWord:false,
         mergeName:false,
         merge:false,
@@ -189,6 +189,7 @@ export default {
         dataClassifyArr:{},
         dataTypeArr:{},
         dataSourceArr:{},
+        checkArr:[],
         }
     },
     created(){
@@ -196,6 +197,37 @@ export default {
         this.getSelectObj()
     },
     methods:{
+        checkout(data,value){
+            if(value){
+                this.checkArr.push(data)
+            }else{
+               this.checkArr = this.checkArr.filter(x=>x.structureId!=data.structureId) 
+            }
+            if(this.checkArr.length>=2){
+                this.isdisabled=true
+            }
+            
+            console.log(this.checkArr)
+        },
+        mergeKey(structureId1,structureId2){
+            this.$api.mergeKey({
+                structureId1:structureId1,
+                structureId2:structureId2,
+                stKey:this.checkArr[this.radio].stKey,
+                stType:this.checkArr[this.radio].stType,
+                }).then(res=>{ 
+                    this.mergeName = false
+                    if(res.data.msg==='success'){
+                        this.$message({
+                            message: '合并成功',
+                            type: 'success'
+                        });
+                    this.getListdata()
+                    this.isCheck = false
+                    this.isdisabled=false
+                    }
+            }) 
+        },
         getSelectObj(){
             this.$api.dataTypelist().then(res=>{ // 数据类型
                 this.dataTypeObj = res.data.data
@@ -240,8 +272,23 @@ export default {
             this.addKeyWord = true
         },
         mergeKeyWord() {
-            this.merge = true
-            this.mergeName = true
+            if(this.checkArr.length<2){
+                this.$message({
+                    message: '请选择两条',
+                    type: 'warning'
+                });
+                return
+            }else{
+                let fisrt = this.checkArr[0].stType
+                let notLength = this.checkArr.filter(x=>x.stType!=fisrt)||[]
+                if(notLength.length>0){
+                    this.merge = true
+                }else{
+                    this.mergeName = true
+                }
+            }
+            this.isdisabled=false
+            this.isCheck=false
         },
         handleSelectionChange(){},
         onSubmit(){},
@@ -252,10 +299,28 @@ export default {
         this.getListdata()
         console.log(`当前页: ${val}`);
         },
-        submitForm(formName){
+        // submitForm(formName){
+        //     this.$refs[formName].validate((valid) => {
+        //         if (valid) {
+        //             this.addKeyWord = false
+        //         } else {
+        //             console.log('error submit!!');
+        //             return false;
+        //         }
+        //     });
+        // },
+        saveKey(formName){
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.addKeyWord = false
+                    this.$api.addKey(this.addKeyWordArr).then(res=>{ // 数据来源
+                        if(res.data.msg==='success'){
+                            this.$message({
+                                message: '保存成功',
+                                type: 'success'
+                            });
+                            this.addKeyWord = false
+                        }
+                    })
                 } else {
                     console.log('error submit!!');
                     return false;

@@ -10,41 +10,33 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="单位">
-                            <el-select v-model="formInline.danwei" style="width:200px" placeholder="请选择界面相成分">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
-                            </el-select>
+                            <el-input v-model="formInline.company" style="width:200px" placeholder="例如：0002，0003-0023，0027"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="部门">
-                            <el-select v-model="formInline.bumen" style="width:200px" placeholder="请选择数据分类">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
-                            </el-select>
+                            <el-input v-model="formInline.department" style="width:200px" placeholder="例如：0002，0003-0023，0027"></el-input>
                         </el-form-item>  
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="是否可用">
-                            <el-select v-model="formInline.isUsable" style="width:200px" placeholder="请选择数据来源">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="formInline.status" style="width:200px" placeholder="请选择数据来源">
+                                <el-option label="禁用" value="0"></el-option>
+                                <el-option label="正常" value="1"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="角色名称">
-                            <el-select v-model="formInline.roleName" style="width:200px" placeholder="请选择数据类型">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="formInline.roleIdArray" style="width:200px" placeholder="请选择数据类型">
+                                <el-option v-for="item in userRole" :key="item.roleId" :label="item.roleName" :value="item.roleId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="权限">
-                            <el-select v-model="formInline.quanxian" multiple style="width:500px" placeholder="请选择数据类型">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="formInline.menu" multiple style="width:500px" placeholder="请选择数据类型">
+                                <el-option v-for="item in selectMenu" :key="item.menuId" :label="item.name" :value="item.menuId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -61,20 +53,20 @@
             <el-button> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
         </div>
         <div class="tableBox">
-            <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData" tooltip-effect="dark" style="width: 100%" 
+            <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="userCode" sortable label="用户名" width="100"></el-table-column>
+                <el-table-column prop="userId" sortable label="用户名" width="100"></el-table-column>
                 <el-table-column prop="name" sortable label="姓名" width="77"></el-table-column>
-                <el-table-column prop="danwei" label="单位" width="153"></el-table-column>
-                <el-table-column prop="bumen" label="部门" width="84"></el-table-column>
-                <el-table-column prop="emial" label="邮箱" width="177"></el-table-column>
-                <el-table-column prop="userType" label="用户类型" width="111"></el-table-column>
-                <el-table-column prop="quanxian" label="权限" width="187"></el-table-column>
-                <el-table-column prop="isUsable" label="是否可用" width="153">
+                <el-table-column prop="company" label="单位" width="153"></el-table-column>
+                <el-table-column prop="department" label="部门" width="84"></el-table-column>
+                <el-table-column prop="email" label="邮箱" width="177"></el-table-column>
+                <el-table-column prop="role" label="用户类型" width="111"></el-table-column>
+                <el-table-column prop="menu" label="权限" width="187"></el-table-column>
+                <el-table-column label="是否可用" width="153">
                     <template slot-scope="scope">
                         <el-switch
-                            v-model="scope.row.isUsable"
+                            v-model="scope.row.status"
                             active-color="#13ce66"
                             inactive-color="#ff4949"
                             active-value="100"
@@ -86,53 +78,50 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <div style="text-align:center">
-                            <el-button type="text" @click="editData=true" style="color:#33B0B5;text-decoration: underline">修改</el-button>
-                            <el-button type="text" @click="removeData(scope.row.userCode)" style="color:#EF992A;text-decoration: underline">删除</el-button>
+                            <el-button type="text" @click="editUser(scope.row.userId)" style="color:#33B0B5;text-decoration: underline">修改</el-button>
+                            <el-button type="text" @click="removeData(scope.row.userId)" style="color:#EF992A;text-decoration: underline">删除</el-button>
                         </div>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
-                    共<span style="color:#33B0B5">18</span>条数据，当前页显示 <span style="color:#33B0B5">10</span> 条树
+                    共<span style="color:#33B0B5">{{tableData.totalPage}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条树
                 </span>
 				<el-pagination
-					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
-					:current-page.sync="currentPage"
-					:page-size="100"
+					:current-page.sync="tableData.currPage"
+					:page-size="tableData.pageSize"
 					layout="prev, pager, next, jumper"
-					:total="1000">
+					:total="tableData.totalCount">
 				</el-pagination>
 			</div>
         </div>
         <el-dialog class="editDataBox" :visible.sync="editData" width="660px" :before-close="handleClose" :show-close='false'>
             <el-form ref="editDataForm" :model="editDataForm" label-width="100px" :rules="rules">
-                <el-form-item label="用户名" prop="userName">
-                    <el-input v-model="editDataForm.userName" placeholder="请输入用户名"></el-input>
+                <el-form-item label="用户名" prop="username">
+                    <el-input v-model="editDataForm.username" placeholder="请输入用户名"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="editDataForm.name" placeholder="请输入姓名"></el-input>
                 </el-form-item>
-                <el-form-item label="单位" prop="danwei">
-                    <el-input v-model="editDataForm.danwei" placeholder="请输入单位"></el-input>
+                <el-form-item label="单位" prop="company">
+                    <el-input v-model="editDataForm.company" placeholder="请输入单位"></el-input>
                 </el-form-item>
-                <el-form-item label="部门" prop="bumen">
-                    <el-input v-model="editDataForm.bumen" placeholder="请输入部门"></el-input>
+                <el-form-item label="部门" prop="department">
+                    <el-input v-model="editDataForm.department" placeholder="请输入部门"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="editDataForm.email" placeholder="请输入邮箱"></el-input>
                 </el-form-item>
-                <el-form-item label="用户类型" prop="userType">
-                    <el-select v-model="formInline.userType" style="width:420px" placeholder="请选择数据类型">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                <el-form-item label="用户类型" prop="role">
+                    <el-select v-model="formInline.role" style="width:420px" placeholder="请选择数据类型">
+                        <el-option v-for="item in userRole" :key="item.roleId" :label="item.roleName" :value="item.roleId"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="权限" prop="quanxian">
-                    <el-select v-model="formInline.quanxian" multiple style="width:420px" placeholder="请选择数据类型">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                <el-form-item label="权限" prop="menu">
+                    <el-select v-model="formInline.menu" multiple style="width:420px" placeholder="请选择数据类型">
+                        <el-option v-for="item in selectMenu" :key="item.menuId" :label="item.name" :value="item.menuId"></el-option>
                     </el-select>
                 </el-form-item>
                 <div class="formButtonBox">
@@ -155,44 +144,22 @@ export default {
             editDataForm:{
                 userName:'',
                 name:'',
-                danwei:'',
-                bumen:'',
+                company:'',
+                department:'',
                 email:'',
-                userType:'',
-                quanxian:[]
+                role:'',
+                menu:[]
             },
             editData:false,
             currentPage: 1,
             formInline:{
                 name:'',
-                danwei:'',
-                bumen:'',
-                isUsable:'',
-                roleName:'',
-                quanxian:[],
+                company:'',
+                department:'',
+                status:'',
+                roleIdArray:'',
+                menu:[],
             },
-            tableData:[
-                {
-                    userCode:'job',
-                    name:'千万',
-                    danwei:'技术部',
-                    bumen:'技术',
-                    emial:'12312312345@qq.com',
-                    userType:'管理员',
-                    quanxian:'查询、上传、修改、删除',
-                    isUsable:true,
-                },
-                {
-                    userCode:'aob',
-                    name:'啊千万',
-                    danwei:'技术部',
-                    bumen:'技术',
-                    emial:'12312312345@qq.com',
-                    userType:'管理员',
-                    quanxian:'查询、上传、修改、删除',
-                    isUsable:true,
-                }
-            ],
             rules: {
                 userName: [
                     { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -200,29 +167,69 @@ export default {
                 name: [
                     { required: true, message: '请输入姓名', trigger: 'blur' },
                 ],
-                danwei: [
+                company: [
                     { required: true, message: '请输入单位', trigger: 'blur' },
                 ],
-                bumen: [
+                department: [
                     { required: true, message: '请输入部门', trigger: 'blur' },
                 ],
                 email: [
                     { required: true, message: '请输入邮箱', trigger: 'blur' },
                 ],
-                userType: [
-                    { type: 'date', required: true, message: '请选择用户类型', trigger: 'change' }
+                role: [
+                    { type:'string', required: true, message: '请选择用户类型', trigger: 'change', }
                 ],
-                quanxian: [
-                    { type: 'date', required: true, message: '请选择权限', trigger: 'change' }
+                menu: [
+                    { type:'string', required: true, message: '请选择权限', trigger: 'change', }
                 ],
                 
-            }
+            },
+            tableData:{
+                totalCount:0,
+                pageSize:10,
+                totalPage:0,
+                currPage:1,
+                list:[]
+            },
+            selectMenu:[],
+            userRole:[],
+            userInfo:{},
         }
     },
     created(){
-
+        this.getListData()
+        this.getArrObj()
     },
     methods:{
+        editUser(id){
+            this.editData=true
+            this.$api.getUserInfo(id).then(res=>{
+                this.editDataForm = res.data.user
+            })
+        },
+        getArrObj(){
+            this.$api.getUserSelectMenu().then(res=>{
+                this.selectMenu = res.data.data
+            })
+            this.$api.getUserRole().then(res=>{
+                this.userRole = res.data.data
+            })
+        },
+        getListData(){
+            this.$api.getUserList({
+                page:this.tableData.currPage,
+                limit:this.tableData.pageSize,
+                // name:this.formInline.name,
+                // company:this.formInline.company,
+                // department:this.formInline.department,
+                // status:this.formInline.status,
+                // roleIdArray:this.formInline.roleIdArray,
+                // menu:this.formInline.menu
+                }).then(res=>{
+                this.tableData = res.data.page
+                console.log(res)
+            })
+        },
         handleSelectionChange(){},
         onSubmit(){},
         handleSizeChange(val) {
@@ -239,6 +246,9 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    this.$api.editUser(this.editDataForm).then(res=>{
+                        this.selectMenu = res.data.data
+                    })
                     this.editData = false
                 } else {
                     console.log('error submit!!');

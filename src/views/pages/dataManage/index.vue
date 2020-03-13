@@ -57,21 +57,13 @@
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="dataNum" label="数据编号" width="190"></el-table-column>
                 <el-table-column prop="dataContail" label="界面相成分" width="190"></el-table-column>
-                <el-table-column label="数据分类" width="320">
-                    <template slot-scope="scope">
-                        {{dataClassifyArr[scope.row.classification]}}
-                    </template>
-                </el-table-column>
+                <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column>
                 <el-table-column label="数据来源" width="130">
                     <template slot-scope="scope">
                         {{dataSourceArr[scope.row.dataSource]}}
                     </template>
                 </el-table-column>
-                <el-table-column label="数据类型" width="106">
-                    <template slot-scope="scope">
-                        {{dataTypeArr[scope.row.dataType]}}
-                    </template>
-                </el-table-column>
+                <el-table-column prop="typeName" label="数据类型" width="106"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <div class="caozuoBox" style="text-align:center">
@@ -173,11 +165,11 @@ export default {
             this.$api.dataManage({
                 page:this.tableData.currPage,
                 limit:this.tableData.pageSize,
-                dataNum:this.formInline.dataNum,
-                dataContail:this.formInline.dataContail,
-                classification:this.formInline.classification,
-                dataSource:this.formInline.dataSource,
-                dataType:this.formInline.dataType,
+                // dataNum:this.formInline.dataNum,
+                // dataContail:this.formInline.dataContail,
+                // classification:this.formInline.classification,
+                // dataSource:this.formInline.dataSource,
+                // dataType:this.formInline.dataType,
                 }).then(res=>{
                 this.tableData = res.data.page
                 console.log(res)

@@ -32,7 +32,7 @@
 							<div class="ul">
 								<div style="overflow:hidden">
 									<span
-										@click="threeLeveCli(item.id,item.centent)"
+										@click="threeLeveCli(item.id,item.content)"
 										:style="[{'font-size':(item.content.length>1?'20px':'24px')},
 										{'backgroundColor':(selectList.nowElement==item.id?'#EF992A':'#33B0B5')}]"
 										v-for="(item,index) in threeLeveArr" :key="index"
@@ -168,6 +168,7 @@ export default {
         })
 	},
 	threeLeveCli(id,value){
+		console.log(value)
 		this.selectList.nowElement = id
 		this.selectList.threeLeveArr = value
 		this.$api.getSysDataList({page:this.searchData.currPage,limit:this.searchData.pageSize,dataContail:value}).then( res => {

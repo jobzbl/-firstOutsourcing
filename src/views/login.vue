@@ -8,7 +8,7 @@
             <el-input v-model="ruleForm.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input v-model="ruleForm.password" placeholder="请输入密码"></el-input>
+            <el-input v-model="ruleForm.password" type="password" placeholder="请输入密码"></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="captcha">
             <div style="display:flex">

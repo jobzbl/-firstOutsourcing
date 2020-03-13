@@ -73,5 +73,45 @@ const article = {
     getdataStrutureData(params){
         return axios.get(`${base.sq}/sys/sysDatastructure/list`,{params})
     },
+    // 获取用户列表
+    getUserList(params){
+        return axios.get(`${base.sq}/sys/user/list`,{params})
+    },
+    // 获取用户权限
+    getUserSelectMenu(){
+        return axios.get(`${base.sq}/sys/user/selectMenu`)
+    },
+    // 获取用户类型
+    getUserRole(){
+        return axios.get(`${base.sq}/sys/user/selectRole`)
+    },
+    // 上传数据
+    upData(params){
+        return axios.post(`${base.sq}/sys/sysData/save`,params)
+    },
+    // 保存关键字
+    addKey(params){
+        return axios.post(`${base.sq}/sys/sysDatastructure/save`,params)
+    },
+    // 合并关键字
+    mergeKey(params){
+        return axios.post(`${base.sq}/sys/sysDatastructure/merge`,params)
+    },
+    // 获取用户信息
+    getUserInfo(params){
+        return axios.get(`${base.sq}/sys/user/info`,{params})
+    },
+    // 获取当前用户信息
+    getNowUserInfo(){
+        return axios.get(`${base.sq}/sys/user/info`)
+    },
+    // 修改用户信息
+    editUser(params){
+        return axios.post(`${base.sq}/sys/user/update`,params)
+    },
+    // 修改密码
+    editPasword(params){
+        return axios.post(`${base.sq}/sys/user/password`,params)
+    },
 }
 export default article;

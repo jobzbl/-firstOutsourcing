@@ -24,9 +24,7 @@
                 <el-col :span="5">
                     <el-form-item label="数据来源" class="marginZero" prop="dataNumber">
                         <el-select v-model="formInline.dataSource" style="width:160px" placeholder="请选择数据来源">
-                        <el-option label="公开发表论文" value="1"></el-option>
-                        <el-option label="未发表结果" value="2"></el-option>
-                        <el-option label="已出版书籍" value="3"></el-option>
+                            <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -37,26 +35,26 @@
                 </el-col>
             </el-row>
         </el-form>
-        <div class="updataBigBox" v-for="(item, index) in formInline.updataArr" :key="index">
+        <div class="updataBigBox" v-for="(item, index) in formInline.itemList" :key="index">
             <el-form :inline="true" :model="item" class="demo-form-inline" label-position="right" label-width="68px">
                 <el-row>
                     <el-col :span="7">
                         <el-form-item label="数据分类">
-                            <el-select v-model="item.classify" style="width:240px" @change="dataSel(item.classify,item.dataKey)" placeholder="请选择数据来源">
+                            <el-select v-model="sub[index].classify" style="width:240px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
                                 <el-option v-for="item in dataClassifyArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
                         <el-form-item label="数据类型" class="marginZero" prop="dataNumber">
-                            <el-select v-model="item.dataKey" style="width:160px" @change="dataSel(item.classify,item.dataKey)" placeholder="请选择数据来源">
+                            <el-select v-model="sub[index].dataType" style="width:160px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
                                 <el-option v-for="item in dataTypeArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" style="text-align:right">
                         <el-form-item label="关键词" prop="dataNumber">
-                            <el-select v-model="item.laiyuan" style="width:460px" placeholder="请选择数据来源">
+                            <el-select v-model="item.dataKey" style="width:460px" placeholder="请选择数据来源">
                                 <el-option v-for="item in keywordArr" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                             </el-select>
                         </el-form-item>
@@ -83,6 +81,12 @@
                 </el-row>
             </el-form>
         </div>
+        <div class="pushButton" @click="pushArr()">
+            <i class="iconfont iconjiahao"></i>
+        </div>
+        <div style="margin-top:55px;text-align:center;margin-bottom:90px;">
+            <el-button class="saveUpdata" type="primary" @click="saveUpdata">保存</el-button>
+        </div>
     </div>
 </template>
 <script>
@@ -91,20 +95,26 @@ export default {
     data(){
         return {
             formInline:{
-                chenfen:'',
-                laiyuan:'',
-                dataNumber:'',
-                updataArr:[
+                dataElement:'',
+                dataContent:'',
+                dataSource:'',
+                dataDescription:'',
+                itemList:[
                     {
-                        laiyuan:'',
                         classify:'',
-                        dataKey:'',
+                        dataValue:'',
+                        dataTips:'',
+                        dataFile:'',
                     },
                 ],
             },
+            sub:[
+                {dataKey:'', dataType:''}
+            ],
             dataClassifyArr:[], // 数据分类
             dataTypeArr:[], // 数据类型
             keywordArr:[], // 关键词
+            dataSourceObj:[], // 来源
             rules:{
                 dataNumber: [
                     { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -125,6 +135,27 @@ export default {
         this.getSelectArr()
     },
     methods:{
+        pushArr(){
+            this.formInline.itemList.push({
+                dataKey:'',
+                dataType:'',
+                classify:'',
+                dataValue:'',
+                dataTips:'',
+            })
+            this.sub.push({dataKey:'', dataType:''})
+        },
+        saveUpdata(){
+            this.$api.upData(this.formInline).then(res=>{
+                if(res.data.msg==='success'){
+                    this.$message({
+                        message: '保存成功',
+                        type: 'success'
+                    });
+                }
+                console.log(res)
+            })
+        },
         updata(){},
         getSelectArr(){
             this.$api.dataTypelist().then(res=>{
@@ -134,6 +165,9 @@ export default {
             this.$api.dataClassify().then(res=>{
                 this.dataClassifyArr = res.data.data
                 console.log(res)
+            })
+            this.$api.getDataSource().then(res=>{ // 数据来源
+                this.dataSourceObj = res.data.data
             })
         },
         dataSel(data1,data2){
@@ -145,6 +179,14 @@ export default {
 }
 </script>
 <style lang="less">
+    .saveUpdata{
+            width: 180px;
+            height: 40px;
+            padding: 0px;
+            text-align: center;
+            line-height: 40px;
+            font-size: 18px!important;
+    }
     .upDataBox{
         width: 60px;
         border: 1px solid #33B0B5!important;
@@ -165,6 +207,20 @@ export default {
 </style>
 
 <style scoped>
+    .pushButton{
+        margin-left: 1140px;
+        height: 60px;
+        width: 60px;
+        border: 1px dashed #33B0B5;
+        text-align: center;
+        line-height: 60px;
+        font-weight: bold;
+        margin-top:23px;
+    }
+    .pushButton i{
+        font-size: 32px;
+        color: #33B0B5;
+    }
     .labelSpan{
         display:inline-block;
         font-size:14px;
