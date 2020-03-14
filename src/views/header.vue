@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header class="header">
+    <div class="header">
       <div style="width:100%;background: #1A242F;">
         <div class="wrap flexSb logoTextBox">
           <div class="logoText"></div>
@@ -13,13 +13,13 @@
             <div class="userButton">
               <span><router-link :to="{path:'/data-cen/user/personalCenter'}">shy</router-link></span>
               <span>|</span>
-              <span>超级管理员</span>
-              <span><i class="iconfont icontuichufffpx"></i></span>
+              <span>{{name}}</span>
+              <span style="cursor: pointer;" @click="out()"><i class="iconfont icontuichufffpx"></i></span>
             </div>
           </div>
         </div>
       </div>
-    </header>
+    </div>
     <router-view/>
   </div>
 </template>
@@ -28,15 +28,21 @@ export default {
   name: 'header',
   data() {
     return {
-      input3:''
+      input3:'',
+      name:''
     }
   },
   created() {
       this.init()
   },
   methods: {
+    out(){
+      this.$router.push('/login')
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+    },
     init() {
-        // this.$router.push('/login') 
+      this.name = JSON.parse(localStorage.getItem("user")).name
      }
   }
 }
@@ -44,6 +50,7 @@ export default {
 
 <style>
   .userButton{
+    
     color: #fff;
     width: 200px;
     padding-left: 20px;

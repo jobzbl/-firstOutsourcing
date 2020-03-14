@@ -99,7 +99,7 @@ const article = {
     },
     // 获取用户信息
     getUserInfo(params){
-        return axios.get(`${base.sq}/sys/user/info`,{params})
+        return axios.get(`${base.sq}/sys/user/info/${params}`)
     },
     // 获取当前用户信息
     getNowUserInfo(){
@@ -113,5 +113,26 @@ const article = {
     editPasword(params){
         return axios.post(`${base.sq}/sys/user/password`,params)
     },
+    // 删除数据 管理
+    deleteData(params){
+        return axios.post(`${base.sq}/sys/sysData/delete`,params)
+    },
+    // 删除用户
+    deleteUser(params){
+        return axios.post(`${base.sq}/sys/user/delete`,params)
+    },
+    // 修改数据
+    editData(params){
+        return axios.post(`${base.sq}/sys/sysDat/upData`,params)
+    },
+    // 获取数据信息（单条）
+    getDataOne(params){
+        return axios.get(`${base.sq}/sys/sysData/info/${params}`)
+    },
+    // 上传数据
+    fileUpData(params){
+        return axios.post(`${base.sq}/sys/oss/upload`,params)
+    },
+    
 }
 export default article;

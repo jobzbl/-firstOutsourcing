@@ -54,7 +54,17 @@ export default {
             ],
         }
     },
+    created(){
+        this.init()
+    },
     methods:{
+        init(){
+            console.log(this.$route.query.id)
+            this.$api.getDataOne(this.$route.query.id).then(res=>{ // 数据来源
+                console.log(res)
+            })
+        },
+        // 
         handleSelectionChange(){},
         handleSizeChange(val) {
         console.log(`每页 ${val} 条`);

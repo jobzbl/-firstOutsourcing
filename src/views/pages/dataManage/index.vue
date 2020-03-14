@@ -11,7 +11,7 @@
                     <el-col :span="8">
                         <el-form-item label="界面相成分">
                             <el-input v-model="formInline.dataContail" style="width:280px" placeholder="例如：0002，0003-0023，0027"></el-input>
-                            <!-- <el-select v-model="formInline.dataContail" style="width:200px" placeholder="请选择界面相成分">
+                            <!-- <el-select clearable v-model ="formInline.dataContail" style="width:200px" placeholder="请选择界面相成分">
                                 <el-option label="区域一" value="shanghai"></el-option>
                                 <el-option label="区域二" value="beijing"></el-option>
                             </el-select> -->
@@ -19,21 +19,21 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="数据分类">
-                            <el-select v-model="formInline.classification" style="width:300px" placeholder="请选择数据分类">
+                            <el-select clearable v-model ="formInline.classification" style="width:300px" placeholder="请选择数据分类">
                                 <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>  
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="数据来源">
-                            <el-select v-model="formInline.dataSource" placeholder="请选择数据来源">
+                            <el-select clearable v-model ="formInline.dataSource" placeholder="请选择数据来源">
                                 <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="数据类型">
-                            <el-select v-model="formInline.dataType" placeholder="请选择数据类型">
+                            <el-select clearable v-model ="formInline.dataType" placeholder="请选择数据类型">
                                 <el-option v-for="item in dataTypeObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
@@ -68,9 +68,9 @@
                     <template slot-scope="scope">
                         <div class="caozuoBox" style="text-align:center">
                             <el-button type="text" style="color:#33B0B5;">
-                                <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{id:scope.row.dataNumber}}">编辑</router-link>
+                                <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{id:scope.row.dataId}}">编辑</router-link>
                             </el-button>
-                            <el-button @click="delect(scope.row.dataNumber)" type="text" style="color:#EF992A;">
+                            <el-button @click="delect(scope.row.dataId)" type="text" style="color:#EF992A;">
                                 删除
                             </el-button>
                             <el-button type="text" style="color:#248AD1;">
@@ -124,7 +124,8 @@ export default {
         dataSourceObj:[], // 数据来源
         dataClassifyArr:{},
         dataTypeArr:{},
-        dataSourceArr:{}
+        dataSourceArr:{},
+        nowCheckedArr:[] // 当前选中
         }
     },
     components: {
@@ -165,11 +166,11 @@ export default {
             this.$api.dataManage({
                 page:this.tableData.currPage,
                 limit:this.tableData.pageSize,
-                // dataNum:this.formInline.dataNum,
-                // dataContail:this.formInline.dataContail,
-                // classification:this.formInline.classification,
-                // dataSource:this.formInline.dataSource,
-                // dataType:this.formInline.dataType,
+                dataNum:this.formInline.dataNum,
+                dataContail:this.formInline.dataContail,
+                classification:this.formInline.classification,
+                dataSource:this.formInline.dataSource,
+                dataType:this.formInline.dataType,
                 }).then(res=>{
                 this.tableData = res.data.page
                 console.log(res)
@@ -183,13 +184,46 @@ export default {
             console.log(val)
         },
         delect(val){
-            this.isBoxShow = true;
-            this.isBoxData = val;
+            let parmas = [val]
+            if(val==''&&this.nowCheckedArr.length==0){
+                this.$message({
+                    message: '请勾选需要删除的数据',
+                    type: 'warning'
+                });
+                return
+            }
+            if(val==''&&this.nowCheckedArr.length>0){
+                this.isBoxShow = true
+                return
+            }
+            this.$api.deleteData(parmas).then(res=>{ // 数据类型
+                this.dataTypeObj = res.data.data
+                if(res.data.msg==='success'){
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                    this.getListdata()
+                }
+            })
+            
         },
         removeDataOk(){
-            console.log('已删除')
+            let parmas = this.nowCheckedArr.map(x=>{return x.dataId})
+            this.$api.deleteData(parmas).then(res=>{ // 数据类型
+                this.dataTypeObj = res.data.data
+                if(res.data.msg==='success'){
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                    this.getListdata()
+                }
+            })
         },
-        handleSelectionChange(){},
+        handleSelectionChange(val){
+            this.nowCheckedArr = val
+        },
         handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
         },

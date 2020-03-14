@@ -5,51 +5,51 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="姓名">
-                            <el-input v-model="formInline.name" style="width:200px" placeholder="例如：0002，0003-0023，0027"></el-input>
+                            <el-input v-model="formInline.name" style="width:200px" placeholder="请输入姓名"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="单位">
-                            <el-input v-model="formInline.company" style="width:200px" placeholder="例如：0002，0003-0023，0027"></el-input>
+                            <el-input v-model="formInline.company" style="width:200px" placeholder="请输入单位"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="部门">
-                            <el-input v-model="formInline.department" style="width:200px" placeholder="例如：0002，0003-0023，0027"></el-input>
-                        </el-form-item>  
+                            <el-input v-model="formInline.department" style="width:200px" placeholder="请输入部门"></el-input>
+                        </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="是否可用">
-                            <el-select v-model="formInline.status" style="width:200px" placeholder="请选择数据来源">
+                            <el-select clearable v-model ="formInline.status" style="width:200px" placeholder="请选择是否可用">
                                 <el-option label="禁用" value="0"></el-option>
                                 <el-option label="正常" value="1"></el-option>
-                            </el-select>
+                            </el-select>   
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="角色名称">
-                            <el-select v-model="formInline.roleIdArray" style="width:200px" placeholder="请选择数据类型">
+                            <el-select clearable v-model ="formInline.roleIdArray" style="width:200px" placeholder="请选择角色名称">
                                 <el-option v-for="item in userRole" :key="item.roleId" :label="item.roleName" :value="item.roleId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="权限">
-                            <el-select v-model="formInline.menu" multiple style="width:500px" placeholder="请选择数据类型">
+                            <el-select clearable v-model ="formInline.menu" multiple style="width:500px" placeholder="请选择权限">
                                 <el-option v-for="item in selectMenu" :key="item.menuId" :label="item.name" :value="item.menuId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" style="text-align:right">
                         <el-form-item>
-                            <el-button type="primary" @click="onSubmit">查询</el-button>
+                            <el-button type="primary" @click="getListData()">查询</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
         </div>
         <div class="buttonRow">
-            <el-button> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
+            <el-button @click="removeData('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
             <el-button> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
         </div>
         <div class="tableBox">
@@ -61,20 +61,26 @@
                 <el-table-column prop="company" label="单位" width="153"></el-table-column>
                 <el-table-column prop="department" label="部门" width="84"></el-table-column>
                 <el-table-column prop="email" label="邮箱" width="177"></el-table-column>
-                <el-table-column prop="role" label="用户类型" width="111"></el-table-column>
-                <el-table-column prop="menu" label="权限" width="187"></el-table-column>
+                <el-table-column prop="role" label="用户类型" width="111">
+                    <!-- <template slot-scope="scope">
+                        <span v-for="item in scope.row.role" :key="item.roleId">{{userRoleArr[item]}}</span>
+                    </template> -->
+                </el-table-column>
+                <el-table-column prop="menu" label="权限" width="187">
+                    <!-- <template slot-scope="scope">
+                        <span v-for="item in scope.row.menu" :key="item.menuId">{{userRoleArr[item]}}</span>
+                    </template> -->
+                </el-table-column>
                 <el-table-column label="是否可用" width="153">
                     <template slot-scope="scope">
                         <el-switch
+                            @change="statusChange(scope.row,$event)"
                             v-model="scope.row.status"
                             active-color="#13ce66"
-                            inactive-color="#ff4949"
-                            active-value="100"
-                            inactive-value="0">
+                            inactive-color="#ff4949">
                         </el-switch>
                     </template>
                 </el-table-column>
-
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <div style="text-align:center">
@@ -114,13 +120,13 @@
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="editDataForm.email" placeholder="请输入邮箱"></el-input>
                 </el-form-item>
-                <el-form-item label="用户类型" prop="role">
-                    <el-select v-model="formInline.role" style="width:420px" placeholder="请选择数据类型">
-                        <el-option v-for="item in userRole" :key="item.roleId" :label="item.roleName" :value="item.roleId"></el-option>
+                <el-form-item label="用户类型" prop="roleIdList">
+                    <el-select  v-model="editDataForm.roleIdList" multiple style="width:420px" placeholder="请选择数据类型">
+                        <el-option v-for="(item,index) in userRole" :key="index" :label="item.roleName" :value="item.roleId"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="权限" prop="menu">
-                    <el-select v-model="formInline.menu" multiple style="width:420px" placeholder="请选择数据类型">
+                <el-form-item label="权限" prop="menuIdList">
+                    <el-select  v-model="editDataForm.menuIdList" multiple style="width:420px" placeholder="请选择数据类型">
                         <el-option v-for="item in selectMenu" :key="item.menuId" :label="item.name" :value="item.menuId"></el-option>
                     </el-select>
                 </el-form-item>
@@ -142,13 +148,14 @@ export default {
             isBoxShow:false,
             isBoxData:'',
             editDataForm:{
-                userName:'',
+                userId:'',
+                username:'',
                 name:'',
                 company:'',
                 department:'',
                 email:'',
-                role:'',
-                menu:[]
+                roleIdList:[],
+                menuIdList:[]
             },
             editData:false,
             currentPage: 1,
@@ -161,6 +168,12 @@ export default {
                 menu:[],
             },
             rules: {
+                roleIdList: [
+                    { type:'array', required: true, message: '请选择用户类型', trigger: 'blur', }
+                ],
+                menuIdList: [
+                    { type:'array', required: true, message: '请选择权限', trigger: 'blur', }
+                ],
                 userName: [
                     { required: true, message: '请输入用户名', trigger: 'blur' },
                 ],
@@ -176,13 +189,6 @@ export default {
                 email: [
                     { required: true, message: '请输入邮箱', trigger: 'blur' },
                 ],
-                role: [
-                    { type:'string', required: true, message: '请选择用户类型', trigger: 'change', }
-                ],
-                menu: [
-                    { type:'string', required: true, message: '请选择权限', trigger: 'change', }
-                ],
-                
             },
             tableData:{
                 totalCount:0,
@@ -194,6 +200,9 @@ export default {
             selectMenu:[],
             userRole:[],
             userInfo:{},
+            selectMenuArr:[],
+            userRoleArr:[],
+            nowCheckedArr:[]
         }
     },
     created(){
@@ -204,33 +213,79 @@ export default {
         editUser(id){
             this.editData=true
             this.$api.getUserInfo(id).then(res=>{
-                this.editDataForm = res.data.user
+                this.editDataForm.userId = res.data.user.userId
+                this.editDataForm.username = res.data.user.username
+                this.editDataForm.name = res.data.user.name
+                this.editDataForm.company = res.data.user.company
+                this.editDataForm.department = res.data.user.department
+                this.editDataForm.email = res.data.user.email
+                this.editDataForm.roleIdList = res.data.user.roleIdList
+                this.editDataForm.menuIdList = res.data.user.menuIdList
             })
         },
         getArrObj(){
-            this.$api.getUserSelectMenu().then(res=>{
+            this.$api.getUserSelectMenu().then(res=>{ // 权限
                 this.selectMenu = res.data.data
+                this.selectMenu.map(x=>{
+                    Object.assign(this.selectMenuArr,{[x.menuId]: x.name})
+                })
             })
-            this.$api.getUserRole().then(res=>{
+            this.$api.getUserRole().then(res=>{ // 用户类型
                 this.userRole = res.data.data
+                this.userRole.map(x=>{
+                    Object.assign(this.userRoleArr,{[x.roleId]: x.roleName})
+                })
             })
         },
         getListData(){
             this.$api.getUserList({
                 page:this.tableData.currPage,
                 limit:this.tableData.pageSize,
-                // name:this.formInline.name,
-                // company:this.formInline.company,
-                // department:this.formInline.department,
-                // status:this.formInline.status,
-                // roleIdArray:this.formInline.roleIdArray,
-                // menu:this.formInline.menu
+                name:this.formInline.name,
+                company:this.formInline.company,
+                department:this.formInline.department,
+                status:this.formInline.status,
+                roleIdArray:this.formInline.roleIdArray,
+                menu:this.formInline.menu
                 }).then(res=>{
-                this.tableData = res.data.page
-                console.log(res)
+                    this.tableData = res.data.page
+                    for(var i=0;i<this.tableData.list.length;i++){
+                        if(this.tableData.list[i].status != 0){
+                            this.tableData.list[i].status = true
+                        }else{
+                            this.tableData.list[i].status = false
+                        }
+                    }
+                    console.log(this.tableData)
+                    console.log(res.data)
+
+                })
+        },
+        statusChange(data,value){
+            console.log(data)
+            let pranam = {}
+            pranam.userId = data.userId,
+            pranam.username = data.username,
+            pranam.name = data.name,
+            pranam.company = data.company,
+            pranam.department = data.department,
+            pranam.email = data.email,
+            pranam.roleIdList = data.role,
+            pranam.menuIdList = data.menu,
+            pranam.status = value?1:0
+            this.$api.editUser(pranam).then(res=>{
+                if(res.data.msg==='success'){
+                    this.$message({
+                        message: '修改成功',
+                        type: 'success'
+                    });
+                    this.getListData()
+                }
             })
         },
-        handleSelectionChange(){},
+        handleSelectionChange(val){
+            this.nowCheckedArr = val
+        },
         onSubmit(){},
         handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
@@ -247,7 +302,14 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.$api.editUser(this.editDataForm).then(res=>{
-                        this.selectMenu = res.data.data
+                        if(res.data.msg==='success'){
+                            this.$message({
+                                message: '修改成功',
+                                type: 'success'
+                            });
+                            this.getListData()
+                        }
+                        // this.selectMenu = res.data.data
                     })
                     this.editData = false
                 } else {
@@ -257,12 +319,38 @@ export default {
             });
         },
         removeData(data){
-            console.log(data)
-            this.isBoxShow = true;
-            this.isBoxData = 'data'
+            if(data==''&&this.nowCheckedArr.length==0){
+                this.$message({
+                    message: '请勾选需要删除的数据',
+                    type: 'warning'
+                });
+                return
+            }
+            if(data==''&&this.nowCheckedArr.length>0){
+                this.isBoxShow = true;
+                return
+            }
+            this.$api.deleteUser([data]).then(res=>{
+                if(res.data.msg==='success'){
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                    this.getListData()
+                }
+            })
         },
         removeDataOk(){
-            console.log('已删除')
+            let parmas = this.nowCheckedArr.map(x=>{return x.userId})
+            this.$api.deleteUser(parmas).then(res=>{
+                if(res.data.msg==='success'){
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                    this.getListData()
+                }
+            })
         },
         changeShow(val){
             this.isBoxShow = val;

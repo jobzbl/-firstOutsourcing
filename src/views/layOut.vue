@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header class="header">
+    <div class="header">
       <div style="width:100%;background: #1A242F;">
         <div class="wrap flexSb logoTextBox">
           <div class="logoText"></div>
@@ -13,8 +13,8 @@
             <div class="userButton">
               <span><router-link :to="{path:'/data-cen/user/personalCenter'}">shy</router-link></span>
               <span>|</span>
-              <span>超级管理员</span>
-              <span><i class="iconfont icontuichufffpx"></i></span>
+              <span>{{name}}</span>
+              <span style="cursor: pointer;" @click="out()"><i class="iconfont icontuichufffpx"></i></span>
             </div>
           </div>
         </div>
@@ -28,7 +28,7 @@
         <div :class="{headerMenuHover:headerMenu==5}" @click="menuClick(5)"><router-link :to="{path:'/dataStructure'}"></router-link>数据结构管理</div>
         <div :class="{headerMenuHover:headerMenu==6}" @click="menuClick(6)"><router-link :to="{path:'/userManage'}"></router-link>用户管理</div>
       </div>
-    </header>
+    </div>
     <router-view/>
   </div>
 </template>
@@ -38,7 +38,8 @@ export default {
   data() {
     return {
       headerMenu:1,
-      input3:''
+      input3:'',
+      name:''
     }
   },
   created() {
@@ -48,7 +49,13 @@ export default {
     menuClick(e) {
       this.headerMenu = e
     },
+    out(){
+      this.$router.push('/login')
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+    },
     init() {
+      this.name = JSON.parse(localStorage.getItem("user")).name
         // this.$router.push('/login') 
      }
   }

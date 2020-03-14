@@ -232,9 +232,13 @@ export default {
         this.$api.login(that.ruleForm).then( res => {
           that.getUuid()
           localStorage.setItem("token", res.data.token)
-          if(res.data.code==0){
-            that.$router.push('/')
-          }
+          this.$api.getNowUserInfo().then(res2=>{
+            localStorage.setItem("user", JSON.stringify(res2.data.user))
+            if(res.data.code==0){
+              that.$router.push('/')
+            }
+          })
+          
         })
       } else {
         this.getUuid()

@@ -23,7 +23,7 @@
                 </el-col>
                 <el-col :span="5">
                     <el-form-item label="数据来源" class="marginZero" prop="dataNumber">
-                        <el-select v-model="formInline.dataSource" style="width:160px" placeholder="请选择数据来源">
+                        <el-select clearable v-model ="formInline.dataSource" style="width:160px" placeholder="请选择数据来源">
                             <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                         </el-select>
                     </el-form-item>
@@ -40,21 +40,21 @@
                 <el-row>
                     <el-col :span="7">
                         <el-form-item label="数据分类">
-                            <el-select v-model="sub[index].classify" style="width:240px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
+                            <el-select clearable v-model ="sub[index].classify" style="width:240px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
                                 <el-option v-for="item in dataClassifyArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
-                        <el-form-item label="数据类型" class="marginZero" prop="dataNumber">
-                            <el-select v-model="sub[index].dataType" style="width:160px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
+                        <el-form-item label="数据类型" class="marginZero">
+                            <el-select clearable v-model ="sub[index].dataType" style="width:160px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
                                 <el-option v-for="item in dataTypeArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" style="text-align:right">
-                        <el-form-item label="关键词" prop="dataNumber">
-                            <el-select v-model="item.dataKey" style="width:460px" placeholder="请选择数据来源">
+                        <el-form-item label="关键词">
+                            <el-select clearable v-model ="item.dataKey" style="width:460px" placeholder="请选择数据来源">
                                 <el-option v-for="item in keywordArr" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                             </el-select>
                         </el-form-item>
@@ -69,7 +69,17 @@
                     <el-col :span="12" style="text-align:right;display:flex;">
                         <span class="labelSpan">文件上传/图片上传</span>
                             <el-input v-model="item.dataFile " style="width:382px"></el-input>
-                            <el-button class="upDataBox">上传</el-button>
+                            <el-upload
+                            class="upload-demo upDataBox"
+                            action="0"
+                            :before-upload="beforeUpload"
+                            :on-success="uploadSuccess"
+                            :on-error="uploadError"
+                            :on-change="handleChange"
+                            :file-list="fileList">
+                            <el-button size="small" type="primary">上传</el-button>
+                            </el-upload>
+                            <!-- <el-button class="upDataBox">上传</el-button> -->
                     </el-col>
                 </el-row>
                 <el-row>
@@ -94,6 +104,7 @@ export default {
     name:'updata',
     data(){
         return {
+            fileList: [],
             formInline:{
                 dataElement:'',
                 dataContent:'',
@@ -118,15 +129,12 @@ export default {
             rules:{
                 dataNumber: [
                     { required: true, message: '请输入活动名称', trigger: 'blur' },
-                    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
                 ],
                 dataContent: [
                     { required: true, message: '请输入活动名称', trigger: 'blur' },
-                    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
                 ],
                 dataElement: [
                     { required: true, message: '请输入活动名称', trigger: 'blur' },
-                    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
                 ],
             }
         }
@@ -135,6 +143,32 @@ export default {
         this.getSelectArr()
     },
     methods:{
+        beforeUpload(file){
+            let fd = new FormData();
+            fd.append('file',file);//传文件
+            // fd.append('id',this.srid);//传其他参数
+            this.$api.fileUpData(fd).then(res=>{
+                console.log(res)
+            })
+            // axios.post('/api/up/file',fd).then(function(res){
+            //         alert('成功');
+            // })
+            return false  //屏蔽了action的默认上传
+        },
+        uploadError(err){
+            console.log(err)
+        },
+        uploadSuccess(res){
+            console.log(res)
+        },
+        handleChange(file, fileList) {
+            // 
+            // this.$api.fileUpData(file).then(res=>{
+            //     console.log(res)
+            // })
+            console.log(fileList)
+            // this.fileList = fileList.slice(-3);
+        },
         pushArr(){
             this.formInline.itemList.push({
                 dataKey:'',
@@ -198,6 +232,17 @@ export default {
         font-size: 16px!important;
         line-height: 34px;
         margin-left: 19px!important;
+        .el-button--primary{
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: none!important;
+            color: #33B0B5!important;
+            border: none;
+            span{
+                font-size: 16px!important;
+            }
+        }
     }
     .marginZero{
         .el-form-item__label-wrap{

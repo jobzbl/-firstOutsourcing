@@ -10,7 +10,7 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="数据分类">
-                            <el-select v-model="formInline.dataClassify" style="width:200px" placeholder="请选择数据分类">
+                            <el-select clearable v-model ="formInline.dataClassify" style="width:200px" placeholder="请选择数据分类">
                                 <el-option label="区域一" value="shanghai"></el-option>
                                 <el-option label="区域二" value="beijing"></el-option>
                             </el-select>
@@ -18,7 +18,7 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="数据类型">
-                            <el-select v-model="formInline.dataType" placeholder="请选择数据类型">
+                            <el-select clearable v-model ="formInline.dataType" placeholder="请选择数据类型">
                             <el-option label="区域一" value="shanghai"></el-option>
                             <el-option label="区域二" value="beijing"></el-option>
                             </el-select>
@@ -126,12 +126,12 @@
                             <el-input v-model="addKeyWordArr.stKey"></el-input>
                         </el-form-item>
                         <el-form-item label="数据分类">
-                            <el-select v-model="addKeyWordArr.stClassification" style="width:240px" placeholder="请选择数据分类">
+                            <el-select clearable v-model ="addKeyWordArr.stClassification" style="width:240px" placeholder="请选择数据分类">
                                 <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="数据类型">
-                            <el-select v-model="addKeyWordArr.stType" style="width:240px" placeholder="请选择数据类型">
+                            <el-select clearable v-model ="addKeyWordArr.stType" style="width:240px" placeholder="请选择数据类型">
                                 <el-option v-for="item in dataTypeObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>

@@ -14,44 +14,53 @@
         </div>
         <div class="tabDiv">
             <div v-if="tabPosition=='left'" >
-                <el-form :model="details" :rules="detailsRules" ref="details" label-width="100px" class="demo-ruleForm">
+                <el-form :model="details" :rules="detailsRules" ref="detailsRule" label-width="100px" class="demo-ruleForm">
                     <el-form-item label="用户名" prop="username">
-                        <el-input v-model="details.username "></el-input>
+                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
+                        <el-input v-model="details.username" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="姓名" prop="name">
-                        <el-input v-model="details.name"></el-input>
+                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
+                        <el-input v-model="details.name" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="单位" prop="company">
+                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
                         <el-input v-model="details.company"></el-input>
                     </el-form-item>
                     <el-form-item label="部门" prop="department">
+                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
                         <el-input v-model="details.department"></el-input>
                     </el-form-item>
                     <el-form-item label="邮箱" prop="email">
+                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
                         <el-input v-model="details.email"></el-input>
                     </el-form-item>
-                    <el-form-item label="备注" prop="name2">
-                        <el-input v-model="details.name"></el-input>
+                    <el-form-item label="备注">
+                        <el-input v-model="details.tips"></el-input>
                     </el-form-item>
-                    <el-form-item label="密码">
+                    <el-form-item label="密码" prop="password">
+                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
                         <el-input v-model="details.password" type="password"></el-input>
                     </el-form-item>
                     <div class="okButtonBox">
                         <el-button @click="resetForm('ruleForm')">取消</el-button>
-                        <el-button type="primary" @click="submitForm2('ruleForm')">保存</el-button>
+                        <el-button type="primary" @click="submitForm2('detailsRule')">保存</el-button>
                     </div>
                 </el-form>
             </div>
             <div v-if="tabPosition=='right'">
-                <el-form :model="editPassword" :rules="editPasswordRules" ref="editPassword" label-width="100px" class="demo-ruleForm">
+                <el-form :model="editPassword" :rules="editPasswordRules" ref="editPassword" label-width="120px" class="demo-ruleForm">
                     <el-form-item label="旧密码" prop="password">
+                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
                         <el-input v-model="editPassword.password"></el-input>
                     </el-form-item>
                     <el-form-item label="新密码" prop="newPassword">
+                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
                         <el-input v-model="editPassword.newPassword"></el-input>
                     </el-form-item>
-                    <el-form-item label="确认新密码" prop="newPassword">
-                        <el-input v-model="editPassword.newPassword"></el-input>
+                    <el-form-item label="确认新密码" prop="newPassword2">
+                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
+                        <el-input v-model="editPassword.newPassword2"></el-input>
                     </el-form-item>
                     <div class="okButtonBox">
                         <el-button @click="resetForm('ruleForm')">取消</el-button>
@@ -68,24 +77,34 @@ export default {
     data(){
         return {
             tabPosition:'left',
-            details:{},
+            details:{
+                username:'',
+                name:'',
+                company:'',
+                department:'',
+                email:'',
+                password:'',
+                tips:'',
+            },
             detailsRules:{
-                // name: [
-                //     { required: true, message: '请输入姓名', trigger: 'blur' },
-                // ],
-                // username:[
-                //     { required: true, message: '请输入用户名', trigger: 'blur' },
-                // ],
-                // company:[
-                //     { required: true, message: '请输入单位', trigger: 'blur' },
-                // ],
-                // email:[
-                //     { required: true, message: '请输入邮箱', trigger: 'blur' },
-                // ],
-                // password:[
-                //     { required: true, message: '请输入密码', trigger: 'blur' },
-                // ],
-
+                name: [
+                    { required: true, message: '请输入姓名', trigger: 'blur' },
+                ],
+                username:[
+                    { required: true, message: '请输入用户名', trigger: 'blur' },
+                ],
+                company:[
+                    { required: true, message: '请输入单位', trigger: 'blur' },
+                ],
+                department:[
+                    { required: true, message: '请输入部门', trigger: 'blur' },
+                ],
+                email:[
+                    { required: true, message: '请输入邮箱', trigger: 'blur' },
+                ],
+                password:[
+                    { required: true, message: '请输入密码', trigger: 'blur' },
+                ],
             },
             editPasswordRules:{
                 password: [
@@ -94,8 +113,15 @@ export default {
                 newPassword:[
                     { required: true, message: '请输入新密码', trigger: 'blur' },
                 ],
+                newPassword2:[
+                    { required: true, message: '请再次输入新密码', trigger: 'blur' },
+                ],
             },
-            editPassword:{}
+            editPassword:{
+                password:'',
+                newPassword:'',
+                newPassword2:''
+            }
         }
     },
     created(){
@@ -107,13 +133,34 @@ export default {
                 this.details = res.data.user
             })
         },
-        submitForm2(){
-            
+        submitForm2(formName){
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.$api.editUser(this.details).then(res=>{ // 数据来源
+                        if(res.data.msg==='success'){
+                            this.$message({
+                                message: '修改成功',
+                                type: 'success'
+                            });
+                        }
+                    })
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
         submitForm(){
             this.$refs['editPassword'].validate((valid) => {
                 if (valid) {
-                    this.$api.editPasword(this.editPassword).then(res=>{ // 数据来源
+                    if(this.editPassword.newPassword!=this.editPassword.newPassword2){
+                        this.$message({
+                            message: '两次密码输入不一致',
+                            type: 'warning'
+                        });
+                        return
+                    }
+                    this.$api.editPasword({password:this.editPassword.password,newPassword:this.editPassword.newPassword}).then(res=>{ // 数据来源
                         if(res.data.msg==='success'){
                             this.$message({
                                 message: '修改成功',
