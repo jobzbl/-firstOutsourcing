@@ -126,12 +126,20 @@ const article = {
         return axios.post(`${base.sq}/sys/sysDat/upData`,params)
     },
     // 获取数据信息（单条）
-    getDataOne(params){
-        return axios.get(`${base.sq}/sys/sysData/info/${params}`)
+    getDataOne(id,params){
+        return axios.get(`${base.sq}/sys/sysData/info/${id}`,{params})
     },
     // 上传数据
     fileUpData(params){
         return axios.post(`${base.sq}/sys/oss/upload`,params)
+    },
+    // 删除上传文件
+    fileDelete(params){
+        return axios.post(`${base.sq}/sys/oss/delete`,params)
+    },
+    // 保存编辑
+    eidtSave(params){
+        return axios.post(`${base.sq}/sys/sysData/update`,params)
     },
     
 }

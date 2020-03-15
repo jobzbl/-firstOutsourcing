@@ -34,13 +34,13 @@
                     <div class="parameterTit">品格参数</div>
                     <div class="tableBorer">
                         <el-row type="flex" class="row-bg">
-                            <el-col :span="24">
+                            <el-col :span="24" v-if="paramLenght.dataChildList.length">
                                 <el-row v-for="itm in paramLenght.dataChildList" :key="itm.dataId">
                                     <el-col :span="12" class="parameterBox bgColor">a (Å)</el-col>
                                     <el-col :span="12" class="parameterBox">{{itm.dataValue}}</el-col>
                                 </el-row>
                             </el-col>
-                            <el-col :span="24">
+                            <el-col :span="24" v-if="paramAngle.dataChildList.length">
                                 <el-row v-for="itm in paramAngle.dataChildList" :key="itm.dataId">
                                     <el-col :span="12" class="parameterBox bgColor">{{itm.dataTips}} (°)</el-col>
                                     <el-col :span="12" class="parameterBox">{{itm.dataValue}}</el-col>
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="fl matrixDataBigBox borderTL">
+                <div class="fl matrixDataBigBox borderTL" :style="data.keyParentList.length>12?'overflow-y: scroll;width: 800px;margin-left: 15px;':''">
                     <div v-for="item in data.keyParentList" :key="item.dataKey">
                         <div class="matrixRSmallBox fl" v-if="item.dataKey!=31&&item.dataKey!=32">
                             <div class="matrixBgBox" >
@@ -175,14 +175,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="borderTL imgDatailsList">
-                    <ul class="clearFloat">
-                        <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                        <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                        <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                        <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                        <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                    </ul>
+                <div v-for="(item, index) in data.keyParentList" :key="index">
+                    <div class="borderTL imgDatailsList" v-if="item.dataKey==6">
+                        <ul class="clearFloat">
+                            <li v-for="(itm, index) in item.dataChildList" :key="index">
+                                <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                                <img :src="itm.dataFile!=null?itm.dataFile:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
+                                <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </template>
@@ -214,14 +216,16 @@
                     </div>
                 </div>
             </div>
-            <div class="borderTL imgDatailsList" style="margin-top:50px;">
-                <ul class="clearFloat">
-                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                    <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                    <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                </ul>
+            <div v-for="(item, index) in data.keyParentList" :key="index">
+                <div class="borderTL imgDatailsList" v-if="item.dataKey==23">
+                    <ul class="clearFloat">
+                        <li v-for="(itm, index) in item.dataChildList" :key="index">
+                            <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                            <img :src="itm.dataFile!=null?itm.dataFile:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
+                            <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </template>
 
@@ -239,14 +243,16 @@
                     </div>
                 </div>
             </div>
-            <div class="borderTL imgDatailsList" style="margin-top:50px;">
-                <ul class="clearFloat">
-                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                    <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                    <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                </ul>
+            <div v-for="(item, index) in data.keyParentList" :key="index">
+                <div class="borderTL imgDatailsList" v-if="item.dataKey==23">
+                    <ul class="clearFloat">
+                        <li v-for="(itm, index) in item.dataChildList" :key="index">
+                            <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                            <img :src="itm.dataFile!=null?itm.dataFile:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
+                            <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </template>
 
@@ -263,14 +269,16 @@
                     </div>
                 </div>
             </div>
-            <div class="borderTL imgDatailsList" style="margin-top:50px;margin-bottom:250px">
-                <ul class="clearFloat">
-                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                    <li><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/img123.png" alt=""></li>
-                    <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                    <li class="nomore"><img src="../../../assets/images/nomore.png" alt=""></li>
-                </ul>
+            <div v-for="(item, index) in data.keyParentList" :key="index">
+                <div class="borderTL imgDatailsList" v-if="item.dataKey==23">
+                    <ul class="clearFloat">
+                        <li v-for="(itm, index) in item.dataChildList" :key="index">
+                            <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                            <img :src="itm.dataFile!=null?itm.dataFile:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
+                            <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </template>
     </div>
@@ -326,8 +334,10 @@ export default {
             searchKeyWord:this.$route.query.id,
             paramLenght:{dataChildList:[]},
             paramAngle:{dataChildList:[]},
-            paramPositionB:[{x:'',y:'',z:''}],
-            paramPositionN:[{x:'',y:'',z:''}],
+            paramPositionBArr:[],
+            paramPositionNArr:[],
+            paramPositionBArrArr:[],
+            paramPositionNArrArr:[],
         }
     },
     created() {
@@ -338,6 +348,7 @@ export default {
             this.$api.searchResult({dataContail:this.searchKeyWord}).then(res=>{
                 var resData = res.data.data
                 this.pageData = resData
+                this.processingData(resData)
                 for(var i=0;i<resData.length;i++){
                     if(resData[i].classId==7){
                         this.paramLenght = resData[i].keyParentList.filter(x=>x.dataKey==27)[0]
@@ -354,7 +365,34 @@ export default {
                     }
                 }
             })
-        }
+        },
+        processingData(data){
+            for(let i=0;i<data.length;i++){
+                if(data[i].classId==7){
+                    for(let m=0;m<data[i].keyParentList.length;m++){
+                        if(data[i].keyParentList[m].dataKey=='29'){
+                            // this.processingData2(data[i].keyParentList[m])
+                        }
+                    }
+                }else{
+                    return
+                }
+            }
+        },
+        // processingData2(data){
+            // for(let x=0;x<data.dataChildList.length;x++){
+            //     if(data.dataChildList[x].dataDescription=='B'){
+            //         this.paramPositionBArr.push(data.dataChildList[x])
+            //         for(let q=0;q<this.paramPositionBArr;q++){
+
+            //         }
+            //     }else if(data.dataChildList[x].dataDescription=='N'){
+            //         this.paramPositionNArr.push(data.dataChildList[x])
+            //     }
+            // }
+            // console.log(this.paramPositionNArr)
+            // console.log(this.paramPositionBArr)
+        // },
     }
 }
 </script>
@@ -414,19 +452,21 @@ export default {
         position: relative;
         border-right: 1px solid #ddd;
         border-bottom: 1px solid #ddd;
-        width: 233px;
+        width: 239px;
         height: 100%;
         float: left;
         padding-top: 60px;
         text-align:center;
+    }
+    .xingmaoBorder .imgDatailsList li{
+        width: 233px
     }
     .imgDatailsList ul{
         width: 1205px;
         height: 100%;
     }
     .borderTL{
-        border-top: 1px solid #ddd;
-        border-left: 1px solid #ddd;
+        border: 1px solid #ddd;
     }
     .xingmaoBorder{
         border: 1px solid #ddd;

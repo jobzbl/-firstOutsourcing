@@ -360,7 +360,7 @@ export default {
         margin-bottom: 34px;
     }
     .loginBox{
-        width: 25%;
+        width: 480px;
         position: absolute;
         right: 15%;
         top: 50%;

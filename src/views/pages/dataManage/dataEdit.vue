@@ -11,24 +11,53 @@
             <el-button> <i class="iconfont iconshangchuan"></i> 上传更新数据</el-button>
         </div>
         <div class="tableBox">
-            <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData" tooltip-effect="dark" style="width: 100%" 
-                @selection-change="handleSelectionChange" border row-class-name="tableTr">
-                <el-table-column prop="dataNumber" label="数据关键字词" width="239"></el-table-column>
-                <el-table-column prop="chenfen" label="数据类型" width="214"></el-table-column>
-                <el-table-column prop="dataClass" label="数据值" width="344"></el-table-column>
-                <el-table-column prop="dataFrom" label="数据摘要"></el-table-column>
+            <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
+                @selection-change="handleSelectionChange" border row-class-name="tableTr" class="tableEdit">
+                <el-table-column label="数据关键字词" width="239">
+                    <template slot-scope="scope">
+                        <div style="background:#F7F7F7">
+                            {{scope.row.keyName}}
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="数据类型" width="214">
+                     <template slot-scope="scope">
+                        <div style="background:#F7F7F7">
+                            {{scope.row.typeName}}
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="数据值" width="344">
+                    <template slot-scope="scope">
+                        <div style="padding:0">
+                            <span :style="scope.row.status?'display:block':'display:none'" class="editSpan" @dblclick="editSpan1C(scope.row)">{{scope.row.dataValue}}</span>
+                            <input :style="scope.row.status?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataValue">
+                            <i @click="clearCon(scope.row,'status')" class="iconfont iconguanbi" :style="scope.row.status?'display:none':'display:block'"></i>
+                            <i @click="saveData(scope.row)" class="iconfont icondui1" :style="scope.row.status?'display:none':'display:block'"></i>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="数据摘要">
+                    <template slot-scope="scope">
+                        <div style="padding:0">
+                            <span :style="scope.row.dataContent?'display:block':'display:none'" class="editSpan" @dblclick="editSpan2C(scope.row)">{{scope.row.dataTips}}</span>
+                            <input :style="scope.row.dataContent?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataTips">
+                            <i @click="clearCon(scope.row,'dataContent')" class="iconfont iconguanbi" :style="scope.row.dataContent?'display:none':'display:block'"></i>
+                            <i @click="saveData(scope.row)" class="iconfont icondui1" :style="scope.row.dataContent?'display:none':'display:block'"></i>
+                        </div>
+                    </template>
+                </el-table-column>
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
                     共<span style="color:#33B0B5">18</span>条数据，当前页显示 <span style="color:#33B0B5">10</span> 条树
                 </span>
 				<el-pagination
-					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
-					:current-page.sync="currentPage"
-					:page-size="100"
+					:current-page.sync="tableData.currPage"
+					:page-size="tableData.pageSize"
 					layout="prev, pager, next, jumper"
-					:total="1000">
+					:total="tableData.totalCount">
 				</el-pagination>
 			</div>
         </div>
@@ -43,26 +72,77 @@ export default {
     name:'dataEdit',
     data(){
         return {
-            tableData:[
-                {
-                    dataNumber:'12',
-                    chenfen:'123',
-                    dataClass:'qwe',
-                    dataFrom:'qwe',
-                    dataType:'qwe'
-                }
-            ],
+            tableData:{
+                totalCount:0,
+                pageSize:10,
+                totalPage:0,
+                currPage:1,
+                list:[]
+            },
+            saveArr:{
+                flag:'updata',
+                itemList:[]
+            }
         }
     },
     created(){
-        this.init()
+        this.getListdata()
     },
     methods:{
-        init(){
+        clearCon(data,val){
+            console.log(data)
+            console.log(val)
+
+            if(val == 'status'){
+                data.dataValue = ''
+            }else{
+                data.dataTips=''
+            }
+        },
+        close(){
+            this.$api.eidtSave(this.saveArr).then(res=>{ // 数据来源
+                if(res.data.msg==='success'){
+                    this.$message({
+                        message: '保存成功',
+                        type: 'success'
+                    });
+                    this.getListdata()
+                }
+            })
+        },
+        saveData(data){
+            data.status = true
+            data.dataContent = true
+            for(let i=0;i<this.saveArr.itemList.length;i++){
+                if(this.saveArr.itemList[i].dataId == data.dataId){
+                    this.saveArr.itemList.splice(i,1)
+                }
+            }
+            setTimeout(() => {
+                this.saveArr.itemList.push({
+                    dataId: data.dataId,
+                    dataValue: data.dataValue,
+                    dataTips: data.dataTips
+                })
+            console.log(this.saveArr)
+            });
+        },
+        getListdata(){
             console.log(this.$route.query.id)
-            this.$api.getDataOne(this.$route.query.id).then(res=>{ // 数据来源
+            this.$api.getDataOne(this.$route.query.id,{page:this.tableData.currPage,limit:this.tableData.pageSize,}).then(res=>{ // 数据来源
+                this.tableData = res.data.page
+                for(let i=0;i<this.tableData.list.length;i++){
+                    this.tableData.list[i].status = true
+                    this.tableData.list[i].dataContent = true
+                }
                 console.log(res)
             })
+        },
+        editSpan1C(data){
+            data.status = false
+        },
+        editSpan2C(data){
+            data.dataContent = false
         },
         // 
         handleSelectionChange(){},
@@ -70,6 +150,7 @@ export default {
         console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
+            this.getListdata()
         console.log(`当前页: ${val}`);
         },
     }
@@ -77,6 +158,24 @@ export default {
 }
 </script>
 <style lang="less">
+    .tableEdit{
+        .el-table__row{
+            td{
+                padding: 0!important;
+                height:54px;
+            }
+            .cell{
+                height: 100%;
+                width: 100%;
+                padding: 0!important;
+                position: relative;
+                div{
+                    padding: 12px 0;
+                    height: 100%;
+                }
+            }
+        }
+    }
  .buttonRowEdit{
     button{
         color:#33B0B5;
@@ -90,6 +189,33 @@ export default {
 </style>
 
 <style scoped>
+    .icondui1,.iconguanbi{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+    .icondui1{
+        right: 10px;
+    }
+    .iconguanbi{
+        right: 40px;
+        font-size: 12px;
+    }
+    .editInput{
+        border: none;
+        height: 100%;
+        width: 100%;
+        outline: none;
+        text-align:center;
+    }
+    .editSpan{
+        display: inline-block;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        line-height: 53px;
+    }
     .dateEditSeaveBox{
         width: 430px;
         display: flex;

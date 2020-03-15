@@ -68,7 +68,10 @@
                     </el-col>
                     <el-col :span="12" style="text-align:right;display:flex;">
                         <span class="labelSpan">文件上传/图片上传</span>
-                            <el-input v-model="item.dataFile " style="width:382px"></el-input>
+                            <div class="inputBoxDiv" style="">
+                                <span v-for="(item,i) in item.dataFile" :key="i">{{item}} <i @click="removeFile(index,i)" class="iconfont iconcuowu"></i> </span>
+                            </div>
+                            <!-- <el-input v-model="item.dataFile " style="width:382px"></el-input> -->
                             <el-upload
                             class="upload-demo upDataBox"
                             action="0"
@@ -77,7 +80,7 @@
                             :on-error="uploadError"
                             :on-change="handleChange"
                             :file-list="fileList">
-                            <el-button size="small" type="primary">上传</el-button>
+                            <el-button @click="shangchuanB(index)" size="small" type="primary">上传</el-button>
                             </el-upload>
                             <!-- <el-button class="upDataBox">上传</el-button> -->
                     </el-col>
@@ -112,15 +115,15 @@ export default {
                 dataDescription:'',
                 itemList:[
                     {
-                        classify:'',
+                        dataKey:'',
                         dataValue:'',
                         dataTips:'',
-                        dataFile:'',
+                        dataFile:[],
                     },
                 ],
             },
             sub:[
-                {dataKey:'', dataType:''}
+                {classify:'', dataType:'',dataFile:[]}
             ],
             dataClassifyArr:[], // 数据分类
             dataTypeArr:[], // 数据类型
@@ -136,24 +139,31 @@ export default {
                 dataElement: [
                     { required: true, message: '请输入活动名称', trigger: 'blur' },
                 ],
-            }
+            },
+            nowIndex:0,
         }
     },
     created(){
         this.getSelectArr()
     },
     methods:{
+        removeFile(index,i){
+            // this.$api.fileDelete(this.sub[index].dataFile[i]).then(res=>{
+            //     console.log(res)
+                this.formInline.itemList[index].dataFile.splice(i,1)
+            // })
+        },
         beforeUpload(file){
             let fd = new FormData();
             fd.append('file',file);//传文件
-            // fd.append('id',this.srid);//传其他参数
             this.$api.fileUpData(fd).then(res=>{
-                console.log(res)
+                this.formInline.itemList[this.nowIndex].dataFile.push(res.data.url)
+                this.sub[this.nowIndex].dataFile.push(fd)
             })
-            // axios.post('/api/up/file',fd).then(function(res){
-            //         alert('成功');
-            // })
             return false  //屏蔽了action的默认上传
+        },
+        shangchuanB(index){
+            this.nowIndex = index
         },
         uploadError(err){
             console.log(err)
@@ -172,14 +182,16 @@ export default {
         pushArr(){
             this.formInline.itemList.push({
                 dataKey:'',
-                dataType:'',
-                classify:'',
                 dataValue:'',
                 dataTips:'',
+                dataFile:[]
             })
-            this.sub.push({dataKey:'', dataType:''})
+            this.sub.push({classify:'', dataType:'',dataFile:[]})
         },
         saveUpdata(){
+            for(let i=0;i<this.formInline.itemList.length;i++){
+                this.formInline.itemList[i].dataFile = this.formInline.itemList[i].dataFile.toString()
+            }
             this.$api.upData(this.formInline).then(res=>{
                 if(res.data.msg==='success'){
                     this.$message({
@@ -252,6 +264,40 @@ export default {
 </style>
 
 <style scoped>
+    .inputBoxDiv{
+        border:1px solid #C0C4CC;
+        height:40px;width:382px;
+        background:#fff;
+        border-radius:3px;
+        text-align:left;
+        padding-left: 10px;
+        line-height: 40px;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: normal
+    }
+    .inputBoxDiv span{
+        display: inline-block;
+        overflow: hidden;
+        height: 20px;
+        line-height: 20px;
+        width: 40px;
+        color: #fff;
+        background: #999;
+        vertical-align: middle;
+        padding-left: 3px;
+        border-radius: 3px;
+        cursor: pointer;
+        position: relative;
+        margin-right: 5px;
+    }
+    .iconcuowu{
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #666;
+    }
     .pushButton{
         margin-left: 1140px;
         height: 60px;
