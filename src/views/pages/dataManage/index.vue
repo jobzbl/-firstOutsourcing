@@ -56,7 +56,13 @@
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="dataNum" label="数据编号" width="190"></el-table-column>
-                <el-table-column prop="dataContail" label="界面相成分" width="190"></el-table-column>
+                <el-table-column prop="dataContail" label="界面相成分" width="190">
+                    <template slot-scope="scope">
+                        <span v-for="(item,index) in scope.row.dataElement" :key='index'>{{item}}
+                            <sub>{{scope.row.dataContent[index]>1?scope.row.dataContent[index]:''}}</sub>
+                        </span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column>
                 <el-table-column label="数据来源" width="130">
                     <template slot-scope="scope">
@@ -68,13 +74,13 @@
                     <template slot-scope="scope">
                         <div class="caozuoBox" style="text-align:center">
                             <el-button type="text" style="color:#33B0B5;">
-                                <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{id:scope.row.dataId}}">编辑</router-link>
+                                <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{'id':scope.row.dataId,'type':'edit'}}">编辑</router-link>
                             </el-button>
                             <el-button @click="delect(scope.row.dataId)" type="text" style="color:#EF992A;">
                                 删除
                             </el-button>
                             <el-button type="text" style="color:#248AD1;">
-                                查看
+                                <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{'id':scope.row.dataId,'type':'check'}}">查看</router-link>
                             </el-button>
                         </div>
                     </template>
@@ -173,6 +179,19 @@ export default {
                 dataType:this.formInline.dataType,
                 }).then(res=>{
                 this.tableData = res.data.page
+                for(var i=0;i<this.tableData.list.length;i++){
+                    if(this.tableData.list[i].dataElement){
+                        this.tableData.list[i].dataElement = this.tableData.list[i].dataElement.split(',')
+                    }else{
+                        this.tableData.list[i].dataElement = []
+                    }
+
+                    if(this.tableData.list[i].dataContent){
+                        this.tableData.list[i].dataContent = this.tableData.list[i].dataContent.split(':')
+                    }else{
+                        this.tableData.list[i].dataContent = []
+                    }
+                }
                 console.log(res)
             })
         },

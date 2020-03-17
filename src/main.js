@@ -7,7 +7,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 import api from './request/api' // 导入api接口
 import { Button } from 'vant';
 import 'vant/lib/index.css';
+import qs from 'qs';
 
+Vue.prototype.qs = qs;
 Vue.use(Button);
 
 Vue.prototype.$api = api; // 将api挂载到vue的原型上复制代码

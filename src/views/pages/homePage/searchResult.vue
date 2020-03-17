@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="padding-bottom:60px;">
     <div class="wrap">
         <div style="margin-top:12px;">
             <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -28,6 +28,7 @@
             <div style="overflow:hidden">
                 <div class="fl crystalImg">
                     <img class="fangda" src="../../../assets/images/fangdafff.png" alt="">
+                    <iframe style="height:100%;width:100%" src="file:///E:/District%2013/3dDemo/demo/alphahelix/index.html"></iframe>
                     <img class="xiazai" src="../../../assets/images/downicon.png" alt="">
                 </div>
                 <div class="fl crystalParameter">
@@ -75,11 +76,11 @@
                 <div class="fl parameterTit">电子能态密度</div>
             </div>
             <div class="erpBigBox">
-                <div class="fl" style="border-right:1px solid #ddd;">
+                <div class="fl" style="border-right:1px solid #ddd;width:50%">
                     <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
                     <img src="../../../assets/images/take.png" alt="">
                 </div>
-                <div class="fl">
+                <div class="fl" style="width:50%">
                     <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
                     <img src="../../../assets/images/take.png" alt="">
                 </div>
@@ -99,9 +100,12 @@
                 <div class="fl matrixBigBox">
                     <div class="matrixMask"></div>
                     <div class="matrixbox borderTL">
-                        <div class="matrixRowBox" v-for="(item, index) in matrixData" :key="index">
+                        <!-- <div class="matrixRowBox" v-for="(item, index) in matrixData" :key="index">
                             <div v-for="(data, index2) in item" :key="index2">{{data}}</div>
-                        </div>
+                        </div> -->
+                        <template v-for="item in data.keyParentList">
+                            <img v-if="tabPosition=='left'?item.dataKey==31:item.dataKey==32" :key="item.dataId" :src="item.dataValue" style="width:100%;height:100%" alt="">
+                        </template>
                     </div>
                 </div>
                 <div class="fl matrixDataBigBox borderTL" :style="data.keyParentList.length>12?'overflow-y: scroll;width: 800px;margin-left: 15px;':''">
@@ -156,15 +160,21 @@
                     <li v-for="(item,i) in data.data" :key="i">{{item}}</li>
                 </ul>
             </div>
-            <div class="erpTit">
+            <!-- <div class="erpTit">
                 <div class="fl parameterTit" style="border-right:1px solid #fff;width:33%">XRD图谱</div>
                 <div class="fl parameterTit" style="border-right:1px solid #fff;width:33%">拉曼吸收峰</div>
                 <div class="fl parameterTit" style="width:33%">红外吸收峰</div>
-            </div>
+            </div> -->
             <div class="erpBigBox">
-                <div class="fl" style="border-right:1px solid #ddd;width:33%"><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/take.png" alt=""></div>
-                <div class="fl" style="border-right:1px solid #ddd;width:33%"><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/take.png" alt=""></div>
-                <div class="fl" style="width:33%"><img class="fangda" src="../../../assets/images/fangda000.png" alt=""><img src="../../../assets/images/take.png" alt=""></div>
+                <div class="erpBigBoxFlex">
+                    <template v-for="item in data.keyParentList">
+                        <div style="border-right:1px solid #ddd;" :key="item.dataId" v-if="item.dataKey=='58'||item.dataKey=='59'||item.dataKey=='60'">
+                            <div class="parameterTit" style="border-right:1px solid #fff;height:40px;width:100%">{{item.dataKeyName}}</div>
+                            <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                            <img :src="item.dataValue" alt="" style="max-with:90%;margin:0 auto;max-height:360px">
+                        </div>
+                    </template>
+                </div>
             </div>
             <div class=" parameterTit" style="border-right:1px solid #fff;margin-top:20px">界面相形貌</div>
             <div class="xingmaoBorder">
@@ -179,8 +189,8 @@
                     <div class="borderTL imgDatailsList" v-if="item.dataKey==6">
                         <ul class="clearFloat">
                             <li v-for="(itm, index) in item.dataChildList" :key="index">
-                                <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                                <img :src="itm.dataFile!=null?itm.dataFile:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
+                                <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                                <img :src="itm.dataValue!=null?itm.dataValue:'../../../assets/images/nomore.png'" style="max-width:80%;max-height:250px;margin:0 auto" alt="">
                                 <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
                             </li>
                         </ul>
@@ -208,20 +218,21 @@
                 <i></i>
                 界面力学性能：
             </div>
-            <div class="hechengBigBox borderTL" :style="data.keyParentList.length>10?'overflow-y: scroll;':''">
-                <div v-if="data.keyParentList.length>3" @click="classId13=!classId13" class="downIcon"><img :style="!classId13?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
+            <div class="hechengBigBox borderTL">
+                 <!-- :style="data.keyParentList.length>10?'overflow-y: scroll;':''" -->
+                <!-- <div v-if="data.keyParentList.length>3" @click="classId13=!classId13" class="downIcon"><img :style="!classId13?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div> -->
                 <div v-for="(item, index) in data.keyParentList" :key="index">
-                    <div class="hechengRowBox" v-if="classId13?index<3:true">
+                    <div class="hechengRowBox" v-if="item.dataKey==18">
                         <span>{{item.dataKeyName}}</span>{{item.dataValue}}
                     </div>
                 </div>
             </div>
             <div v-for="(item, index) in data.keyParentList" :key="index">
-                <div class="borderTL imgDatailsList" v-if="item.dataKey==23">
+                <div class="borderTL imgDatailsList" v-if="item.dataChildList.length>0&&item.dataKey==61">
                     <ul class="clearFloat">
                         <li v-for="(itm, index) in item.dataChildList" :key="index">
-                            <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                            <img :src="itm.dataFile!=null?itm.dataFile:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
+                            <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                            <img :src="itm.dataValue!=null?itm.dataValue:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
                         </li>
                     </ul>
@@ -238,17 +249,17 @@
             <div class="hechengBigBox borderTL" :style="data.keyParentList.length>10?'overflow-y: scroll;':''">
                 <div v-if="data.keyParentList.length>3" @click="classId14=!classId14" class="downIcon"><img :style="!classId14?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
                 <div v-for="(item, index) in data.keyParentList" :key="index">
-                    <div class="hechengRowBox" v-if="classId14?index<3:true">
+                    <div class="hechengRowBox" v-if="classId14?index<3:true&&item.dataKey!=23">
                         <span>{{item.dataKeyName}}</span>{{item.dataValue}}
                     </div>
                 </div>
             </div>
             <div v-for="(item, index) in data.keyParentList" :key="index">
-                <div class="borderTL imgDatailsList" v-if="item.dataKey==23">
+                <div class="borderTL imgDatailsList" v-if="item.dataChildList.length>0&&item.dataKey==23">
                     <ul class="clearFloat">
                         <li v-for="(itm, index) in item.dataChildList" :key="index">
-                            <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                            <img :src="itm.dataFile!=null?itm.dataFile:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
+                            <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                            <img :src="itm.dataValue!=null?itm.dataValue:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
                         </li>
                     </ul>
@@ -273,7 +284,7 @@
                 <div class="borderTL imgDatailsList" v-if="item.dataKey==23">
                     <ul class="clearFloat">
                         <li v-for="(itm, index) in item.dataChildList" :key="index">
-                            <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                            <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                             <img :src="itm.dataFile!=null?itm.dataFile:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
                         </li>
@@ -281,7 +292,12 @@
                 </div>
             </div>
         </template>
-    </div>
+        </div>
+        <el-dialog title="" :visible.sync="bigImgBox" :show-close='false'>
+            <div style="text-align:center">
+                <img :src="nowImg" style="display:inline-block;width:90%;margin: 0 auto;height:auto;" alt="">
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -290,6 +306,8 @@ export default {
     name: 'searchResult',
     data() {
         return {
+            bigImgBox:false,
+            nowImg:'',
             classId10:true,
             classId11:true,
             classId14:true,
@@ -318,18 +336,7 @@ export default {
                 ['','','','','',''],
             ],
             matrixRightData:[
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
-                { name:'体模量 B',sub:'V',bracket:'(GPa)',value:'',allName:'' },
+               
             ],
             searchKeyWord:this.$route.query.id,
             paramLenght:{dataChildList:[]},
@@ -426,7 +433,7 @@ export default {
 </style>
 <style scoped>
     .imgDatailsList{
-        margin-top: 20px;
+        margin-top: 35px;
         height: 409px;
         overflow: hidden;
     }
@@ -624,13 +631,19 @@ export default {
     .clearFloat{
         overflow: hidden;
     }
+    .erpBigBoxFlex{
+        display: flex;
+        justify-content: space-between;
+    }
+    .erpBigBoxFlex>div{
+        flex: 1
+    }
     .erpBigBox{
-        height: 475px;
+        height: 525px;
         border: 1px solid #ddd;
         border-top: none;
     }
     .erpBigBox div{
-        width: 50%;
         height: 100%;
         text-align: center;
         overflow: hidden;
@@ -638,7 +651,7 @@ export default {
     }
     .erpBigBox img{
         position: absolute;
-        top: 50%;
+        top: 54%;
         left: 50%;
         transform: translate(-50%,-50%);
         max-width: 100%;
@@ -647,7 +660,7 @@ export default {
     .erpBigBox .fangda{
         transform:translate(0,0)!important;
         right: 10px!important;
-        top: 10px!important;
+        top: 50px!important;
         left:unset
     }
     .erpTit{

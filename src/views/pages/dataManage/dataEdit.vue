@@ -6,9 +6,16 @@
                 <el-breadcrumb-item class="nowPage">数据编辑</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="buttonRow buttonRowEdit">
-            <el-button> <i class="iconfont iconwenjian"></i> 选择文件格式</el-button>
-            <el-button> <i class="iconfont iconshangchuan"></i> 上传更新数据</el-button>
+        <div class="buttonRow buttonRowEdit" v-if="type=='edit'">
+            <!-- <el-button> <i class="iconfont iconwenjian"></i> 选择文件格式</el-button> -->
+            <el-upload
+            class="upload-demo upDataBox"
+            action="0"
+            :before-upload="beforeUpload"
+            :file-list="fileList">
+            <el-button style="background:none;color:#33B0B5" @click="shangchuanB()" size="small" type="primary"><i class="iconfont iconshangchuan"></i>上传更新数据</el-button>
+            </el-upload>
+            <!-- <el-button> <i class="iconfont iconshangchuan"></i> 上传更新数据</el-button> -->
         </div>
         <div class="tableBox">
             <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
@@ -61,7 +68,7 @@
 				</el-pagination>
 			</div>
         </div>
-        <div class="dateEditSeaveBox">
+        <div class="dateEditSeaveBox" v-if="type=='edit'">
             <el-button @click="close('editDataForm')">保存</el-button>
             <el-button type="primary" @click="submitForm('editDataForm')">提交数据</el-button>
         </div>
@@ -72,6 +79,7 @@ export default {
     name:'dataEdit',
     data(){
         return {
+            fileList: [],
             tableData:{
                 totalCount:0,
                 pageSize:10,
@@ -82,13 +90,27 @@ export default {
             saveArr:{
                 flag:'updata',
                 itemList:[]
-            }
+            },
+            type:this.$route.query.type
         }
     },
     created(){
         this.getListdata()
     },
     methods:{
+        beforeUpload(file){
+            let fd = new FormData();
+            fd.append('file',file);//传文件
+            this.$api.upFile(fd).then(res=>{
+                console.log(res)
+                // this.formInline.itemList[this.nowIndex].dataFile.push(res.data.url)
+                // this.sub[this.nowIndex].dataFile.push(fd)
+            })
+            return false  //屏蔽了action的默认上传
+        },
+        shangchuanB(){
+
+        },
         clearCon(data,val){
             console.log(data)
             console.log(val)
@@ -128,6 +150,7 @@ export default {
             });
         },
         getListdata(){
+            console.log(this.type)
             console.log(this.$route.query.id)
             this.$api.getDataOne(this.$route.query.id,{page:this.tableData.currPage,limit:this.tableData.pageSize,}).then(res=>{ // 数据来源
                 this.tableData = res.data.page
@@ -139,10 +162,14 @@ export default {
             })
         },
         editSpan1C(data){
-            data.status = false
+            if(this.type=='edit'){
+                data.status = false
+            }
         },
         editSpan2C(data){
-            data.dataContent = false
+            if(this.type=='edit'){
+                data.dataContent = false
+            }
         },
         // 
         handleSelectionChange(){},

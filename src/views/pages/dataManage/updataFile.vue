@@ -233,7 +233,8 @@ export default {
             line-height: 40px;
             font-size: 18px!important;
     }
-    .upDataBox{
+    .row-bg{
+        .upDataBox{
         width: 60px;
         border: 1px solid #33B0B5!important;
         color: #33B0B5!important;
@@ -255,6 +256,7 @@ export default {
                 font-size: 16px!important;
             }
         }
+    }
     }
     .marginZero{
         .el-form-item__label-wrap{

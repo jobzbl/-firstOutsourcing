@@ -50,13 +50,13 @@
         </div>
         <div class="buttonRow">
             <el-button @click="removeData('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
-            <el-button> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
+            <el-button @click="onDown()"> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
         </div>
         <div class="tableBox">
             <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="userId" sortable label="用户名" width="100"></el-table-column>
+                <el-table-column prop="username" sortable label="用户名" width="100"></el-table-column>
                 <el-table-column prop="name" sortable label="姓名" width="77"></el-table-column>
                 <el-table-column prop="company" label="单位" width="153"></el-table-column>
                 <el-table-column prop="department" label="部门" width="84"></el-table-column>
@@ -164,7 +164,7 @@ export default {
                 company:'',
                 department:'',
                 status:'',
-                roleIdArray:'',
+                roleIdArray:[],
                 menu:[],
             },
             rules: {
@@ -210,6 +210,18 @@ export default {
         this.getArrObj()
     },
     methods:{
+        onDown(){
+            if(this.nowCheckedArr.length==0){
+                this.$message({
+                    message: '请勾选需要下载的数据',
+                    type: 'warning'
+                });
+                return
+            }
+            this.$api.onDown('').then(res=>{
+                console.log(res)
+            })
+        },
         editUser(id){
             this.editData=true
             this.$api.getUserInfo(id).then(res=>{
@@ -238,16 +250,17 @@ export default {
             })
         },
         getListData(){
-            this.$api.getUserList({
+            var parmas = {
                 page:this.tableData.currPage,
                 limit:this.tableData.pageSize,
                 name:this.formInline.name,
                 company:this.formInline.company,
                 department:this.formInline.department,
                 status:this.formInline.status,
-                roleIdArray:this.formInline.roleIdArray,
-                menu:this.formInline.menu
-                }).then(res=>{
+                roleIdArray:this.formInline.roleIdArray.toString()?'['+this.formInline.roleIdArray.toString()+']':'',
+                menuIdArray:this.formInline.menu.toString()?'['+this.formInline.menu.toString()+']':''
+            }
+            this.$api.getUserList(parmas).then(res=>{
                     this.tableData = res.data.page
                     for(var i=0;i<this.tableData.list.length;i++){
                         if(this.tableData.list[i].status != 0){

@@ -5,28 +5,26 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="关键词">
-                            <el-input v-model="formInline.keyword" style="width:280px" placeholder="请输入关键词"></el-input>
+                            <el-input v-model="formInline.stKey" style="width:280px" placeholder="请输入关键词"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="数据分类">
-                            <el-select clearable v-model ="formInline.dataClassify" style="width:200px" placeholder="请选择数据分类">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
+                            <el-select clearable v-model ="formInline.stClassification" style="width:200px" placeholder="请选择数据分类">
+                                <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="数据类型">
-                            <el-select clearable v-model ="formInline.dataType" placeholder="请选择数据类型">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                            <el-select clearable v-model ="formInline.stType" placeholder="请选择数据类型">
+                                <el-option v-for="item in dataTypeObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4" style="text-align:right">
                         <el-form-item>
-                            <el-button type="primary" @click="onSubmit">查询</el-button>
+                            <el-button type="primary" @click="getListdata()">查询</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -172,9 +170,9 @@ export default {
         keywordShow:false,
 		currentPage: 1,
         formInline:{
-            keyword:'',
-            dataClassify:'',
-            dataType:''
+            stKey:'',
+            stClassification:'',
+            stType:'',
         },
         tableData:{
             totalCount:0,
@@ -258,11 +256,9 @@ export default {
             this.$api.getdataStrutureData({
                 page:this.tableData.currPage,
                 limit:this.tableData.pageSize,
-                // dataNum:this.formInline.dataNum,
-                // dataContail:this.formInline.dataContail,
-                // classification:this.formInline.classification,
-                // dataSource:this.formInline.dataSource,
-                // dataType:this.formInline.dataType,
+                stKey:this.formInline.stKey,
+                stType:this.formInline.stType,
+                classification:this.formInline.stClassification,
                 }).then(res=>{
                 this.tableData = res.data.page
                 console.log(this.tableData)

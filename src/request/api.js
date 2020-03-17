@@ -141,6 +141,25 @@ const article = {
     eidtSave(params){
         return axios.post(`${base.sq}/sys/sysData/update`,params)
     },
-    
+    // 上传文件
+    upFile(params){
+        return axios.post(`${base.sq}/sys/sysData/import`,params)
+    },
+    // 下载
+    onDown(params){
+        return axios.post(`${base.sq}/sys/user/export`,params)
+    },
+    // 忘记密码
+    forgetPassword(params){
+        return axios.get(`${base.sq}/sys/user/forgetPassword?${params}`)
+    },
+    // 忘记密码2
+    forgetPassword2(params){
+        return axios.get(`${base.sq}/sys/user/reset_password?${params}`)
+    },
+    // 忘记密码3
+    forgetPassword3(params){
+        return axios.get(`${base.sq}/sys/user/confirm_password?${params}`)
+    },
 }
 export default article;
