@@ -54,8 +54,7 @@
                 <el-table-column prop="dataNum" label="数据编号" width="190"></el-table-column>
                 <el-table-column prop="dataContail" label="界面相成分" width="190">
                     <template slot-scope="scope">
-                        <span v-for="(item,index) in scope.row.dataElement" :key='index'>{{item}}
-                            <sub>{{scope.row.dataContent[index]>1?scope.row.dataContent[index]:''}}</sub>
+                        <span v-for="(item,index) in scope.row.dataElement" :key='index'>{{item}}<span style="font-size:10px">{{scope.row.dataContent[index]>1?scope.row.dataContent[index]:''}}</span>
                         </span>
                     </template>
                 </el-table-column>
