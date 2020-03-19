@@ -10,11 +10,7 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="界面相成分">
-                            <el-input v-model="formInline.dataContail" style="width:280px" placeholder="例如：0002，0003-0023，0027"></el-input>
-                            <!-- <el-select clearable v-model ="formInline.dataContail" style="width:200px" placeholder="请选择界面相成分">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
-                            </el-select> -->
+                            <el-input v-model="formInline.dataContail" style="width:280px" placeholder="请输入界面相成分"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">

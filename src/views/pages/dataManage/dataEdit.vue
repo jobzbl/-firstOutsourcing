@@ -36,7 +36,14 @@
                 </el-table-column>
                 <el-table-column label="数据值" width="344">
                     <template slot-scope="scope">
-                        <div style="padding:0">
+                        <div style="padding:0" v-if="scope.row.typeName=='图片'">
+                            <img :src="scope.row.dataValue" alt="" style="max-height:100px;max-width:100%;">
+                            <!-- <span :style="scope.row.status?'display:block':'display:none'" class="editSpan" @dblclick="editSpan1C(scope.row)">{{scope.row.dataValue}}</span> -->
+                            <!-- <input :style="scope.row.status?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataValue"> -->
+                            <i @click="clearCon(scope.row,'status')" class="iconfont iconguanbi" :style="scope.row.status?'display:none':'display:block'"></i>
+                            <i @click="saveData(scope.row)" class="iconfont icondui1" :style="scope.row.status?'display:none':'display:block'"></i>
+                        </div>
+                        <div style="padding:0" v-if="scope.row.typeName!='图片'">
                             <span :style="scope.row.status?'display:block':'display:none'" class="editSpan" @dblclick="editSpan1C(scope.row)">{{scope.row.dataValue}}</span>
                             <input :style="scope.row.status?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataValue">
                             <i @click="clearCon(scope.row,'status')" class="iconfont iconguanbi" :style="scope.row.status?'display:none':'display:block'"></i>

@@ -18,9 +18,10 @@
             </div>
           </el-form-item>
           <div class="forgetPasBox">
-            <el-radio-group v-model="autoLogin">
+              <el-checkbox v-model="autoLogin">下次自动登录</el-checkbox>
+            <!-- <el-radio-group v-model="autoLogin">
               <el-radio label="下次自动登录"></el-radio>
-            </el-radio-group>
+            </el-radio-group> -->
             <span @click="forgetPW">忘记密码？</span>
           </div>
         <div class="forgetPasBox">
@@ -314,6 +315,15 @@ export default {
       }
       this.ruleForm.uuid = (S4() + S4() + "-" + S4() + "-" + S4());
     },
+    setCookie(userInif,exdays){
+      var exdate = new Date(); //获取时间
+      exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+      //字符串拼接cookie
+      window.document.cookie = "userInif"+userInif
+    },
+    clearCookie: function() {
+      this.setCookie("", -1); //修改2值都为空，天数为负1天就好了
+    },
     submitForm(formName) {
       this.isLogin = 1
       // 点击登录 跳转到登录界面
@@ -324,6 +334,11 @@ export default {
         this.$api.login(that.ruleForm).then( res => {
           that.getUuid()
           localStorage.setItem("token", res.data.token)
+          if(this.autoLogin){
+            this.setCookie(that.ruleForm, 7);
+          }else{
+            this.clearCookie();
+          }
           if(res.data.msg==='success'){
             this.$api.getNowUserInfo().then(res2=>{
               localStorage.setItem("user", JSON.stringify(res2.data.user))
