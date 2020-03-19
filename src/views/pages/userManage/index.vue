@@ -278,15 +278,8 @@ export default {
             console.log(data)
             let pranam = {}
             pranam.userId = data.userId,
-            pranam.username = data.username,
-            pranam.name = data.name,
-            pranam.company = data.company,
-            pranam.department = data.department,
-            pranam.email = data.email,
-            pranam.roleIdList = data.role,
-            pranam.menuIdList = data.menu,
             pranam.status = value?1:0
-            this.$api.editUser(pranam).then(res=>{
+            this.$api.editStatus(pranam).then(res=>{
                 if(res.data.msg==='success'){
                     this.$message({
                         message: '修改成功',

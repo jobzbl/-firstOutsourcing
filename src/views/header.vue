@@ -42,6 +42,7 @@ export default {
       localStorage.removeItem("user")
     },
     init() {
+      console.log(this.$router)
       this.name = JSON.parse(localStorage.getItem("user")).name
      }
   }

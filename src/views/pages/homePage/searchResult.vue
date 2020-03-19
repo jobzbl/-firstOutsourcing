@@ -11,11 +11,11 @@
             <div class="fl">
                 <span style="font-weight:bold;">具体结果页：</span>
                 <span>界面相材料：</span>
-                <span style="color:#33B0B5">BxNySiz,</span>
+                <span style="color:#33B0B5">{{dataContail}},</span>
             </div>
             <div class="fl" style="margin-left:5px">
-                <span>数据来源</span>
-                <span style="color:#33B0B5">DOI:123343.3435/adbc</span>
+                <span>数据来源：</span>
+                <span style="color:#33B0B5">{{dataSourceObj[source]}}</span>
             </div>
         </div>
     </div>
@@ -350,6 +350,9 @@ export default {
             paramPositionNArr:[],
             paramPositionBArrArr:[],
             paramPositionNArrArr:[],
+            dataContail:this.$route.query.id,
+            source:this.$route.query.source,
+            dataSourceObj:{}
         }
     },
     created() {
@@ -357,6 +360,11 @@ export default {
     },
     methods: {
         init(){
+            this.$api.getDataSource().then(res=>{ // 数据来源
+                res.data.data.map(x=>{
+                    Object.assign(this.dataSourceObj,{[x.structureId]: x.stKey})
+                })
+            })
             this.$api.searchResult({dataContail:this.searchKeyWord}).then(res=>{
                 var resData = res.data.data
                 this.pageData = resData

@@ -161,5 +161,10 @@ const article = {
     forgetPassword3(params){
         return axios.get(`${base.sq}/sys/user/confirm_password?${params}`)
     },
+    editStatus(params){
+        return axios.post(`${base.sq}/sys/user/updateStatus`,params)
+    },
+    // 修改用户状态
+    
 }
 export default article;

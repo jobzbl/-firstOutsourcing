@@ -94,7 +94,7 @@
         </div>
        </el-form>
        
-      <el-form v-if="!init" :model="setPassword" :rules="rulesetPassword" ref="setPassword" label-width="100px" class="demo-ruleForm">
+      <el-form v-if="!init" :model="forgetPWArr" :rules="rulesetPassword" ref="setPassword" label-width="100px" class="demo-ruleForm">
           <el-form-item label="新密码" prop="password">
             <el-input v-model="forgetPWArr.password" placeholder="请输入用户名"></el-input>
           </el-form-item>
@@ -323,6 +323,20 @@ export default {
     },
     clearCookie: function() {
       this.setCookie("", -1); //修改2值都为空，天数为负1天就好了
+    },
+    getCookie: function() {
+      if (document.cookie.length > 0) {
+        var arr = document.cookie.split("; "); //这里显示的格式需要切割一下自己可输出看下
+        for (var i = 0; i < arr.length; i++) {
+          var arr2 = arr[i].split("="); //再次切割
+          //判断查找相对应的值
+          if (arr2[0] == "userName") {
+            this.userInfo.user = arr2[1]; //保存到保存数据的地方
+          } else if (arr2[0] == "userPwd") {
+            this.userInfo.pass = arr2[1];
+          }
+        }
+      }
     },
     submitForm(formName) {
       this.isLogin = 1

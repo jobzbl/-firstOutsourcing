@@ -55,8 +55,12 @@
 				<div class="searchConTit">搜索到相关数据共<span style="color:#ef992a">{{searchData.totalCount}}</span>条</div>
 				<div class="searchConBox">
 					<div class="searchConBoxOver">
-						<div v-for="(item, index) in searchData.list" :key="index">
-							<router-link :to="{path:'/result',query:{id:item.dataContail}}">{{item.dataContail}}</router-link>
+						<div v-for="(data, index) in searchData.list" :key="index">
+							<router-link :to="{path:'/result',query:{'id':data.dataContail,'source':data.dataSource}}">
+							<!-- {{item.dataContail}} -->
+							<span v-for="(item,index) in data.dataElement" :key='index'>{{item}}<span style="font-size:10px;">{{data.dataContent[index]>1?data.dataContent[index]:''}}</span>
+							</span>
+							</router-link>
 						</div>
 					</div>
 				</div>
@@ -117,9 +121,6 @@ export default {
 			threeContent:''
 		},
 		currentPage: 1,
-		searchValue: ['asdasd','asd','dsret','sdfert','sdfg','asdasd','asd','dsret','sdfert',
-		'sdfg','asdasd','asd','dsret','sdfert','sdfg','asdasd','asd','dsret','sdfert','sdfg',
-		'asdasd','asd','dsret','sdfert','sdfg','asdasd','asd','dsret','sdfert','sdfg'],
 		// 一级菜单
 		stairListArr:[],
 		// 二级菜单
@@ -174,6 +175,20 @@ export default {
 		this.$api.getSysDataList({page:this.searchData.currPage,limit:this.searchData.pageSize,dataContail:value}).then( res => {
 			console.log(res.data.page)
 			this.searchData = res.data.page
+            for(var i=0; i<this.searchData.list.length; i++){
+				if( this.searchData.list[i].dataElement ) {
+                this.searchData.list[i].dataElement = this.searchData.list[i].dataElement.split(',')
+				}else{
+					this.searchData.list[i].dataElement = []
+				}
+
+				if(this.searchData.list[i].dataContent) {
+					this.searchData.list[i].dataContent = this.searchData.list[i].dataContent.split(':')
+				}else{
+					this.searchData.list[i].dataContent = []
+				}
+			}
+			
         })
 	},
 	search() { // 单机搜索
@@ -384,8 +399,7 @@ export default {
 		margin-top: 21px;
 		min-height: 508px;
 		overflow: hidden;
-		border-top: 1px solid rgba(221,221,221,1);
-		border-left: 1px solid rgba(221,221,221,1);
+		border: 1px solid rgba(221,221,221,1);
 	}
 	.searchConTit{
 		font-size: 12px;
