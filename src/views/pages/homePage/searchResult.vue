@@ -33,7 +33,7 @@
                     <!-- <v-html-panel name="iframe" style="width:100%;height:100%;" url.asyc="file:///C:/Users/dell/Desktop/html.html"></v-html-panel> -->
                     <!-- <a href="https://chemapps.stolaf.edu/jmol/jmol.php?model=acetone&width=50%&height=50%&script=background+white%3Brotate+x+180&caption=acetone">asd</a> -->
                     <!-- <script type="text/javascript" src="https://chemapps.stolaf.edu/jmol/jmol.php?model=acetone&link=3D model"></script> -->
-                    <!-- <iframe style="height:100%;width:100%" src="file:///C:/Users/dell/Desktop/html.html"></iframe> -->
+                    <iframe style="height:100%;width:100%" src="https://chemapps.stolaf.edu/jmol/jmol.php?model=acetone&amp;width=100%&amp;height=100%&amp;script=background+white%3Brotate+x+180&amp;caption=acetone&quot;,&quot;&quot;,&quot;width=600,height=600,scrollbars=no&quot;"></iframe>
                     <img class="xiazai" src="../../../assets/images/downicon.png" alt="">
                 </div>
                 <div class="fl crystalParameter">
@@ -71,24 +71,24 @@
             </div>
         </template>
 
-        <template v-if="data.classId==0">
+        <template v-if="data.classId==29">
             <div class="subfield" style="margin-top:42px">
                 <i></i>
                 界面相材料电子结构：
             </div>
             <div class="erpTit">
-                <div class="fl parameterTit" style="border-right:1px solid #fff;">能带结构</div>
-                <div class="fl parameterTit">电子能态密度</div>
+                <div v-for="(item,index) in data.keyParentList" :key="index" class="fl parameterTit" :style="index==0?'border-right:1px solid #fff':''">{{item.dataKeyName}}</div>
+                <!-- <div class="fl parameterTit">电子能态密度</div> -->
             </div>
             <div class="erpBigBox">
-                <div class="fl" style="border-right:1px solid #ddd;width:50%">
+                <div class="fl" v-for="(item,index) in data.keyParentList" :key="index" :style="index==0?'border-right:1px solid #ddd;width:50%':'width:50%'">
+                    <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                    <img style="width:80%;height:90%" :src="item.dataValue?item.dataValue:'../../../assets/images/take.png'" alt="">
+                </div>
+                <!-- <div class="fl" style="width:50%">
                     <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
                     <img src="../../../assets/images/take.png" alt="">
-                </div>
-                <div class="fl" style="width:50%">
-                    <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                    <img src="../../../assets/images/take.png" alt="">
-                </div>
+                </div> -->
             </div>
         </template>
 
@@ -193,10 +193,10 @@
                 <div v-for="(item, index) in data.keyParentList" :key="index">
                     <div class="borderTL imgDatailsList" v-if="item.dataKey==6">
                         <ul class="clearFloat">
-                            <li v-for="(itm, index) in item.dataChildList" :key="index">
-                                <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                                <img :src="itm.dataValue!=null?itm.dataValue:'../../../assets/images/nomore.png'" style="max-width:80%;max-height:250px;margin:0 auto" alt="">
-                                <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
+                            <li v-for="(itm, index) in item.dataValue" :key="index">
+                                <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                                <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;max-height:250px;margin:0 auto" alt="">
+                                <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.dateTips}}</div>
                             </li>
                         </ul>
                     </div>
@@ -233,11 +233,11 @@
                 </div>
             </div>
             <div v-for="(item, index) in data.keyParentList" :key="index">
-                <div class="borderTL imgDatailsList" v-if="item.dataChildList.length>0&&item.dataKey==61">
+                <div class="borderTL imgDatailsList" v-if="item.dataValue.length>0&&item.dataKey==61">
                     <ul class="clearFloat">
-                        <li v-for="(itm, index) in item.dataChildList" :key="index">
-                            <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                            <img :src="itm.dataValue!=null?itm.dataValue:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
+                        <li v-for="(itm, index) in item.dataValue" :key="index">
+                            <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                            <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
                         </li>
                     </ul>
@@ -260,11 +260,11 @@
                 </div>
             </div>
             <div v-for="(item, index) in data.keyParentList" :key="index">
-                <div class="borderTL imgDatailsList" v-if="item.dataChildList.length>0&&item.dataKey==23">
+                <div class="borderTL imgDatailsList" v-if="item.dataValue.length>0&&item.dataKey==23">
                     <ul class="clearFloat">
-                        <li v-for="(itm, index) in item.dataChildList" :key="index">
-                            <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                            <img :src="itm.dataValue!=null?itm.dataValue:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
+                        <li v-for="(itm, index) in item.dataValue" :key="index">
+                            <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                            <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
                         </li>
                     </ul>
@@ -286,11 +286,11 @@
                 </div>
             </div>
             <div v-for="(item, index) in data.keyParentList" :key="index">
-                <div class="borderTL imgDatailsList" v-if="item.dataKey==23">
+                <div class="borderTL imgDatailsList" v-if="item.dataValue.length>0&&item.dataKey==63">
                     <ul class="clearFloat">
-                        <li v-for="(itm, index) in item.dataChildList" :key="index">
-                            <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                            <img :src="itm.dataFile!=null?itm.dataFile:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
+                        <li v-for="(itm, index) in item.dataValue" :key="index">
+                            <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                            <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="width:80%;margin:0 auto" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
                         </li>
                     </ul>
@@ -298,7 +298,7 @@
             </div>
         </template>
         </div>
-        <el-dialog title="" :visible.sync="bigImgBox" :show-close='false'>
+        <el-dialog title="" :visible.sync="bigImgBox" :destroy-on-close='true' :show-close='false'>
             <div style="text-align:center">
                 <img :src="nowImg" style="display:inline-block;width:90%;margin: 0 auto;height:auto;" alt="">
             </div>
@@ -332,14 +332,6 @@ export default {
                 {x:'1',y:'2',z:'3'},
                 {x:'1',y:'2',z:'3'},
             ],
-            matrixData: [
-                ['','','','','',''],
-                ['','','','','',''],
-                ['','','','','',''],
-                ['','','','','',''],
-                ['','','','','',''],
-                ['','','','','',''],
-            ],
             matrixRightData:[
                
             ],
@@ -367,23 +359,31 @@ export default {
             })
             this.$api.searchResult({dataContail:this.searchKeyWord}).then(res=>{
                 var resData = res.data.data
-                this.pageData = resData
                 this.processingData(resData)
                 for(var i=0;i<resData.length;i++){
                     if(resData[i].classId==7){
                         this.paramLenght = resData[i].keyParentList.filter(x=>x.dataKey==27)[0]
                         this.paramAngle = resData[i].keyParentList.filter(x=>x.dataKey==28)[0]
-                        // this.paramPositionB = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='B')
-                        // this.paramPositionB.x = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='B').filter(x=>x.dataTips=='x')[0].dataValue
-                        // this.paramPositionB.y = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='B').filter(x=>x.dataTips=='y')[0].dataValue
-                        // this.paramPositionB.z = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='B').filter(x=>x.dataTips=='z')[0].dataValue
-                        
-                        // this.paramPositionN.x = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='N').filter(x=>x.dataTips=='x')[0].dataValue
-                        // this.paramPositionN.y = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='N').filter(x=>x.dataTips=='y')[0].dataValue
-                        // this.paramPositionN.z = resData[i].keyParentList.filter(x=>x.dataKey==29)[0].dataChildList.filter(x=>x.dataDescription=='N').filter(x=>x.dataTips=='z')[0].dataValue
-                        
+                    }
+                    for(let m=0;m<resData[i].keyParentList.length;m++){
+                        if(resData[i].keyParentList[m].dataKey == '61'
+                        ||resData[i].keyParentList[m].dataKey == '31'
+                        ||resData[i].keyParentList[m].dataKey == '32'
+                        ||resData[i].keyParentList[m].dataKey == '6'
+                        ||resData[i].keyParentList[m].dataKey == '23'
+                        ||resData[i].keyParentList[m].dataKey == '56'
+                        ||resData[i].keyParentList[m].dataKey == '57'
+                        ||resData[i].keyParentList[m].dataKey == '58'
+                        ||resData[i].keyParentList[m].dataKey == '60'
+                        ||resData[i].keyParentList[m].dataKey == '59'
+                        ||resData[i].keyParentList[m].dataKey == '63'){
+                            console.log(resData[i].className)
+                            resData[i].keyParentList[m].dataValue = resData[i].keyParentList[m].dataValue.split(',')
+                        }
                     }
                 }
+                this.pageData = resData
+                console.log(resData)
             })
         },
         processingData(data){
@@ -664,7 +664,7 @@ export default {
     }
     .erpBigBox img{
         position: absolute;
-        top: 54%;
+        top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
         max-width: 100%;

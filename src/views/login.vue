@@ -74,10 +74,15 @@
               <span style="cursor: pointer;" @click="goZhuce()">去注册<i class="iconfont icongengduo"></i></span>
             </el-form-item>
           </div>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="forgetPWArr.email" placeholder="请输入姓名"></el-input>
-          </el-form-item>
-          <el-form-item v-if="verifyCodeIsShow&&forgetPWArr.email" label="验证码" prop="verifyCode">
+          <div class="goLogin">
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="forgetPWArr.email" placeholder="请输入姓名"></el-input>
+              <span :style="verifyCodeIsShow?'color:#999;pointer-events: none':''" style="cursor: pointer;right:-120px" @click="forgetSubmitForm()">
+                {{verifyCodeIsShow?totalTime+'s后重新发送':'发送验证邮件'}}
+              </span>
+            </el-form-item>
+          </div>
+          <el-form-item label="验证码" prop="verifyCode">
             <el-input v-model="forgetPWArr.verifyCode" placeholder="请输入验证码"></el-input>
           </el-form-item>
         </div>
@@ -85,16 +90,16 @@
           邮件已发送至你的邮箱<span style="color:#333">{{forgetPWArr.email}}</span>快去查收邮件吧
         </div> -->
         <div class="forgetPasBox">
-          <el-button v-if="!mailDelivery&&!verifyCodeIsShow" style="width:100%;height:46px;font-size:18px" type="primary" @click="forgetSubmitForm('forgetPW')">发送验证邮件</el-button>
-          <el-button v-if="mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="sent('forgetPW')">邮件已发送 <i style="color:#fff" class="iconfont icondui"></i> </el-button>
-          <el-button v-if="!mailDelivery&&verifyCodeIsShow" style="width:100%;height:46px;font-size:18px" type="primary" @click="nextStep()">下一步</el-button>
+          <!-- <el-button v-if="!mailDelivery&&!verifyCodeIsShow" style="width:100%;height:46px;font-size:18px" type="primary" @click="forgetSubmitForm('')">发送验证邮件</el-button> -->
+          <!-- <el-button v-if="mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="sent('forgetPW')">邮件已发送 <i style="color:#fff" class="iconfont icondui"></i> </el-button> -->
+          <el-button v-if="!mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="nextStep('forgetPW')">下一步</el-button>
         </div>
         <div class="forgetPasBox">
           <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="registerforget('forgetPW')">去登录</el-button>
         </div>
        </el-form>
        
-      <el-form v-if="!init" :model="forgetPWArr" :rules="rulesetPassword" ref="setPassword" label-width="100px" class="demo-ruleForm">
+      <el-form v-if="!init" :model="forgetPWArr" :rules="rulesetPassword" ref="setPassword" label-width="130px" class="demo-ruleForm">
           <el-form-item label="新密码" prop="password">
             <el-input v-model="forgetPWArr.password" placeholder="请输入用户名"></el-input>
           </el-form-item>
@@ -116,27 +121,9 @@ import qs from 'qs'
 export default {
     name: 'login',
   data() {
-    var verifyCodeFun = (rule, value, callback) => {
-      console.log(rule)
-      console.log(value)
-      console.log(callback)
-      // if (!value) {
-      //   return callback(new Error('年龄不能为空'));
-      // }
-      // setTimeout(() => {
-      //   if (!Number.isInteger(value)) {
-      //     callback(new Error('请输入数字值'));
-      //   } else {
-      //     if (value < 18) {
-      //       callback(new Error('必须年满18岁'));
-      //     } else {
-      //       callback();
-      //     }
-      //   }
-      // }, 1000);
-    };
     return {
       verifyCodeIsShow:false,
+      totalTime:120,
       setPassword:{
         name:''
       },
@@ -182,7 +169,7 @@ export default {
             { required: true, message: '输入不能为空', trigger: 'blur' },
         ],
         verifyCode: [
-            { validate:verifyCodeFun, trigger: 'blur' },
+            { required:true, message: '输入不能为空', trigger: 'blur' },
         ],
       },
       rules: {
@@ -240,54 +227,95 @@ export default {
       this.isLogin = 2
       this.loginText = '账号注册'
     },
-    setPasswordOk(){
-      var parmas = {
+    setPasswordOk(formName){
+
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          var parmas = {
           username:this.forgetPWArr.username,
           password:this.forgetPWArr.password,
           newPassword:this.forgetPWArr.newPassword,
         }
-      this.$api.forgetPassword3(qs.stringify(parmas)).then(()=>{
-        this.verifyCodeIsShow = true
-        this.mailDelivery = false
-        this.isforgetPW = false
-        this.isLogin = 1
-        this.loginText = '账号登录'
-        this.init= true
-        this.getUuid()
-      })
-    },
-    forgetSubmitForm(formName){
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          var parmas = {
-            username:this.forgetPWArr.username,
-            email:this.forgetPWArr.email
+        this.$api.forgetPassword3(qs.stringify(parmas)).then(res=>{
+          if(res.data.msg == 'success'){
+            this.$message({
+              message: '密码修改成功',
+              type: 'success'
+            });
+            setTimeout(() => {
+              this.verifyCodeIsShow = true
+              this.mailDelivery = false
+              this.isforgetPW = false
+              this.isLogin = 1
+              this.loginText = '账号登录'
+              this.init= true
+              this.getUuid()
+            }, 2000);
           }
-          this.$api.forgetPassword(qs.stringify(parmas)).then(res=>{
-            console.log(res)
-            this.verifyCodeIsShow = true
-          })
+          
+        })
         } else {
           console.log('error submit!!');
           return false;
         }
       });
     },
-    nextStep(){
-        var parmas = {
-          username:this.forgetPWArr.username,
-          verifyCode:this.forgetPWArr.verifyCode
+    forgetSubmitForm(){ // 发送邮箱验证
+      if(this.forgetPWArr.username==''){
+        this.$message({
+            message: '请输入用户名',
+            type: 'warning'
+        });
+        return
+      }else if(this.forgetPWArr.email==''){
+        this.$message({
+            message: '请输入邮箱',
+            type: 'warning'
+        });
+        return
+      }
+      var parmas = {
+        username:this.forgetPWArr.username,
+        email:this.forgetPWArr.email
+      }
+      this.verifyCodeIsShow = true
+      let time = window.setInterval(()=>{
+        this.totalTime--
+        if(this.totalTime == 0){
+          window.clearInterval(time)
+          this.totalTime = 120
+          this.verifyCodeIsShow = false
         }
-        this.$api.forgetPassword2(qs.stringify(parmas)).then(res=>{
-          console.log(res)
-          if(res.data.msg == 'success'){
-            this.loginText = '设置新密码'
-            this.isLogin = 3
-            this.init = false
-            this.isforgetPW = false
+      },1000)
+        console.log('123')
+        this.$api.forgetPassword(qs.stringify(parmas)).then(()=>{})
+    },
+    nextStep(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          var parmas = {
+            username:this.forgetPWArr.username,
+            verifyCode:this.forgetPWArr.verifyCode
           }
-          // this.verifyCodeIsShow = true
+          this.$api.forgetPassword2(qs.stringify(parmas)).then(res=>{
+            if(res.data.msg == 'success'){
+              this.loginText = '设置新密码'
+              this.isLogin = 3
+              this.init = false
+              this.isforgetPW = false
+            }else{
+              this.$message({
+                message: res.data.msg,
+                type: 'warning'
+              });
+            }
         })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      })
+        
     },
     sent(){
       
@@ -348,6 +376,8 @@ export default {
         this.$api.login(that.ruleForm).then( res => {
           that.getUuid()
           localStorage.setItem("token", res.data.token)
+          localStorage.setItem("roleIdList", JSON.stringify(res.data.roleIdList))
+          localStorage.setItem("menuIdList", JSON.stringify(res.data.menuIdList))
           if(this.autoLogin){
             this.setCookie(that.ruleForm, 7);
           }else{

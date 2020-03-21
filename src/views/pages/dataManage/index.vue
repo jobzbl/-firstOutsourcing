@@ -1,21 +1,21 @@
 <template>
     <div class="wrap">
         <div class="haederBox">
-            <el-form :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="90px">
+            <el-form v-if="quanxian.indexOf(1)!=-1" :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="120px">
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="数据编号">
-                            <el-input v-model="formInline.dataNum" style="width:280px" placeholder="例如：0002，0003-0023，0027"></el-input>
+                            <el-input v-model="formInline.dataNum" style="width:250px" placeholder="例如：0002，0003-0023，0027"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="界面相成分">
-                            <el-input v-model="formInline.dataContail" style="width:280px" placeholder="请输入界面相成分"></el-input>
+                            <el-input v-model="formInline.dataContail" style="width:250px" placeholder="请输入界面相成分"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="数据分类">
-                            <el-select clearable v-model ="formInline.classification" style="width:300px" placeholder="请选择数据分类">
+                            <el-select clearable v-model ="formInline.classification" style="width:268px" placeholder="请选择数据分类">
                                 <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>  
@@ -43,8 +43,8 @@
             </el-form>
         </div>
         <div class="buttonRow">
-            <el-button @click="updata()"> <i class="iconfont iconshangchuan"></i> 上传文件</el-button>
-            <el-button @click="delect('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
+            <el-button v-if="quanxian.indexOf(2)!=-1" @click="updata()"> <i class="iconfont iconshangchuan"></i> 上传文件</el-button>
+            <el-button v-if="quanxian.indexOf(4)!=-1" @click="delect('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
             <el-button> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
         </div>
         <div class="tableBox">
@@ -68,13 +68,13 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <div class="caozuoBox" style="text-align:center">
-                            <el-button type="text" style="color:#33B0B5;">
+                            <el-button v-if="quanxian.indexOf(3)!=-1" type="text" style="color:#33B0B5;">
                                 <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{'id':scope.row.dataId,'type':'edit'}}">编辑</router-link>
                             </el-button>
-                            <el-button @click="delect(scope.row.dataId)" type="text" style="color:#EF992A;">
+                            <el-button  v-if="quanxian.indexOf(4)!=-1" @click="delect(scope.row.dataId)" type="text" style="color:#EF992A;">
                                 删除
                             </el-button>
-                            <el-button type="text" style="color:#248AD1;">
+                            <el-button v-if="quanxian.indexOf(1)!=-1" type="text" style="color:#248AD1;">
                                 <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{'id':scope.row.dataId,'type':'check'}}">查看</router-link>
                             </el-button>
                         </div>
@@ -103,6 +103,7 @@ import removeComponent from '../component/remove.vue' // 将子组件引入父�
 export default {
     data() {
         return {
+        quanxian:localStorage.getItem('menuIdList'),
         isBoxShow:false,
         isBoxData:'',
 		currentPage: 1,
@@ -126,7 +127,7 @@ export default {
         dataClassifyArr:{},
         dataTypeArr:{},
         dataSourceArr:{},
-        nowCheckedArr:[] // 当前选中
+        nowCheckedArr:[], // 当前选中
         }
     },
     components: {
@@ -143,14 +144,12 @@ export default {
                 this.dataTypeObj.map(x=>{
                     Object.assign(this.dataTypeArr,{[x.id]: x.paramValue})
                 })
-                console.log(this.dataTypeArr)
             })
             this.$api.dataClassify().then(res=>{ // 数据分类
                 this.dataClassifyObj = res.data.data
                 this.dataClassifyObj.map(x=>{
                     Object.assign(this.dataClassifyArr,{[x.id]: x.paramValue})
                 })
-                console.log(this.dataClassifyArr)
 
             })
             this.$api.getDataSource().then(res=>{ // 数据来源
@@ -159,7 +158,6 @@ export default {
                     Object.assign(this.dataSourceArr,{[x.structureId]: x.stKey})
                 })
                 
-                console.log(this.dataSourceArr)
             })
             
         },
@@ -187,7 +185,6 @@ export default {
                         this.tableData.list[i].dataContent = []
                     }
                 }
-                console.log(res)
             })
         },
         updata(){
@@ -195,7 +192,6 @@ export default {
         },
         changeShow(val){
             this.isBoxShow = val;
-            console.log(val)
         },
         delect(val){
             let parmas = [val]
@@ -238,12 +234,9 @@ export default {
         handleSelectionChange(val){
             this.nowCheckedArr = val
         },
-        handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-        },
         handleCurrentChange(val) {
             this.getListdata()
-        console.log(`当前页: ${val}`);
+            console.log(`当前页: ${val}`);
         },
     }
 }

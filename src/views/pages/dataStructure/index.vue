@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <div class="haederBox">
-            <el-form :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="90px">
+            <el-form v-if="quanxian.indexOf(1)!=-1" :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="90px">
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="关键词">
@@ -10,14 +10,14 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="数据分类">
-                            <el-select clearable v-model ="formInline.stClassification" style="width:200px" placeholder="请选择数据分类">
+                            <el-select clearable v-model ="formInline.stClassification" style="width:199px" placeholder="请选择数据分类">
                                 <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="数据类型">
-                            <el-select clearable v-model ="formInline.stType" placeholder="请选择数据类型">
+                            <el-select clearable v-model ="formInline.stType"  style="width:199px" placeholder="请选择数据类型">
                                 <el-option v-for="item in dataTypeObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
@@ -30,7 +30,7 @@
                 </el-row>
             </el-form>
         </div>
-        <div class="buttonRow buttonRow2">
+        <div class="buttonRow buttonRow2" v-if="quanxian.indexOf(3)!=-1">
             <el-button @click="addkeyWordFun"> <i class="iconfont iconshanchu"></i> 新增关键词</el-button>
             <el-button @click="mergeKeyWord"> <i class="iconfont iconxiazai"></i> 合并关键词</el-button>
         </div>
@@ -121,7 +121,7 @@
                 <el-dialog title="关键词信息" :visible.sync="addKeyWord" width="400px" :show-close='false'>
                     <el-form ref="addKeyWord" :rules="addKeyWordRules" :model="addKeyWordArr" label-width="80px">
                         <el-form-item label="关键词" prop="stKey">
-                            <el-input v-model="addKeyWordArr.stKey"></el-input>
+                            <el-input v-model.trim="addKeyWordArr.stKey"></el-input>
                         </el-form-item>
                         <el-form-item label="数据分类">
                             <el-select clearable v-model ="addKeyWordArr.stClassification" style="width:240px" placeholder="请选择数据分类">
@@ -188,6 +188,7 @@ export default {
         dataTypeArr:{},
         dataSourceArr:{},
         checkArr:[],
+        quanxian:localStorage.getItem('menuIdList')
         }
     },
     created(){
@@ -204,8 +205,6 @@ export default {
             if(this.checkArr.length>=2){
                 this.isdisabled=true
             }
-            
-            console.log(this.checkArr)
         },
         mergeKey(structureId1,structureId2){
             this.$api.mergeKey({
@@ -232,14 +231,12 @@ export default {
                 this.dataTypeObj.map(x=>{
                     Object.assign(this.dataTypeArr,{[x.id]: x.paramValue})
                 })
-                console.log(this.dataTypeArr)
             })
             this.$api.dataClassify().then(res=>{ // 数据分类
                 this.dataClassifyObj = res.data.data
                 this.dataClassifyObj.map(x=>{
                     Object.assign(this.dataClassifyArr,{[x.id]: x.paramValue})
                 })
-                console.log(this.dataClassifyArr)
 
             })
             this.$api.getDataSource().then(res=>{ // 数据来源
@@ -247,8 +244,6 @@ export default {
                 this.dataSourceObj.map(x=>{
                     Object.assign(this.dataSourceArr,{[x.structureId]: x.stKey})
                 })
-                
-                console.log(this.dataSourceArr)
             })
             
         },
@@ -261,7 +256,6 @@ export default {
                 classification:this.formInline.stClassification,
                 }).then(res=>{
                 this.tableData = res.data.page
-                console.log(this.tableData)
             })
         },
         addkeyWordFun(){
@@ -288,23 +282,10 @@ export default {
         },
         handleSelectionChange(){},
         onSubmit(){},
-        handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-        },
         handleCurrentChange(val) {
         this.getListdata()
         console.log(`当前页: ${val}`);
         },
-        // submitForm(formName){
-        //     this.$refs[formName].validate((valid) => {
-        //         if (valid) {
-        //             this.addKeyWord = false
-        //         } else {
-        //             console.log('error submit!!');
-        //             return false;
-        //         }
-        //     });
-        // },
         saveKey(formName){
             this.$refs[formName].validate((valid) => {
                 if (valid) {
@@ -318,7 +299,6 @@ export default {
                         }
                     })
                 } else {
-                    console.log('error submit!!');
                     return false;
                 }
             });

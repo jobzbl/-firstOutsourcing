@@ -9,28 +9,28 @@
         <div class="buttonRow buttonRow2" style="margin-top:24px;">
             <el-button @click="updata()"> <i class="iconfont iconshangchuan"></i> 批量上传</el-button>
         </div>
-        <el-form style="margin-top:20px;" :rules="rules" :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="auto">
+        <el-form style="margin-top:20px;" ref="updataTab" :rules="rules" :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="auto">
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="界面相成分-元素" prop="dataElement">
-                        <el-input v-model="formInline.dataElement" style="width:213px" placeholder="请输入界面相成分-元素"></el-input>
+                        <el-input v-model.trim="formInline.dataElement" style="width:213px" placeholder="请输入界面相成分-元素"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="界面相成分-含量" prop="dataContent">
-                        <el-input v-model="formInline.dataContent" style="width:213px" placeholder="请输入界面相成分-含量"></el-input>
+                        <el-input v-model.trim="formInline.dataContent" style="width:213px" placeholder="请输入界面相成分-含量"></el-input>
                     </el-form-item>  
                 </el-col>
                 <el-col :span="5">
-                    <el-form-item label="数据来源" class="marginZero" prop="dataNumber">
-                        <el-select clearable v-model ="formInline.dataSource" style="width:160px" placeholder="请选择数据来源">
+                    <el-form-item label="数据来源" class="marginZero" prop="dataSource">
+                        <el-select clearable v-model="formInline.dataSource" style="width:160px" placeholder="请选择数据来源">
                             <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
                     <el-form-item>
-                        <el-input v-model="formInline.dataDescription " style="width:250px" placeholder="请填写数据描述"></el-input>
+                        <el-input v-model.trim="formInline.dataDescription " style="width:250px" placeholder="请填写数据描述"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -61,28 +61,27 @@
                     </el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg" justify="space-between">
-                    <el-col :span="12">
+                    <el-col :span="12" v-if="sub[index].dataType!=3">
                         <el-form-item label="数据值" class="marginZero">
                             <el-input v-model="item.dataValue" style="width:495px" placeholder="请输入数据值"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="12" style="text-align:right;display:flex;">
+                    <el-col :span="12" style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px" v-if="sub[index].dataType==3">
                         <span class="labelSpan">文件上传/图片上传</span>
-                            <div class="inputBoxDiv" style="">
-                                <span v-for="(item,i) in item.dataFile" :key="i">{{item}} <i @click="removeFile(index,i)" class="iconfont iconcuowu"></i> </span>
-                            </div>
-                            <!-- <el-input v-model="item.dataFile " style="width:382px"></el-input> -->
-                            <el-upload
-                            class="upload-demo upDataBox"
-                            action="0"
-                            :before-upload="beforeUpload"
-                            :on-success="uploadSuccess"
-                            :on-error="uploadError"
-                            :on-change="handleChange"
-                            :file-list="fileList">
-                            <el-button @click="shangchuanB(index)" size="small" type="primary">上传</el-button>
-                            </el-upload>
-                            <!-- <el-button class="upDataBox">上传</el-button> -->
+                        <div class="inputBoxDiv" style="">
+                            <span v-for="(item,i) in item.dataFile" :key="i">{{item}} <i @click="removeFile(index,i)" class="iconfont iconcuowu"></i> </span>
+                        </div>
+                        <!-- <el-input v-model="item.dataFile " style="width:382px"></el-input> -->
+                        <el-upload
+                        class="upload-demo upDataBox"
+                        action="0"
+                        :before-upload="beforeUpload"
+                        :on-success="uploadSuccess"
+                        :on-error="uploadError"
+                        :on-change="handleChange"
+                        :file-list="fileList">
+                        <el-button @click="shangchuanB(index)" size="small" type="primary">上传</el-button>
+                        </el-upload>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -98,7 +97,7 @@
             <i class="iconfont iconjiahao"></i>
         </div>
         <div style="margin-top:55px;text-align:center;margin-bottom:90px;">
-            <el-button class="saveUpdata" type="primary" @click="saveUpdata">保存</el-button>
+            <el-button class="saveUpdata" type="primary" @click="saveUpdata('updataTab')">保存</el-button>
         </div>
     </div>
 </template>
@@ -130,14 +129,14 @@ export default {
             keywordArr:[], // 关键词
             dataSourceObj:[], // 来源
             rules:{
-                dataNumber: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' },
+                dataSource: [
+                    { required: true, message: '请输入数据来源', trigger: 'blur' },
                 ],
                 dataContent: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' },
+                    { required: true, message: '请输入界面相成分-含量', trigger: 'blur' },
                 ],
                 dataElement: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' },
+                    { required: true, message: '请输入界面相成分-元素', trigger: 'blur' },
                 ],
             },
             nowIndex:0,
@@ -154,6 +153,24 @@ export default {
             // })
         },
         beforeUpload(file){
+            if(this.formInline.itemList[this.nowIndex].dataKey==31||this.formInline.itemList[this.nowIndex].dataKey==32
+            ||this.formInline.itemList[this.nowIndex].dataKey==58||this.formInline.itemList[this.nowIndex].dataKey==59
+            ||this.formInline.itemList[this.nowIndex].dataKey==60){
+                if(this.formInline.itemList[this.nowIndex].dataFile.length==1){
+                    this.$message({
+                        message: '此关键词中最多只能上传一个图片/文件',
+                        type: 'warning'
+                    });
+                    return
+                }
+            } else if(this.formInline.itemList[this.nowIndex].dataFile.length==5){
+                this.$message({
+                    message: '此关键词中最多只能上传五个图片/文件',
+                    type: 'warning'
+                });
+                return
+            }
+            // this.formInline.itemList.dataKey ==31 32 58 59 60
             let fd = new FormData();
             fd.append('file',file);//传文件
             this.$api.fileUpData(fd).then(res=>{
@@ -188,19 +205,51 @@ export default {
             })
             this.sub.push({classify:'', dataType:'',dataFile:[]})
         },
-        saveUpdata(){
-            for(let i=0;i<this.formInline.itemList.length;i++){
-                this.formInline.itemList[i].dataFile = this.formInline.itemList[i].dataFile.toString()
-            }
-            this.$api.upData(this.formInline).then(res=>{
-                if(res.data.msg==='success'){
-                    this.$message({
-                        message: '保存成功',
-                        type: 'success'
-                    });
+        saveUpdata(formName){
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    for(let i=0;i<this.formInline.itemList.length;i++){
+                        this.formInline.itemList[i].dataFile = this.formInline.itemList[i].dataFile.toString()
+                    }
+                    let _itemList = this.formInline.itemList.filter(x=>x.dataKey=='')||[]
+                    if(_itemList.length>0){
+                        this.$message({
+                            message: '请选择关键词',
+                            type: 'warning'
+                        });
+                        return false
+                    }
+                    let _elementReg = /^,?(?:[a-zA-Z]+,)*(?:[a-zA-Z]+)?$/
+                    let _contentReg = /^[0-9:]*$/
+                    if(!_elementReg.test(this.formInline.dataElement)){
+                        this.$message({
+                            message: '界面相成分-元素输入格式错误',
+                            type: 'warning'
+                        });
+                        return false
+                    }
+                    if(!_contentReg.test(this.formInline.dataContent)){
+                        this.$message({
+                            message: '界面相成分-含量输入格式错误',
+                            type: 'warning'
+                        });
+                        return false
+                    }
+                    this.$api.upData(this.formInline).then(res=>{
+                        if(res.data.msg==='success'){
+                            this.$message({
+                                message: '保存成功',
+                                type: 'success'
+                            });
+                        }
+                        console.log(res)
+                    })
+                } else {
+                    console.log('error submit!!');
+                    return false;
                 }
-                console.log(res)
-            })
+            });
+            
         },
         updata(){},
         getSelectArr(){
@@ -321,7 +370,7 @@ export default {
         width:80px;
         padding-right:12px;
         align-self:auto;
-        margin-left: 24px;
+        /* margin-left: 24px; */
     }
     .updataBigBox{
         height: 338px;
