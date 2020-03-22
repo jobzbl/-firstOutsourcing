@@ -76,7 +76,7 @@
           </div>
           <div class="goLogin">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="forgetPWArr.email" placeholder="请输入姓名"></el-input>
+              <el-input v-model="forgetPWArr.email" placeholder="请输入邮箱"></el-input>
               <span :style="verifyCodeIsShow?'color:#999;pointer-events: none':''" style="cursor: pointer;right:-120px" @click="forgetSubmitForm()">
                 {{verifyCodeIsShow?totalTime+'s后重新发送':'发送验证邮件'}}
               </span>
@@ -250,6 +250,18 @@ export default {
               this.loginText = '账号登录'
               this.init= true
               this.getUuid()
+              this.$nextTick(()=>{
+                this.$refs['setPassword'].resetFields();
+              })
+              this.$nextTick(()=>{
+                this.$refs['forgetPW'].resetFields();
+              })
+              this.$nextTick(()=>{
+                this.$refs['ruleRegister'].resetFields();
+              })
+              this.$nextTick(()=>{
+                this.$refs['ruleForm'].resetFields();
+              })
             }, 2000);
           }
           

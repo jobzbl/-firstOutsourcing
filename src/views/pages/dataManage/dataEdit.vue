@@ -3,7 +3,7 @@
         <div style="margin-top:12px;">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item class="elsePage" :to="{ path: '/dataManage' }"> <i style="color:#33B0B5" class="iconfont iconiconfontzhizuobiaozhun023101"></i> 数据管理</el-breadcrumb-item>
-                <el-breadcrumb-item class="nowPage">数据编辑</el-breadcrumb-item>
+                <el-breadcrumb-item class="nowPage">{{type=='edit'?'数据编辑':'数据查看'}}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="buttonRow buttonRowEdit" v-if="type=='edit'">
@@ -37,17 +37,27 @@
                 <el-table-column label="数据值" width="344">
                     <template slot-scope="scope">
                         <div style="padding:0" v-if="scope.row.typeName=='图片'">
-                            <img :src="scope.row.dataValue" alt="" style="max-height:100px;max-width:100%;">
+                            <img :src="scope.row.dataValue" alt="" style="max-height:100px;max-width:100%;" @dblclick="editSpan1C(scope.row)">
+                            <el-upload
+                            :style="scope.row.status?'display:none':'display:block'"
+                            class="upload-demo upDataBox"
+                            action="0"
+                            :before-upload="beforeUpload2"
+                            :file-list="fileList2">
+                            <el-button @click="shangchuanB()" size="small" type="primary">替换图片</el-button>
+                            </el-upload>
+                            <!-- style="visibility: hidden;" -->
+
                             <!-- <span :style="scope.row.status?'display:block':'display:none'" class="editSpan" @dblclick="editSpan1C(scope.row)">{{scope.row.dataValue}}</span> -->
                             <!-- <input :style="scope.row.status?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataValue"> -->
-                            <i @click="clearCon(scope.row,'status')" class="iconfont iconguanbi" :style="scope.row.status?'display:none':'display:block'"></i>
-                            <i @click="saveData(scope.row)" class="iconfont icondui1" :style="scope.row.status?'display:none':'display:block'"></i>
+                            <!-- <i @click="clearCon(scope.row,'status')" class="iconfont iconguanbi" :style="scope.row.status?'display:none':'display:block'"></i>
+                            <i @click="saveData(scope.row)" class="iconfont icondui1" :style="scope.row.status?'display:none':'display:block'"></i> -->
                         </div>
                         <div style="padding:0" v-if="scope.row.typeName!='图片'">
                             <span :style="scope.row.status?'display:block':'display:none'" class="editSpan" @dblclick="editSpan1C(scope.row)">{{scope.row.dataValue}}</span>
                             <input :style="scope.row.status?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataValue">
                             <i @click="clearCon(scope.row,'status')" class="iconfont iconguanbi" :style="scope.row.status?'display:none':'display:block'"></i>
-                            <i @click="saveData(scope.row)" class="iconfont icondui1" :style="scope.row.status?'display:none':'display:block'"></i>
+                            <i @click="saveData(scope.row,'status')" class="iconfont icondui1" :style="scope.row.status?'display:none':'display:block'"></i>
                         </div>
                     </template>
                 </el-table-column>
@@ -57,7 +67,7 @@
                             <span :style="scope.row.dataContent?'display:block':'display:none'" class="editSpan" @dblclick="editSpan2C(scope.row)">{{scope.row.dataTips}}</span>
                             <input :style="scope.row.dataContent?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataTips">
                             <i @click="clearCon(scope.row,'dataContent')" class="iconfont iconguanbi" :style="scope.row.dataContent?'display:none':'display:block'"></i>
-                            <i @click="saveData(scope.row)" class="iconfont icondui1" :style="scope.row.dataContent?'display:none':'display:block'"></i>
+                            <i @click="saveData(scope.row,'dataContent')" class="iconfont icondui1" :style="scope.row.dataContent?'display:none':'display:block'"></i>
                         </div>
                     </template>
                 </el-table-column>
@@ -76,8 +86,8 @@
 			</div>
         </div>
         <div class="dateEditSeaveBox" v-if="type=='edit'">
-            <el-button @click="close('editDataForm')">保存</el-button>
-            <el-button type="primary" @click="submitForm('editDataForm')">提交数据</el-button>
+            <el-button @click="close('save')">保存</el-button>
+            <el-button type="primary" @click="close('back')">提交数据</el-button>
         </div>
     </div>
 </template>
@@ -86,6 +96,7 @@ export default {
     name:'dataEdit',
     data(){
         return {
+            fileList2:[],
             fileList: [],
             tableData:{
                 totalCount:0,
@@ -98,13 +109,24 @@ export default {
                 flag:'updata',
                 itemList:[]
             },
-            type:this.$route.query.type
+            type:this.$route.query.type,
+            nowRowData:''
         }
     },
     created(){
         this.getListdata()
     },
     methods:{
+        beforeUpload2(file){
+            let fd = new FormData();
+            fd.append('file',file);//传文件
+            this.$api.fileUpData(fd).then(res=>{
+                this.fileList2.push(fd)
+                this.nowRowData.dataValue = res.data.url
+                this.saveData(this.nowRowData,'status')
+            })
+            return false
+        },
         beforeUpload(file){
             let fd = new FormData();
             fd.append('file',file);//传文件
@@ -128,7 +150,7 @@ export default {
                 data.dataTips=''
             }
         },
-        close(){
+        close(type){
             this.$api.eidtSave(this.saveArr).then(res=>{ // 数据来源
                 if(res.data.msg==='success'){
                     this.$message({
@@ -136,12 +158,25 @@ export default {
                         type: 'success'
                     });
                     this.getListdata()
+                }else{
+                    this.$message({
+                        message: res.data.msg,
+                        type: 'warning'
+                    });
                 }
+                if(type=='back'){
+                    setTimeout(() => {
+                            this.$router.push('/dataManage')
+                    }, 1000);
+                }    
             })
         },
-        saveData(data){
-            data.status = true
-            data.dataContent = true
+        saveData(data,val){
+            if(val == 'status'){
+                data.status = true
+            }else{
+                data.dataContent = true
+            }
             for(let i=0;i<this.saveArr.itemList.length;i++){
                 if(this.saveArr.itemList[i].dataId == data.dataId){
                     this.saveArr.itemList.splice(i,1)
@@ -171,6 +206,10 @@ export default {
         editSpan1C(data){
             if(this.type=='edit'){
                 data.status = false
+                if(data.typeName=='图片'){
+                    console.log('')
+                    this.nowRowData = data
+                }
             }
         },
         editSpan2C(data){
@@ -195,6 +234,7 @@ export default {
     .tableEdit{
         .el-table__row{
             td{
+                
                 padding: 0!important;
                 height:54px;
             }

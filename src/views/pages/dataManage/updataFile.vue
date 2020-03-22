@@ -76,9 +76,6 @@
                         class="upload-demo upDataBox"
                         action="0"
                         :before-upload="beforeUpload"
-                        :on-success="uploadSuccess"
-                        :on-error="uploadError"
-                        :on-change="handleChange"
                         :file-list="fileList">
                         <el-button @click="shangchuanB(index)" size="small" type="primary">上传</el-button>
                         </el-upload>
@@ -182,20 +179,8 @@ export default {
         shangchuanB(index){
             this.nowIndex = index
         },
-        uploadError(err){
-            console.log(err)
-        },
-        uploadSuccess(res){
-            console.log(res)
-        },
-        handleChange(file, fileList) {
-            // 
-            // this.$api.fileUpData(file).then(res=>{
-            //     console.log(res)
-            // })
-            console.log(fileList)
-            // this.fileList = fileList.slice(-3);
-        },
+        
+        
         pushArr(){
             this.formInline.itemList.push({
                 dataKey:'',
@@ -241,7 +226,15 @@ export default {
                                 message: '保存成功',
                                 type: 'success'
                             });
+                        }else{
+                            this.$message({
+                                message: res.data.msg,
+                                type: 'warning'
+                            });
                         }
+                        setTimeout(() => {
+                            this.$router.push('/dataManage')
+                        }, 1000);
                         console.log(res)
                     })
                 } else {

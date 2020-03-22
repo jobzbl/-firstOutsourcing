@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <div class="haederBox">
-            <el-form :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="90px">
+            <el-form v-if="quanxian.indexOf('1')!='-1'" :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="90px">
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="姓名">
@@ -49,7 +49,7 @@
             </el-form>
         </div>
         <div class="buttonRow">
-            <el-button @click="removeData('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
+            <el-button v-if="quanxian.indexOf('4')!='-1'" @click="removeData('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
             <el-button @click="onDown()"> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
         </div>
         <div class="tableBox">
@@ -76,6 +76,7 @@
                         <el-switch
                             @change="statusChange(scope.row,$event)"
                             v-model="scope.row.status"
+                            :disabled="quanxian.indexOf('3')=='-1'"
                             active-color="#13ce66"
                             inactive-color="#ff4949">
                         </el-switch>
@@ -84,8 +85,9 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <div style="text-align:center">
-                            <el-button type="text" @click="editUser(scope.row.userId)" style="color:#33B0B5;text-decoration: underline">修改</el-button>
-                            <el-button type="text" @click="removeData(scope.row.userId)" style="color:#EF992A;text-decoration: underline">删除</el-button>
+                            <div v-if="quanxian.indexOf('3')=='-1'&&quanxian.indexOf('4')=='-1'">无权限</div>
+                            <el-button type="text" v-if="quanxian.indexOf('3')!='-1'" @click="editUser(scope.row.userId)" style="color:#33B0B5;text-decoration: underline">修改</el-button>
+                            <el-button type="text" v-if="quanxian.indexOf('4')!='-1'" @click="removeData(scope.row.userId)" style="color:#EF992A;text-decoration: underline">删除</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -121,12 +123,12 @@
                     <el-input v-model="editDataForm.email" placeholder="请输入邮箱"></el-input>
                 </el-form-item>
                 <el-form-item label="用户类型" prop="roleIdList">
-                    <el-select  v-model="editDataForm.roleIdList" multiple style="width:420px" placeholder="请选择数据类型">
+                    <el-select  v-model="editDataForm.roleIdList" @change="roleChange($event)"  style="width:420px" placeholder="请选择数据类型">
                         <el-option v-for="(item,index) in userRole" :key="index" :label="item.roleName" :value="item.roleId"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="权限" prop="menuIdList">
-                    <el-select  v-model="editDataForm.menuIdList" multiple style="width:420px" placeholder="请选择数据类型">
+                    <el-select :disabled='true' v-model="editDataForm.menuIdList" multiple style="width:420px" placeholder="请选择数据类型">
                         <el-option v-for="item in selectMenu" :key="item.menuId" :label="item.name" :value="item.menuId"></el-option>
                     </el-select>
                 </el-form-item>
@@ -145,6 +147,7 @@ import removeComponent from '../component/remove.vue' // 将子组件引入父�
 export default {
     data() {
         return {
+            quanxian:localStorage.getItem('menuIdList'),
             isBoxShow:false,
             isBoxData:'',
             editDataForm:{
@@ -154,7 +157,7 @@ export default {
                 company:'',
                 department:'',
                 email:'',
-                roleIdList:[],
+                roleIdList:'',
                 menuIdList:[]
             },
             editData:false,
@@ -169,7 +172,7 @@ export default {
             },
             rules: {
                 roleIdList: [
-                    { type:'array', required: true, message: '请选择用户类型', trigger: 'blur', }
+                    { type:'number', required: true, message: '请选择用户类型', trigger: 'blur', }
                 ],
                 menuIdList: [
                     { type:'array', required: true, message: '请选择权限', trigger: 'blur', }
@@ -222,6 +225,17 @@ export default {
                 console.log(res)
             })
         },
+        roleChange(e){
+            if(e==1){
+                this.editDataForm.menuIdList = [1,2,3,4]
+            }
+            if(e==2){
+                this.editDataForm.menuIdList = [1,3,4]
+            }
+            if(e==3){
+                this.editDataForm.menuIdList = [1]
+            }
+        },
         editUser(id){
             this.editData=true
             this.$api.getUserInfo(id).then(res=>{
@@ -231,7 +245,7 @@ export default {
                 this.editDataForm.company = res.data.user.company
                 this.editDataForm.department = res.data.user.department
                 this.editDataForm.email = res.data.user.email
-                this.editDataForm.roleIdList = res.data.user.roleIdList
+                this.editDataForm.roleIdList = res.data.user.roleIdList.toString()*1
                 this.editDataForm.menuIdList = res.data.user.menuIdList
             })
         },
@@ -308,6 +322,12 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+
+                    this.editDataForm.roleIdList = this.editDataForm.roleIdList.toString()
+                    this.editDataForm.roleIdList = this.editDataForm.roleIdList.split('')
+                    this.editDataForm.roleIdList[0] = parseInt(this.editDataForm.roleIdList[0])
+                    console.log(this.editDataForm)
+
                     this.$api.editUser(this.editDataForm).then(res=>{
                         if(res.data.msg==='success'){
                             this.$message({
