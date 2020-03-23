@@ -45,7 +45,7 @@
         <div class="buttonRow">
             <el-button v-if="quanxian.indexOf(2)!=-1" @click="updata()"> <i class="iconfont iconshangchuan"></i> 上传文件</el-button>
             <el-button v-if="quanxian.indexOf(4)!=-1" @click="delect('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
-            <el-button> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
+            <el-button @click="onDown()"> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
         </div>
         <div class="tableBox">
             <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
@@ -138,6 +138,21 @@ export default {
         this.getListdata()
     },
     methods:{
+        onDown(){
+            this.$api.onFile('').then(res=>{
+                // const link = document.createElement('a')
+                // const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+                // link.style.display = 'none'
+                // link.href = URL.createObjectURL(blob)
+                // link.setAttribute('download', `${name}.xlsx`)
+                // document.body.appendChild(link)
+                // link.click()
+                // document.body.removeChild(link)
+                let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});  // res就是接口返回的文件流了
+                let objectUrl = URL.createObjectURL(blob); 
+                window.location.href = objectUrl; 
+            })
+        },
         getSelectObj(){
             this.$api.dataTypelist().then(res=>{ // 数据类型
                 this.dataTypeObj = res.data.data

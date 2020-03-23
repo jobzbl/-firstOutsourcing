@@ -7,7 +7,7 @@
           <div class="searchBox">
             <div style="width:380px" class="inputBox">
               <el-input placeholder="输入关键字搜索" v-model="input3" class="input-with-select">
-                <el-button slot="append" class="searchBut" icon="el-icon-search"></el-button>
+                <el-button slot="append" @click="searchBut()" class="searchBut" icon="el-icon-search"></el-button>
               </el-input>
             </div>
             <div class="userButton">
@@ -36,6 +36,16 @@ export default {
       this.init()
   },
   methods: {
+    searchBut(){
+      if(this.input3){
+        this.$message({
+            message: '请输入关键字',
+            type: 'warning'
+        });
+        return
+      }
+      this.$router.push('/result?id='+this.input3)
+    },
     out(){
       this.$router.push('/login')
       localStorage.removeItem("token")

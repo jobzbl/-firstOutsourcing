@@ -214,15 +214,15 @@ export default {
     },
     methods:{
         onDown(){
-            if(this.nowCheckedArr.length==0){
-                this.$message({
-                    message: '请勾选需要下载的数据',
-                    type: 'warning'
-                });
-                return
-            }
             this.$api.onDown('').then(res=>{
-                console.log(res)
+                const link = document.createElement('a')
+                const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+                link.style.display = 'none'
+                link.href = URL.createObjectURL(blob)
+                link.setAttribute('download', `${name}.xlsx`)
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
             })
         },
         roleChange(e){

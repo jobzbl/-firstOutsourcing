@@ -34,7 +34,7 @@
                         <!-- <v-html-panel name="iframe" style="width:100%;height:100%;" url.asyc="file:///C:/Users/dell/Desktop/html.html"></v-html-panel> -->
                         <!-- <a href="https://chemapps.stolaf.edu/jmol/jmol.php?model=acetone&width=50%&height=50%&script=background+white%3Brotate+x+180&caption=acetone">asd</a> -->
                         <!-- <script type="text/javascript" src="https://chemapps.stolaf.edu/jmol/jmol.php?model=acetone&link=3D model"></script> -->
-                        <iframe style="height:100%;width:100%" src="https://chemapps.stolaf.edu/jmol/jmol.php?model=acetone&amp;width=100%&amp;height=100%&amp;script=background+white%3Brotate+x+180&amp;caption=acetone&quot;,&quot;&quot;,&quot;width=600,height=600,scrollbars=no&quot;"></iframe>
+                        <iframe style="height:100%;width:100%" src="../../../html.html"></iframe>
                         <img class="xiazai" src="../../../assets/images/downicon.png" alt="">
                     </div>
                     <div class="fl crystalParameter">
@@ -44,13 +44,13 @@
                                 <el-col :span="24" v-if="paramLenght&&paramLenght.dataChildList">
                                     <el-row v-for="itm in paramLenght.dataChildList" :key="itm.dataId">
                                         <el-col :span="12" class="parameterBox bgColor">a (Å)</el-col>
-                                        <el-col :span="12" class="parameterBox">{{itm.dataValue}}</el-col>
+                                        <el-col :span="12" class="parameterBox"><div :title="itm.dataValue">{{itm.dataValue}}</div></el-col>
                                     </el-row>
                                 </el-col>
                                 <el-col :span="24" v-if="paramAngle&&paramAngle.dataChildList">
                                     <el-row v-for="itm in paramAngle.dataChilldList" :key="itm.dataId">
                                         <el-col :span="12" class="parameterBox bgColor">{{itm.dataTips}} (°)</el-col>
-                                        <el-col :span="12" class="parameterBox">{{itm.dataValue}}</el-col>
+                                        <el-col :span="12" class="parameterBox"><div :title="itm.dataValue">{{itm.dataValue}}</div></el-col>
                                     </el-row>
                                 </el-col>
                             </el-row>
@@ -769,10 +769,20 @@ export default {
         line-height: 40px;
         font-size: 14px;
     }
+    .parameterBox div{
+        width:200px;
+        margin:0 auto;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
     .tableBorer{
         border-left: 1px solid #ddd;
         border-right: 1px solid #ddd;
         margin-bottom: 20px;
+        max-height:160px;
+        overflow-y:scroll;
+        overflow-x:hidden;
     }
     .parameterTit{
         color: #fff;

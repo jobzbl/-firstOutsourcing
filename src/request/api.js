@@ -146,6 +146,10 @@ const article = {
         return axios.post(`${base.sq}/sys/sysData/import`,params)
     },
     // 下载
+    onFile(params){
+        return axios.post(`${base.sq}/sys/sysData/export`,params,{responseType: 'blob'})
+    },
+    // 下载
     onDown(params){
         return axios.post(`${base.sq}/sys/user/export`,params)
     },
@@ -161,10 +165,13 @@ const article = {
     forgetPassword3(params){
         return axios.get(`${base.sq}/sys/user/confirm_password?${params}`)
     },
+    // 修改用户状态
     editStatus(params){
         return axios.post(`${base.sq}/sys/user/updateStatus`,params)
     },
-    // 修改用户状态
-    
+    // 批量导入
+    bulkImport(params){
+        return axios.post(`${base.sq}/sys/sysData/batchImport`,params)
+    },
 }
 export default article;

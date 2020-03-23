@@ -6,8 +6,15 @@
                 <el-breadcrumb-item class="nowPage">上传文件</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="buttonRow buttonRow2" style="margin-top:24px;">
-            <el-button @click="updata()"> <i class="iconfont iconshangchuan"></i> 批量上传</el-button>
+        <div class="buttonRow ">
+            <el-upload
+            class="upload-demo buttonRowUpDataBox"
+            action="0"
+            :before-upload="updata"
+            :file-list="fileList">
+            <el-button @click="shangchuanB()" type="primary"><i class="iconfont iconshangchuan"></i> 批量上传</el-button>
+            </el-upload>
+            <!-- <el-button @click="updata()"> <i class="iconfont iconshangchuan"></i> 批量上传</el-button> -->
         </div>
         <el-form style="margin-top:20px;" ref="updataTab" :rules="rules" :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="auto">
             <el-row>
@@ -176,6 +183,25 @@ export default {
             })
             return false  //屏蔽了action的默认上传
         },
+        updata(file){
+            let fd = new FormData();
+            fd.append('file',file);//传文件
+            this.$api.bulkImport(fd).then(res=>{
+                if(res.data.code==-1){
+                    this.$message({
+                        message: res.data.msg,
+                        type: 'warning'
+                    });
+                }else{
+                    this.formInline = res.data.data
+                }
+                for(var i=0;i<this.formInline.itemList.length;i++){
+                    this.sub.push( {classify:'', dataType:'',dataFile:[]})
+                }
+                console.log(this.formInline)
+            })
+            return false  //屏蔽了action的默认上传
+        },
         shangchuanB(index){
             this.nowIndex = index
         },
@@ -194,7 +220,9 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     for(let i=0;i<this.formInline.itemList.length;i++){
-                        this.formInline.itemList[i].dataFile = this.formInline.itemList[i].dataFile.toString()
+                        if(this.formInline.itemList[i].dataFile&&this.formInline.itemList[i].dataFile.length){
+                            this.formInline.itemList[i].dataFile = this.formInline.itemList[i].dataFile.toString()
+                        }
                     }
                     let _itemList = this.formInline.itemList.filter(x=>x.dataKey=='')||[]
                     if(_itemList.length>0){
@@ -244,7 +272,7 @@ export default {
             });
             
         },
-        updata(){},
+        
         getSelectArr(){
             this.$api.dataTypelist().then(res=>{
                 this.dataTypeArr = res.data.data
@@ -267,6 +295,19 @@ export default {
 }
 </script>
 <style lang="less">
+    .buttonRowUpDataBox{
+        button{
+            background:#fff
+        }
+        button:hover{
+            background:#fff;
+            color:#33B0B5
+        }
+        button:focus{
+            background:#fff;
+            color:#33B0B5
+        }
+    }
     .saveUpdata{
             width: 180px;
             height: 40px;
@@ -308,6 +349,7 @@ export default {
 </style>
 
 <style scoped>
+    
     .inputBoxDiv{
         border:1px solid #C0C4CC;
         height:40px;width:382px;
