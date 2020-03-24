@@ -157,6 +157,11 @@ export default {
                         message: '保存成功',
                         type: 'success'
                     });
+                    if(type=='back'){
+                        setTimeout(() => {
+                                this.$router.push('/dataManage')
+                        }, 1000);
+                    } 
                     this.getListdata()
                 }else{
                     this.$message({
@@ -164,11 +169,7 @@ export default {
                         type: 'warning'
                     });
                 }
-                if(type=='back'){
-                    setTimeout(() => {
-                            this.$router.push('/dataManage')
-                    }, 1000);
-                }    
+                   
             })
         },
         saveData(data,val){

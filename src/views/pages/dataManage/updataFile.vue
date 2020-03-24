@@ -20,7 +20,7 @@
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="界面相成分-元素" prop="dataElement">
-                        <el-input v-model.trim="formInline.dataElement" style="width:213px" placeholder="请输入界面相成分-元素"></el-input>
+                        <el-input v-model.trim="formInline.dataElement" @change="dataElementArr()" style="width:213px" placeholder="请输入界面相成分-元素"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
@@ -30,7 +30,7 @@
                 </el-col>
                 <el-col :span="5">
                     <el-form-item label="数据来源" class="marginZero" prop="dataSource">
-                        <el-select clearable v-model="formInline.dataSource" style="width:160px" placeholder="请选择数据来源">
+                        <el-select v-model="formInline.dataSource" style="width:160px" placeholder="请选择数据来源">
                             <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                         </el-select>
                     </el-form-item>
@@ -47,27 +47,88 @@
                 <el-row>
                     <el-col :span="7">
                         <el-form-item label="数据分类">
-                            <el-select clearable v-model ="sub[index].classify" style="width:240px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
+                            <el-select v-model ="sub[index].classify" style="width:240px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
                                 <el-option v-for="item in dataClassifyArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
                         <el-form-item label="数据类型" class="marginZero">
-                            <el-select clearable v-model ="sub[index].dataType" style="width:160px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
+                            <el-select v-model ="sub[index].dataType" style="width:160px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
                                 <el-option v-for="item in dataTypeArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" style="text-align:right">
                         <el-form-item label="关键词">
-                            <el-select clearable v-model ="item.dataKey" style="width:460px" placeholder="请选择数据来源">
+                            <el-select v-model ="item.dataKey" style="width:460px" placeholder="请选择数据来源">
                                 <el-option v-for="item in keywordArr" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
+                <el-row type="flex" class="row-bg" justify="space-between" v-if="item.dataKey == 29">
+                    <el-col :span="12">
+                        <el-form-item label="选择字段" class="marginZero">
+                            <el-select v-model="item.dataQ" style="width:495px" placeholder="请选择数据来源">
+                                <el-option label="x" value="x"></el-option>
+                                <el-option label="y" value="y"></el-option>
+                                <el-option label="z" value="z"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="选择字段" class="marginZero">
+                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择数据来源">
+                                <el-option v-for="(item,index) in elementArr" :key="index" :label="item" :value="item"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row type="flex" class="row-bg" justify="space-between" v-if="item.dataKey == 7||item.dataKey == 8">
+                    <el-col :span="12">
+                        <el-form-item label="选择字段" class="marginZero">
+                            <el-select v-model="item.dataQ" style="width:495px" placeholder="请选择数据来源">
+                                <el-option label="XPS" value="XPS"></el-option>
+                                <el-option label="AES" value="AES"></el-option>
+                                <el-option label="EELS" value="EELS"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="选择字段" class="marginZero">
+                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择数据来源">
+                                <el-option v-for="(item,index) in elementArr" :key="index" :label="item" :value="item"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
                 <el-row type="flex" class="row-bg" justify="space-between">
+                    <!-- item.dataKey == 27  dataT a ( Å)a (Å) b (Å) v (Å) -->
+                    <!-- item.dataKey == 28  dataT α (°) β (°) b (Å) γ (°) -->
+                    <!-- item.dataKey == 29  dataT  ->B  dataQ->X  -->
+                    <!-- item.dataKey == 8  dataT  ->B  dataQ->XPS  -->
+                    <!-- item.dataKey == 7  dataT  ->B  dataQ->XPS  -->
+
+                    <el-col :span="12" v-if="item.dataKey == 27">
+                        <el-form-item label="选择字段" class="marginZero">
+                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择数据来源">
+                                <el-option label="a ( Å)" value="a"></el-option>
+                                <el-option label="b ( Å)" value="b"></el-option>
+                                <el-option label="v ( Å)" value="v"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12" v-if="item.dataKey == 28">
+                        <el-form-item label="选择字段" class="marginZero">
+                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择数据来源">
+                                <el-option label="α (°)" value="α"></el-option>
+                                <el-option label="β (°)" value="β"></el-option>
+                                <el-option label="γ (°)" value="γ"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    
                     <el-col :span="12" v-if="sub[index].dataType!=3">
                         <el-form-item label="数据值" class="marginZero">
                             <el-input v-model="item.dataValue" style="width:495px" placeholder="请输入数据值"></el-input>
@@ -144,12 +205,16 @@ export default {
                 ],
             },
             nowIndex:0,
+            elementArr:[]
         }
     },
     created(){
         this.getSelectArr()
     },
     methods:{
+        dataElementArr(){
+            this.elementArr = this.formInline.dataElement.split(',')
+        },
         removeFile(index,i){
             // this.$api.fileDelete(this.sub[index].dataFile[i]).then(res=>{
             //     console.log(res)
@@ -180,6 +245,7 @@ export default {
             this.$api.fileUpData(fd).then(res=>{
                 this.formInline.itemList[this.nowIndex].dataFile.push(res.data.url)
                 this.sub[this.nowIndex].dataFile.push(fd)
+                console.log(this.formInline)
             })
             return false  //屏蔽了action的默认上传
         },
@@ -220,10 +286,17 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     for(let i=0;i<this.formInline.itemList.length;i++){
-                        if(this.formInline.itemList[i].dataFile&&this.formInline.itemList[i].dataFile.length){
-                            this.formInline.itemList[i].dataFile = this.formInline.itemList[i].dataFile.toString()
+                        if(this.sub[i].dataType==3){
+                            if(this.formInline.itemList[i].dataFile&&this.formInline.itemList[i].dataFile.length){
+                                this.formInline.itemList[i].dataValue = this.formInline.itemList[i].dataFile.toString()
+                            }else{
+                                this.formInline.itemList[i].dataFile = ''
+                            }
+                        }else{
+                            this.formInline.itemList[i].dataFile = ''
                         }
                     }
+                    console.log(this.formInline)
                     let _itemList = this.formInline.itemList.filter(x=>x.dataKey=='')||[]
                     if(_itemList.length>0){
                         this.$message({
@@ -248,23 +321,24 @@ export default {
                         });
                         return false
                     }
-                    this.$api.upData(this.formInline).then(res=>{
-                        if(res.data.msg==='success'){
-                            this.$message({
-                                message: '保存成功',
-                                type: 'success'
-                            });
-                        }else{
-                            this.$message({
-                                message: res.data.msg,
-                                type: 'warning'
-                            });
-                        }
-                        setTimeout(() => {
-                            this.$router.push('/dataManage')
-                        }, 1000);
-                        console.log(res)
-                    })
+                    // this.$api.upData(this.formInline).then(res=>{
+                    //     if(res.data.msg==='success'){
+                    //         this.$message({
+                    //             message: '保存成功',
+                    //             type: 'success'
+                    //         });
+                    //         setTimeout(() => {
+                    //             this.$router.push('/dataManage')
+                    //         }, 1000);
+                    //     }else{
+                    //         this.$message({
+                    //             message: res.data.msg,
+                    //             type: 'warning'
+                    //         });
+                    //     }
+                        
+                    //     console.log(res)
+                    // })
                 } else {
                     console.log('error submit!!');
                     return false;
@@ -408,7 +482,7 @@ export default {
         /* margin-left: 24px; */
     }
     .updataBigBox{
-        height: 338px;
+        min-height: 338px;
         background-color: #F3FBFB;
         border: 1px solid #DDDDDD;
         margin-top:20px;

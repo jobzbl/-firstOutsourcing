@@ -43,13 +43,13 @@
                             <el-row type="flex" class="row-bg">
                                 <el-col :span="24" v-if="paramLenght&&paramLenght.dataChildList">
                                     <el-row v-for="itm in paramLenght.dataChildList" :key="itm.dataId">
-                                        <el-col :span="12" class="parameterBox bgColor">a (Å)</el-col>
+                                        <el-col :span="12" class="parameterBox bgColor">{{itm.dataT}} (Å)</el-col>
                                         <el-col :span="12" class="parameterBox"><div :title="itm.dataValue">{{itm.dataValue}}</div></el-col>
                                     </el-row>
                                 </el-col>
                                 <el-col :span="24" v-if="paramAngle&&paramAngle.dataChildList">
                                     <el-row v-for="itm in paramAngle.dataChilldList" :key="itm.dataId">
-                                        <el-col :span="12" class="parameterBox bgColor">{{itm.dataTips}} (°)</el-col>
+                                        <el-col :span="12" class="parameterBox bgColor">{{itm.dataT}} (°)</el-col>
                                         <el-col :span="12" class="parameterBox"><div :title="itm.dataValue">{{itm.dataValue}}</div></el-col>
                                     </el-row>
                                 </el-col>
