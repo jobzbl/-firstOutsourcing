@@ -28,13 +28,8 @@
                 </div>
                 <div style="overflow:hidden" v-if="data1.keyParentList.length">
                     <div class="fl crystalImg">
-                        <a href="javascript:void(0)"
-                        onclick="window.open(&quot;https://chemapps.stolaf.edu/jmol/jmol.php?model=acetone&amp;width=100%&amp;height=100%&amp;script=background+white%3Brotate+x+180&amp;caption=acetone&quot;,&quot;&quot;,&quot;width=600,height=600,scrollbars=no&quot;)">点击跳转到晶体模型</a>
                         <img class="fangda" src="../../../assets/images/fangdafff.png" alt="">
-                        <!-- <v-html-panel name="iframe" style="width:100%;height:100%;" url.asyc="file:///C:/Users/dell/Desktop/html.html"></v-html-panel> -->
-                        <!-- <a href="https://chemapps.stolaf.edu/jmol/jmol.php?model=acetone&width=50%&height=50%&script=background+white%3Brotate+x+180&caption=acetone">asd</a> -->
-                        <!-- <script type="text/javascript" src="https://chemapps.stolaf.edu/jmol/jmol.php?model=acetone&link=3D model"></script> -->
-                        <iframe style="height:100%;width:100%" src="../../../html.html"></iframe>
+                        <iframe style="height:100%;width:100%;margin-top:80px" src="http://118.190.142.89:8090/3d?dataParam=B-0.32-3.23-4.23,C-2.2-3.2-4.2,N-2.3-4.1--0.2,B-2.2-3.2-4.2"></iframe>
                         <img class="xiazai" src="../../../assets/images/downicon.png" alt="">
                     </div>
                     <div class="fl crystalParameter">
@@ -794,12 +789,14 @@ export default {
         width: 660px;
     }
     .crystalImg{
+        padding-top: 1px;
         width: 500px;
         height: 586px;
-        /* background: #000; */
+        background: #000;
         border-radius: 10px;
         margin-right: 37px;
         position: relative;
+        overflow: hidden;
     }
     .crystalImg img{
         position: absolute;
