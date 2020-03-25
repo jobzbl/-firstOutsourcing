@@ -56,9 +56,10 @@
 				<div class="searchConBox">
 					<div class="searchConBoxOver">
 						<div v-for="(data, index) in searchData.list" :key="index">
-							<router-link :to="{path:'/result',query:{'id':data.dataContail,'source':data.dataSource}}">
+							<router-link :to="{path:'/result',query:{'id':data.dataContail,'source':data.dataSource,'content':data.dataContent,'element':data.dataElement}}">
 							<!-- {{item.dataContail}} -->
-							<span v-for="(item,index) in data.dataElement" :key='index'>{{item}}<span style="font-size:10px;">{{data.dataContent[index]>1?data.dataContent[index]:''}}</span>
+							<span v-for="(item,index) in data.dataElement" :key='index'>
+								{{item}}<sub style="font-size:10px;">{{data.dataContent[index]>1?data.dataContent[index]:''}}</sub>
 							</span>
 							</router-link>
 						</div>

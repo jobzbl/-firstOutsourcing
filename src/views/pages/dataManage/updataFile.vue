@@ -70,7 +70,7 @@
                 <el-row type="flex" class="row-bg" justify="space-between" v-if="item.dataKey == 29">
                     <el-col :span="12">
                         <el-form-item label="选择字段" class="marginZero">
-                            <el-select v-model="item.dataQ" style="width:495px" placeholder="请选择数据来源">
+                            <el-select v-model="item.dataQ" style="width:495px" placeholder="请选择字段">
                                 <el-option label="x" value="x"></el-option>
                                 <el-option label="y" value="y"></el-option>
                                 <el-option label="z" value="z"></el-option>
@@ -79,16 +79,19 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="选择字段" class="marginZero">
-                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择数据来源">
-                                <el-option v-for="(item,index) in elementArr" :key="index" :label="item" :value="item"></el-option>
+                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择字段">
+                                <el-option label="B" value="B"></el-option>
+                                <el-option label="N" value="N"></el-option>
+                                <el-option label="O" value="O"></el-option>
+                                <!-- <el-option v-for="(item,index) in elementArr" :key="index" :label="item" :value="item"></el-option> -->
                             </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row type="flex" class="row-bg" justify="space-between" v-if="item.dataKey == 7||item.dataKey == 8">
+                <!-- <el-row type="flex" class="row-bg" justify="space-between" v-if="item.dataKey == 7||item.dataKey == 8">
                     <el-col :span="12">
                         <el-form-item label="选择字段" class="marginZero">
-                            <el-select v-model="item.dataQ" style="width:495px" placeholder="请选择数据来源">
+                            <el-select v-model="item.dataQ" style="width:495px" placeholder="请选择字段">
                                 <el-option label="XPS" value="XPS"></el-option>
                                 <el-option label="AES" value="AES"></el-option>
                                 <el-option label="EELS" value="EELS"></el-option>
@@ -97,25 +100,36 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="选择字段" class="marginZero">
-                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择数据来源">
-                                <el-option v-for="(item,index) in elementArr" :key="index" :label="item" :value="item"></el-option>
+                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择字段">
+                                <el-option label="B" value="B"></el-option>
+                                <el-option label="N" value="N"></el-option>
+                                <el-option label="O" value="O"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
-                </el-row>
+                </el-row> -->
                 <el-row type="flex" class="row-bg" justify="space-between">
                     <!-- item.dataKey == 27  dataT a ( Å)a (Å) b (Å) v (Å) -->
                     <!-- item.dataKey == 28  dataT α (°) β (°) b (Å) γ (°) -->
                     <!-- item.dataKey == 29  dataT  ->B  dataQ->X  -->
                     <!-- item.dataKey == 8  dataT  ->B  dataQ->XPS  -->
                     <!-- item.dataKey == 7  dataT  ->B  dataQ->XPS  -->
-
+                    <el-col :span="12" v-if="item.dataKey == 7||item.dataKey == 8">
+                        <el-form-item label="选择字段" class="marginZero">
+                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择字段">
+                                <el-option label="B" value="B"></el-option>
+                                <el-option label="N" value="N"></el-option>
+                                <el-option label="O" value="O"></el-option>
+                                <!-- <el-option v-for="(item,index) in elementArr" :key="index" :label="item" :value="item"></el-option> -->
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="12" v-if="item.dataKey == 27">
                         <el-form-item label="选择字段" class="marginZero">
                             <el-select v-model="item.dataT" style="width:495px" placeholder="请选择数据来源">
-                                <el-option label="a ( Å)" value="a"></el-option>
-                                <el-option label="b ( Å)" value="b"></el-option>
-                                <el-option label="v ( Å)" value="v"></el-option>
+                                <el-option label="a (Å)" value="a"></el-option>
+                                <el-option label="b (Å)" value="b"></el-option>
+                                <el-option label="c (Å)" value="c"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -167,6 +181,7 @@
     </div>
 </template>
 <script>
+import base from '../../../request/base'; // 导入接口域名列表
 export default {
     name:'updata',
     data(){
@@ -243,7 +258,7 @@ export default {
             let fd = new FormData();
             fd.append('file',file);//传文件
             this.$api.fileUpData(fd).then(res=>{
-                this.formInline.itemList[this.nowIndex].dataFile.push(res.data.url)
+                this.formInline.itemList[this.nowIndex].dataFile.push(base.sq+res.data.url)
                 this.sub[this.nowIndex].dataFile.push(fd)
                 console.log(this.formInline)
             })
@@ -295,6 +310,7 @@ export default {
                         }else{
                             this.formInline.itemList[i].dataFile = ''
                         }
+                            this.formInline.itemList[i].dataFile = ''
                     }
                     console.log(this.formInline)
                     let _itemList = this.formInline.itemList.filter(x=>x.dataKey=='')||[]
@@ -321,24 +337,25 @@ export default {
                         });
                         return false
                     }
-                    // this.$api.upData(this.formInline).then(res=>{
-                    //     if(res.data.msg==='success'){
-                    //         this.$message({
-                    //             message: '保存成功',
-                    //             type: 'success'
-                    //         });
-                    //         setTimeout(() => {
-                    //             this.$router.push('/dataManage')
-                    //         }, 1000);
-                    //     }else{
-                    //         this.$message({
-                    //             message: res.data.msg,
-                    //             type: 'warning'
-                    //         });
-                    //     }
+                    
+                    this.$api.upData(this.formInline).then(res=>{
+                        if(res.data.msg==='success'){
+                            this.$message({
+                                message: '保存成功',
+                                type: 'success'
+                            });
+                            setTimeout(() => {
+                                this.$router.push('/dataManage')
+                            }, 1000);
+                        }else{
+                            this.$message({
+                                message: res.data.msg,
+                                type: 'warning'
+                            });
+                        }
                         
-                    //     console.log(res)
-                    // })
+                        console.log(res)
+                    })
                 } else {
                     console.log('error submit!!');
                     return false;

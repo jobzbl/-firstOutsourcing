@@ -58,7 +58,12 @@ export default {
       this.$api.getSysDataList({page:1,limit:10,dataContail:this.input3}).then( res => {
         console.log(res)
         if(res.data.page.list){
-          this.$router.push('/result?id='+res.data.page.list[0].dataContail+'&source='+res.data.page.list[0].dataSource)
+          // 'content':data.dataContent,'element':data.dataElement
+          this.$router.push('/result?id='+res.data.page.list[0].dataContail
+          +'&source='+res.data.page.list[0].dataSource
+          +'&content='+JSON.stringify(res.data.page.list[0].dataContent)
+          +'&element='+JSON.stringify(res.data.page.list[0].dataElement)
+          )
         }
       })
     },

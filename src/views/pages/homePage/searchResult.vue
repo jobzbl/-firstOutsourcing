@@ -11,7 +11,10 @@
             <div class="fl">
                 <span style="font-weight:bold;">具体结果页：</span>
                 <span>界面相材料：</span>
-                <span style="color:#33B0B5">{{dataContail}},</span>
+                <span style="color:#33B0B5">
+                    <span v-for="(item,index) in element" :key='index'>{{item}}<sub style="font-size:10px;">{{content[index]>1?content[index]:''}}</sub>
+					</span>
+                ,</span>
             </div>
             <div class="fl" style="margin-left:5px">
                 <span>数据来源：</span>
@@ -29,56 +32,43 @@
                 <div style="overflow:hidden" v-if="data1.keyParentList.length">
                     <div class="fl crystalImg">
                         <img class="fangda" src="../../../assets/images/fangdafff.png" alt="">
-                        <iframe style="height:100%;width:100%;margin-top:80px" src="http://118.190.142.89:8090/3d?dataParam=B-0.32-3.23-4.23,C-2.2-3.2-4.2,N-2.3-4.1--0.2,B-2.2-3.2-4.2"></iframe>
+                        <iframe style="height:100%;width:100%;margin-top:80px" :src='"http://118.190.142.89:8090/3d?dataParam="+threrDArrString'></iframe>
                         <img class="xiazai" src="../../../assets/images/downicon.png" alt="">
                     </div>
                     <div class="fl crystalParameter">
-                        <div class="parameterTit">品格参数</div>
+                        <div class="parameterTit" style="margin-right:10px">品格参数</div>
                         <div class="tableBorer">
                             <el-row type="flex" class="row-bg">
                                 <el-col :span="24" v-if="paramLenght&&paramLenght.dataChildList">
                                     <el-row v-for="itm in paramLenght.dataChildList" :key="itm.dataId">
                                         <el-col :span="12" class="parameterBox bgColor">{{itm.dataT}} (Å)</el-col>
-                                        <el-col :span="12" class="parameterBox"><div :title="itm.dataValue">{{itm.dataValue}}</div></el-col>
+                                        <el-col :span="12" class="parameterBox">
+                                            <div :title="itm.dataValue">{{itm.dataValue}}</div>
+                                        </el-col>
                                     </el-row>
                                 </el-col>
                                 <el-col :span="24" v-if="paramAngle&&paramAngle.dataChildList">
-                                    <el-row v-for="itm in paramAngle.dataChilldList" :key="itm.dataId">
+                                    <el-row v-for="itm in paramAngle.dataChildList" :key="itm.dataId">
                                         <el-col :span="12" class="parameterBox bgColor">{{itm.dataT}} (°)</el-col>
                                         <el-col :span="12" class="parameterBox"><div :title="itm.dataValue">{{itm.dataValue}}</div></el-col>
                                     </el-row>
                                 </el-col>
                             </el-row>
                         </div>
-                        <div class="parameterTit">原子位置(分数坐标)</div>
-                        <template v-for="(item,index) in data1.keyParentList" >
-                            <div v-if="item.dataKey == 29" :key="index">
+                        <div class="parameterTit" style="margin-right:10px">原子位置(分数坐标)</div>
+                            <template v-for="(item,index) in data1.keyParentList" >
+                            <div v-if="item.dataKey == 29" :key="index" style="max-height:660px;overflow:scroll">
                                 <template v-for="(itm,i) in item.dataChildList">
                                     <div class="bgColor atomtit" :key="i" :style="i==0?'':'margin-top:30px'">{{itm.dataKey}}</div>
                                     <ul class="yuanziAddressUl" :key="i">
                                         <li v-for="(li,ai) in itm.tempList" :key="ai">
-                                            <div>{{li.dataTips}}</div>
+                                            <div>{{li.dataQ}}</div>
                                             <div>{{li.dataValue}}</div>
                                         </li>
                                     </ul>
                                 </template>
                             </div>
-                        </template>
-                        <!-- <div class="bgColor atomtit" style="margin-top:30px">N</div>
-                        <ul class="yuanziAddressUl">
-                            <li>
-                                <div>x</div>
-                                <div>1</div>
-                            </li>
-                            <li>
-                                <div>y</div>
-                                <div>2</div>
-                            </li>
-                            <li>
-                                <div>z</div>
-                                <div>3</div>
-                            </li>
-                        </ul> -->
+                            </template>
                     </div>
                 </div>
             </div>
@@ -188,7 +178,7 @@
                                         <span style="left:4px;bottom:4px">表征方法</span>
                                         <span class="hr"></span>
                                     </li>
-                                    <li>B</li><li>N</li><li>O</li><li>--</li><li>--</li>
+                                    <li>B</li><li>N</li><li>O</li>
                                 </ul>
                                 <ul class="chengfenTrs clearFloat" v-for="(data5,index) in chenfenTable" :key="index">
                                     <li>{{data5.name}}</li>
@@ -284,7 +274,7 @@
                             <li v-for="(itm, index) in item.dataValue" :key="index">
                                 <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                                 <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
-                                <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
+                                <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.dateTips}}</div>
                             </li>
                         </ul>
                     </div>
@@ -315,7 +305,7 @@
                         <li v-for="(itm, index) in item.dataValue" :key="index">
                             <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                             <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
-                            <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
+                            <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.dateTips}}</div>
                         </li>
                     </ul>
                 </div>
@@ -344,7 +334,7 @@
                             <li v-for="(itm, index) in item.dataValue" :key="index">
                                 <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                                 <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
-                                <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{itm.dataDescription}}</div>
+                                <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.dateTips}}</div>
                             </li>
                         </ul>
                     </div>
@@ -373,13 +363,7 @@ export default {
             classId15:true,
             classId13:true,
             pageData:[],
-            chenfenTable:[
-                {name:'名义',data:['--','--','--','--','--']},
-                {name:'XPS',data:['23','45','54','--','--']},
-                {name:'AES',data:['23','34','55','--','--']},
-                {name:'EELS',data:['23','56','34','--','--']},
-                {name:'--',data:['--','--','--','--','--']},
-            ],
+            chenfenTable:[],
             tabPosition:'left',
             tableData:[
                 {x:'1',y:'2',z:'3'},
@@ -398,7 +382,14 @@ export default {
             paramPositionNArrArr:[],
             dataContail:this.$route.query.id,
             source:this.$route.query.source,
-            dataSourceObj:{}
+            content:'',
+            element:'',
+            dataSourceObj:{},
+            threrDObj:{},
+            threrDArr:[],
+            threrDArrString:'',
+            chenfenTableXPS:[],
+            chenfenTableAES:[],
         }
     },
     created() {
@@ -406,6 +397,17 @@ export default {
     },
     methods: {
         init(){
+            console.log(this.$route.query)
+            if(typeof this.$route.query.content == 'string'){
+                this.content = this.$route.query.content.split(':')
+            }else{
+                this.content = this.$route.query.content
+            }
+            if(typeof this.$route.query.element == 'string'){
+                this.element = this.$route.query.element.split(',')
+            }else{
+                this.element = this.$route.query.element
+            }
             this.$api.getDataSource().then(res=>{ // 数据来源
                 res.data.data.map(x=>{
                     Object.assign(this.dataSourceObj,{[x.structureId]: x.stKey})
@@ -419,7 +421,7 @@ export default {
                         this.paramLenght = resData[i].keyParentList.filter(x=>x.dataKey==27)[0]
                         this.paramAngle = resData[i].keyParentList.filter(x=>x.dataKey==28)[0]
                     }
-                    for(let m=0;m<resData[i].keyParentList.length;m++){
+                    for(let m=0;m<resData[i].keyParentList.length;m++){ // 检出所有类型是图片的数据
                         if(resData[i].keyParentList[m].dataKey == '61'
                         ||resData[i].keyParentList[m].dataKey == '31'
                         ||resData[i].keyParentList[m].dataKey == '32'
@@ -431,13 +433,106 @@ export default {
                         ||resData[i].keyParentList[m].dataKey == '60'
                         ||resData[i].keyParentList[m].dataKey == '59'
                         ||resData[i].keyParentList[m].dataKey == '63'){
-                            console.log(resData[i].className)
                             resData[i].keyParentList[m].dataValue = resData[i].keyParentList[m].dataValue.split(',')
                         }
+
+                        if(resData[i].keyParentList[m].dataKey==29){ //
+                            let keyParentList = resData[i].keyParentList[m]
+                            if(keyParentList.dataChildList.length){
+                                for(var n=0;n<keyParentList.dataChildList.length;n++){
+                                    let threrDObjArr = [keyParentList.dataChildList[n].dataKey]
+                                    if(keyParentList.dataChildList[n].tempList.length){
+                                        for(var b=0;b<keyParentList.dataChildList[n].tempList.length;b++){
+                                            threrDObjArr.push(keyParentList.dataChildList[n].tempList[b].dataValue)
+                                            this.threrDObj[n]=threrDObjArr
+                                        }
+                                    }
+                                }
+                            }
+                            // this.threrDArr = 
+                            for(let key  in this.threrDObj){ // 给3d图用的参数
+                                this.threrDArr.push(this.threrDObj[key].join('-'))
+                            }
+                            this.threrDArrString = this.threrDArr.join(',')
+                        }
+
+                        // 界面相结构成分表格
+                        // XPS
+                        if(resData[i].keyParentList[m].dataKey==7){
+                            let _keyParentList = resData[i].keyParentList[m]
+                            if(_keyParentList.dataChildList.length>0){
+                                for(let i=0;i<_keyParentList.dataChildList.length;i++){
+                                    if(_keyParentList.dataChildList[i].tempList.length){
+                                        for(let b=0;b<_keyParentList.dataChildList[i].tempList.length;b++){
+                                            this.chenfenTableXPS.push({
+                                                dataT:_keyParentList.dataChildList[i].tempList[b].dataT,
+                                                dataValue:_keyParentList.dataChildList[i].tempList[b].dataValue
+                                            })
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // AES
+                        if(resData[i].keyParentList[m].dataKey==8){
+                            let _keyParentList = resData[i].keyParentList[m]
+                            if(_keyParentList.dataChildList.length>0){
+                                for(let i=0;i<_keyParentList.dataChildList.length;i++){
+                                    if(_keyParentList.dataChildList[i].tempList.length){
+                                        for(let b=0;b<_keyParentList.dataChildList[i].tempList.length;b++){
+                                            this.chenfenTableAES.push({
+                                                dataT:_keyParentList.dataChildList[i].tempList[b].dataT,
+                                                dataValue:_keyParentList.dataChildList[i].tempList[b].dataValue
+                                            })
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
                     }
                 }
+                let _chenfenTableAES = []
+                let _chenfenTableXPS = []
+                if(this.chenfenTableAES.filter(x=>x.dataT=='B').length){
+                    _chenfenTableAES.push(this.chenfenTableAES.filter(x=>x.dataT=='B')[0].dataValue)
+                }else{
+                    _chenfenTableAES.push('--')
+                }
+                if(this.chenfenTableAES.filter(x=>x.dataT=='N').length){
+                    _chenfenTableAES.push(this.chenfenTableAES.filter(x=>x.dataT=='N')[0].dataValue)
+                }else{
+                    _chenfenTableAES.push('--')
+                }
+                if(this.chenfenTableAES.filter(x=>x.dataT=='O').length){
+                    _chenfenTableAES.push(this.chenfenTableAES.filter(x=>x.dataT=='O')[0].dataValue)
+                }else{
+                    _chenfenTableAES.push('--')
+                }
+
+                if(this.chenfenTableXPS.filter(x=>x.dataT=='B').length){
+                    _chenfenTableXPS.push(this.chenfenTableXPS.filter(x=>x.dataT=='B')[0].dataValue)
+                }else{
+                    _chenfenTableXPS.push('--')
+                }
+                if(this.chenfenTableXPS.filter(x=>x.dataT=='N').length){
+                    _chenfenTableXPS.push(this.chenfenTableXPS.filter(x=>x.dataT=='N')[0].dataValue)
+                }else{
+                    _chenfenTableXPS.push('--')
+                }
+                if(this.chenfenTableXPS.filter(x=>x.dataT=='O').length){
+                    _chenfenTableXPS.push(this.chenfenTableXPS.filter(x=>x.dataT=='O')[0].dataValue)
+                }else{
+                    _chenfenTableXPS.push('--')
+                }
+                // this.chenfenTable
+                this.chenfenTable=[
+                    {name:'XPS',data:_chenfenTableXPS},
+                    {name:'AES',data:_chenfenTableAES},
+                ]
+                console.log(this.chenfenTable)
                 this.pageData = resData
-                console.log(resData)
             })
         },
         processingData(data){
@@ -515,6 +610,7 @@ export default {
         top: 10px;
         right: 10px;
         width: auto;
+        z-index: 999
     }
     .nomore img{
         width: 148px;
@@ -549,19 +645,23 @@ export default {
         border-top: none;
         padding: 21px 16px 23px 16px;
     }
+    .chengfenTrs{
+        display: flex;
+        justify-content: flex-start;
+    }
     .chengfenTrs li{
         border-right: 1px solid #ddd;
         border-bottom: 1px solid #ddd;
         height: 40px;
         line-height: 40px;
-        width: 211px;
+        width: 333px;
         text-align: center;
         font-size: 14px;
         color: #4d4d4d;
-        float: left;
+        /* float: left; */
     }
     .chengfenTrs>:first-child{
-        width: 143px;
+        width: 200px;
         background: #E2FCF9;
         color: #4D4D4D;
         position: relative;
@@ -572,7 +672,7 @@ export default {
         height: 0;
         left: 0;
         top: 0;
-        transform: rotate(20deg);
+        transform: rotate(14deg);
         transform-origin:top left;
     }
     .chengfenTitle span{
@@ -583,6 +683,8 @@ export default {
     .chengfenTitle{
         height: 53px;
         line-height: 53px;
+        display: flex;
+        justify-content: flex-start;
     }
     .chengfenTitle li{
         text-align: center;
@@ -590,15 +692,15 @@ export default {
         line-height: 53px;
         border-bottom: 1px solid #ddd;
         border-right:1px solid #ddd;
-        width: 211px;
-        float: left;
+        width: 333px;
+        /* float: left; */
         background: #E2FCF9;
         color: #4d4d4d;
         font-size: 14px;
         font-weight: bold;
     }
     .chengfenTitle>:first-child{
-        width: 143px;
+        width: 200px;
         background: #33B0B5;
         color: #fff;
         position: relative;
@@ -730,7 +832,8 @@ export default {
         transform:translate(0,0)!important;
         right: 10px!important;
         top: 50px!important;
-        left:unset
+        left:unset;
+        z-index: 999;
     }
     .erpTit{
         overflow: hidden;
@@ -765,7 +868,7 @@ export default {
         font-size: 14px;
     }
     .parameterBox div{
-        width:200px;
+        width:100%;
         margin:0 auto;
         overflow:hidden;
         text-overflow:ellipsis;
@@ -804,6 +907,7 @@ export default {
     .crystalImg .fangda{
         top: 24px;
         right: 24px;
+        z-index: 999;
     }
     .crystalImg .xiazai{
         bottom: 24px;
