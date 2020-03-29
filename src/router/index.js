@@ -4,7 +4,7 @@ import login from '../views/login.vue'
 import register from '../views/register.vue'
 import forgetPassword from '../views/forgetPas.vue'
 import layOut from '../views/layOut.vue'
-import header from '../views/header.vue'
+import Dheader from '../views/Dheader.vue'
 import indexPage from '../views/pages/homePage/indexPage.vue'
 import searchResult from '../views/pages/homePage/searchResult.vue'
 import dataManage from '../views/pages/dataManage/index.vue'
@@ -40,7 +40,7 @@ const routes = [
   {
     path: '/data-cen',
     name: 'header',
-    component: header,
+    component: Dheader,
     children: [
       {
         path: '/data-cen/dataManage/dataEdit',

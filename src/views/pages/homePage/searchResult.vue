@@ -35,7 +35,7 @@
                 <div style="overflow:hidden" v-if="data1.keyParentList.length">
                     <div class="fl crystalImg">
                         <img @click="iframeBig()" class="fangda" src="../../../assets/images/fangdafff.png" alt="">
-                        <iframe id="iframe" class="iframeStyle" style="height:100%;width:100%;" :src='"http://118.190.142.89:8090/3d?dataParam="+threrDArrString'></iframe>
+                        <iframe id="iframe" class="iframeStyle" :src='"http://118.190.142.89:8090/3d?dataParam="+threrDArrString'></iframe>
                         <img class="xiazai" src="../../../assets/images/downicon.png" alt="">
                     </div>
                     <div class="fl crystalParameter">
@@ -622,11 +622,11 @@ export default {
 </style>
 <style scoped>
     .iframeStyle{
-        height: 554px;
-        width: 580px;
+        height: 673px;
+        width: 665px;
         position: absolute;
-        left: -42px;
-        top: 11px;
+        left: -44px;
+        top: -36px;
     }
     .spareImg:after { 
     content: url('../../../assets/images/nomore.png');

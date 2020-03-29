@@ -11,9 +11,17 @@
               </el-input>
             </div>
             <div class="userButton">
-              <span><router-link :to="{path:'/data-cen/user/personalCenter'}">shy</router-link></span>
+              <span :title="userName" :style="quanxian.indexOf('3')>0?'cursor:not-allowed;color:#d1d1d1;pointer-events: none':''" style="display: inline-block;
+                    width: 55px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;">
+                <router-link :to="{path:'/data-cen/user/personalCenter'}">{{userName}}</router-link>
+              </span>
               <span>|</span>
-              <span>{{name}}</span>
+              <span v-if="roleIdList==1">超级管理员</span>
+              <span v-if="roleIdList==2">管理员</span>
+              <span v-if="roleIdList==3">一般用户</span>
               <span style="cursor: pointer;" @click="out()"><i class="iconfont icontuichufffpx"></i></span>
             </div>
           </div>
@@ -31,7 +39,10 @@ export default {
   data() {
     return {
       input3:'',
-      name:''
+      name:'',
+      userName:'',
+      roleIdList:'',
+      quanxian:localStorage.getItem('roleIdList'),
     }
   },
   created() {
@@ -68,7 +79,10 @@ export default {
     },
     init() {
       this.name = JSON.parse(localStorage.getItem("user")).name
-     }
+      this.userName = JSON.parse(localStorage.getItem("user")).username
+      this.roleIdList = JSON.parse(localStorage.getItem("roleIdList"))[0]
+        // this.$router.push('/login') 
+    },
   }
 }
 </script>

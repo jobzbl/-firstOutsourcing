@@ -261,6 +261,11 @@ export default {
 }
 </script>
 <style lang="less">
+    .tableBox{
+        .el-button--text:focus, .el-button--text:hover{
+            border-color: rgba(0,0,0,.0)!important;
+        }
+    }
     .paginationDiv2{
         margin-top: 24px;
 		.el-pagination{

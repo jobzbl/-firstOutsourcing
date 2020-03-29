@@ -91,7 +91,7 @@ instance.interceptors.response.use(
     res => {
         if(res.status==200){
                 // 在这里把用户名和token保存起来
-            if(res.config.url.indexOf('/regedit')=='-1'){
+            if(res.config.url.indexOf('/regedit')=='-1'&&res.config.url.indexOf('/export')=='-1'){
                 if(res.data.code!='0'&&res.data.code!='-1') {
                     tip(res.data.msg); 
                 }

@@ -9,37 +9,36 @@
       <div class="loginName">账号注册</div>
       <el-form :model="register" :rules="ruleRegister" ref="ruleRegister" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="username">
-                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
-            <el-input v-model="register.username" autocomplete="new-password" placeholder="请输入用户名"></el-input>
+            <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
+            <el-input v-model="register.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="姓名" prop="name">
-                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
-            <el-input v-model="register.name" autocomplete="new-password" placeholder="请输入姓名"></el-input>
+            <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
+            <el-input v-model="register.name" placeholder="请输入姓名"></el-input>
           </el-form-item>
           <el-form-item label="单位" prop="company">
-                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
+            <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.company" placeholder="请输单位"></el-input>
           </el-form-item>
           <el-form-item label="部门" prop="department">
-                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
+            <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.department" placeholder="请输入部门"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
-                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
-
+            <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.email" placeholder="请输入邮箱"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <div style="postion:relative">
-                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
-              <el-input v-model="register.password" :type="passwordBox1?'password':'text'" placeholder="请输入密码"></el-input>
+            <div style="postion:relative;">
+              <el-input class="fakeInput" v-model="register.password" type="text"></el-input>
+              <el-input tabindex='-1' v-model="register.password" :type="passwordBox1?'password':'text'" placeholder="请输入密码"></el-input>
               <i @click="eyeButton()" :class="passwordBox1?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
             </div>
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPassword">
             <div style="postion:relative">
-                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
-              <el-input v-model="register.confirmPassword" :type="passwordBox2?'password':'text'" placeholder="请再次输入密码"></el-input>
+              <el-input class="fakeInput" v-model="register.confirmPassword" type="text"></el-input>
+              <el-input tabindex='-1' v-model="register.confirmPassword" :type="passwordBox2?'password':'text'" placeholder="请再次输入密码"></el-input>
               <i @click="eyeButton2()" :class="passwordBox2?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
             </div>
           </el-form-item>
@@ -61,6 +60,7 @@
 </template>
 
 <script>
+
 export default {
     name: 'register',
   data() {
@@ -100,20 +100,13 @@ export default {
             { min: 6, max: 20, message: '密码只能输入6-20个字母、数字、下划线！', trigger: 'blur' }
         ],
       },
-      passwordBox1:false,
-      passwordBox2:false
+      passwordBox1:true,
+      passwordBox2:true
     }
   },
   created() {
-    this.init()
   },
   methods: {
-    init(){
-      setTimeout(() => {
-        this.passwordBox1=true
-        this.passwordBox2 = true
-      }, 500);
-    },
     eyeButton(){
       this.passwordBox1=!this.passwordBox1
     },
@@ -159,11 +152,20 @@ export default {
           }
         })
     }
-  }
+  },
 }
 </script>
 
 <style>
+  .fakeInput {
+    position:absolute!important;
+    z-index:999;
+  }
+  .fakeInput .el-input__inner{
+    color:rgba(0,0,0,.0);
+    background:rgba(0,0,0,.0);
+    font-size: 1px;
+  }
   .el-form-item__error{
     box-sizing: content-box;
     position: absolute;
@@ -186,6 +188,7 @@ export default {
   .eyeButton{
     position: absolute;
     right:10px;
+    z-index: 99999;
   }
   .mask{
     position: fixed;

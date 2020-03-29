@@ -25,9 +25,9 @@
   border-color: #33B0B5!important;
 }
 .el-button:focus, .el-button:hover{
-  color: #FFF!important;
-  background-color: #33B0B5!important;
   border-color: #33B0B5!important;
+}
+.el-button:focus i, .el-button:hover i{
 }
 .el-input.is-active .el-input__inner, .el-input__inner:focus{
   border-color: #33B0B5!important;
@@ -45,6 +45,9 @@
 .el-radio__input.is-checked .el-radio__inner{
   border-color: #33B0B5!important;
   background: #33B0B5!important;
+}
+.el-checkbox__inner:hover{
+  border-color:#33B0B5!important;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
