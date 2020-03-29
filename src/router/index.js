@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import login from '../views/login.vue'
+import register from '../views/register.vue'
+import forgetPassword from '../views/forgetPas.vue'
 import layOut from '../views/layOut.vue'
 import header from '../views/header.vue'
 import indexPage from '../views/pages/homePage/indexPage.vue'
@@ -24,7 +26,16 @@ const routes = [
     path: '/login',
     name: 'login',
     component: login,
-    // childen
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: register,
+  },
+  {
+    path: '/forgetPas',
+    name: 'forgetPas',
+    component: forgetPassword,
   },
   {
     path: '/data-cen',

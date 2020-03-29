@@ -1,19 +1,23 @@
 <template>
     <div class="removeDialog">
-        <el-dialog title="确认提示" :visible.sync="visible" width="400px" :before-close="handleClose" :show-close='false'>
+        <el-dialog title="确认提示" :visible.sync="visible" width="400px" :before-close="close" :show-close='false'>
             <div style="display:flex;justify-content:flex-start">
                 <div style="width:50px;height:50px;">
                     <img src="../../../assets/images/issue.png" alt="" style="width:100%;height:auto;">
                 </div>
-                <div style="margin-left:20px;">
+                <div style="margin-left:20px;" v-if="msg.length<1">
                     <div style="color:#4d4d4d;font-size:18px;font-weight:bold">是否确定删除勾选数据</div>
                     <div style="color:#666;font-size:14px;margin-top:10px;">删除勾选数据会导致删除的数据不可恢复</div>
+                </div>
+                <div style="margin-left:20px;" v-if="msg.length>0">
+                    <div style="color:#4d4d4d;font-size:18px;font-weight:bold">{{msg[0]}}</div>
+                    <div style="color:#666;font-size:14px;margin-top:10px;">{{msg[1]}}</div>
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
                 <div class="formButtonBox">
                     <el-button type="primary" @click="handleClose(true)">确 定</el-button>
-                    <el-button @click="handleClose">取 消</el-button>
+                    <el-button @click="close()">取 消</el-button>
                 </div>
             </span>
         </el-dialog>
@@ -32,6 +36,10 @@ export default {
             type:Boolean,
             default:true,
         },
+        msg:{
+            type:Array,
+            defalut:[]
+        },
         data:{
             type:String,
             default:''
@@ -43,6 +51,9 @@ export default {
             if(data){
                 this.$parent.removeDataOk();
             }
+            this.$emit('update:visible', false)
+        },
+        close(){
             this.$emit('update:visible', false)
         }
     },

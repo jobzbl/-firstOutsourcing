@@ -11,9 +11,17 @@
               </el-input>
             </div>
             <div class="userButton">
-              <span><router-link :to="{path:'/data-cen/user/personalCenter'}">shy</router-link></span>
+              <span :title="userName" :style="quanxian.indexOf('3')>0?'cursor:not-allowed;color:#d1d1d1;pointer-events: none':''" style="display: inline-block;
+                    width: 55px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;">
+                <router-link :to="{path:'/data-cen/user/personalCenter'}">{{userName}}</router-link>
+              </span>
               <span>|</span>
-              <span>{{name}}</span>
+              <span v-if="roleIdList==1">超级管理员</span>
+              <span v-if="roleIdList==2">管理员</span>
+              <span v-if="roleIdList==3">一般用户</span>
               <span style="cursor: pointer;" @click="out()"><i class="iconfont icontuichufffpx"></i></span>
             </div>
           </div>
@@ -24,12 +32,14 @@
         <div :class="{headerMenuHover:headerMenu==1}" @click="menuClick(1)" style="margin-left:0"><router-link :to="{path:'/'}"></router-link>首页</div>
         <div style="cursor:not-allowed;color:#d1d1d1;pointer-events: none;" :class="{headerMenuHover:headerMenu==2}" @click="menuClick(2)">界面相介绍</div>
         <div style="cursor:not-allowed;color:#d1d1d1;pointer-events: none;" :class="{headerMenuHover:headerMenu==3}" @click="menuClick(3)">界面相筛选</div>
-        <div :class="{headerMenuHover:headerMenu==4}" @click="menuClick(4)"><router-link :to="{path:'/dataManage'}"></router-link>数据管理</div>
-        <div :class="{headerMenuHover:headerMenu==5}" @click="menuClick(5)"><router-link :to="{path:'/dataStructure'}"></router-link>数据结构管理</div>
-        <div :class="{headerMenuHover:headerMenu==6}" @click="menuClick(6)"><router-link :to="{path:'/userManage'}"></router-link>用户管理</div>
+        <div :style="quanxian.indexOf('3')>0?'cursor:not-allowed;color:#d1d1d1;pointer-events: none':''" :class="{headerMenuHover:headerMenu==4}" @click="menuClick(4)"><router-link :to="{path:'/dataManage'}"></router-link>数据管理</div>
+        <div :style="quanxian.indexOf('3')>0?'cursor:not-allowed;color:#d1d1d1;pointer-events: none':''" :class="{headerMenuHover:headerMenu==5}" @click="menuClick(5)"><router-link :to="{path:'/dataStructure'}"></router-link>数据结构管理</div>
+        <div :style="quanxian.indexOf('3')>0?'cursor:not-allowed;color:#d1d1d1;pointer-events: none':''" :class="{headerMenuHover:headerMenu==6}" @click="menuClick(6)"><router-link :to="{path:'/userManage'}"></router-link>用户管理</div>
       </div>
     </div>
-    <router-view/>
+    <div class="bigScroll">
+      <router-view/>
+    </div>
   </div>
 </template>
 <script>
@@ -40,7 +50,10 @@ export default {
       headerMenu:1,
       input3:'',
       name:'',
-      nowPath:''
+      nowPath:'',
+      userName:'',
+      roleIdList:'',
+      quanxian:localStorage.getItem('roleIdList'),
     }
   },
   created() {
@@ -56,14 +69,15 @@ export default {
         return
       }
       this.$api.getSysDataList({page:1,limit:10,dataContail:this.input3}).then( res => {
-        console.log(res)
-        if(res.data.page.list){
+        if(res.data.page.list.length){
           // 'content':data.dataContent,'element':data.dataElement
           this.$router.push('/result?id='+res.data.page.list[0].dataContail
           +'&source='+res.data.page.list[0].dataSource
           +'&content='+JSON.stringify(res.data.page.list[0].dataContent)
           +'&element='+JSON.stringify(res.data.page.list[0].dataElement)
           )
+        }else{
+          this.$router.push('/result?id=0')
         }
       })
     },
@@ -90,6 +104,8 @@ export default {
           this.headerMenu = 6
         }
       this.name = JSON.parse(localStorage.getItem("user")).name
+      this.userName = JSON.parse(localStorage.getItem("user")).username
+      this.roleIdList = JSON.parse(localStorage.getItem("roleIdList"))[0]
         // this.$router.push('/login') 
     },
   },
@@ -118,6 +134,10 @@ export default {
 </script>
 
 <style>
+  .bigScroll{
+    height:calc(100vh - 115px);
+    overflow-y:auto
+  }
   .headerMenu div{
     height: 40px;
     line-height: 40px;

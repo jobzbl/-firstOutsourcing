@@ -20,7 +20,9 @@
         </div>
       </div>
     </div>
+    <div class="bigScroll2">
     <router-view/>
+    </div>
   </div>
 </template>
 <script>
@@ -37,14 +39,25 @@ export default {
   },
   methods: {
     searchBut(){
-      if(this.input3){
+      if(this.input3==''){
         this.$message({
             message: '请输入关键字',
             type: 'warning'
         });
         return
       }
-      this.$router.push('/result?id='+this.input3)
+      this.$api.getSysDataList({page:1,limit:10,dataContail:this.input3}).then( res => {
+        if(res.data.page.list.length){
+          // 'content':data.dataContent,'element':data.dataElement
+          this.$router.push('/result?id='+res.data.page.list[0].dataContail
+          +'&source='+res.data.page.list[0].dataSource
+          +'&content='+JSON.stringify(res.data.page.list[0].dataContent)
+          +'&element='+JSON.stringify(res.data.page.list[0].dataElement)
+          )
+        }else{
+          this.$router.push('/result?id=0')
+        }
+      })
     },
     out(){
       this.$router.push('/login')
@@ -59,6 +72,10 @@ export default {
 </script>
 
 <style>
+  .bigScroll2{
+    height: calc(100vh - 60px);
+    overflow-y:auto;
+  }
   .userButton{
     
     color: #fff;

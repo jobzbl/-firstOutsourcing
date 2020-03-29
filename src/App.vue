@@ -7,6 +7,28 @@
 *{
   box-sizing: border-box;
 }
+.el-button--primary{
+    color: #FFF;
+    background-color: #33B0B5;
+    border-color: #33B0B5;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+    background-color: #33B0B5;
+    border-color: #33B0B5;
+}
+.el-checkbox__input.is-checked+.el-checkbox__label{
+  color:#33B0B5
+}
+.el-button--primary:focus, .el-button--primary:hover{
+  color: #FFF;
+  background-color: #33B0B5;
+  border-color: #33B0B5;
+}
+.el-button:focus, .el-button:hover{
+  color: #FFF;
+  background-color: #33B0B5;
+  border-color: #33B0B5;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

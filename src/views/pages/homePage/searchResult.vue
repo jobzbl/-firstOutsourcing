@@ -10,37 +10,40 @@
         <div style="margin:30px 0 36px;overflow:hidden;font-size:16px;color:#4d4d4d;">
             <div class="fl">
                 <span style="font-weight:bold;">具体结果页：</span>
-                <span>界面相材料：</span>
-                <span style="color:#33B0B5">
-                    <span v-for="(item,index) in element" :key='index'>{{item}}<sub style="font-size:10px;">{{content[index]>1?content[index]:''}}</sub>
+                <span v-if="searchKeyWord!=0">界面相材料：</span>
+                <span style="color:#33B0B5" v-if="searchKeyWord!=0">
+                    <span v-for="(item,indexh) in element" :key='indexh+"c"'>{{item}}<sub style="font-size:10px;">{{content[indexh]>1?content[indexh]:''}}</sub>
 					</span>
                 ,</span>
             </div>
-            <div class="fl" style="margin-left:5px">
+            <div class="fl" style="margin-left:5px" v-if="searchKeyWord!=0">
                 <span>数据来源：</span>
                 <span style="color:#33B0B5">{{dataSourceObj[source]}}</span>
             </div>
+            <div v-if="searchKeyWord==0">
+                搜索结果为0
+            </div>
         </div>
     </div>
-    <template v-for="(data1,index) in pageData">
+    <template v-for="(data1,index1) in pageData">
         <template v-if="data1.classId==7">
-            <div class="wrap" :key="index">
+            <div class="wrap" :key="index1+'a'">
                 <div class="subfield">
                     <i></i>
                     界面相材料晶体结构：
                 </div>
                 <div style="overflow:hidden" v-if="data1.keyParentList.length">
                     <div class="fl crystalImg">
-                        <img class="fangda" src="../../../assets/images/fangdafff.png" alt="">
-                        <iframe style="height:100%;width:100%;margin-top:80px" :src='"http://118.190.142.89:8090/3d?dataParam="+threrDArrString'></iframe>
+                        <img @click="iframeBig()" class="fangda" src="../../../assets/images/fangdafff.png" alt="">
+                        <iframe id="iframe" class="iframeStyle" style="height:100%;width:100%;" :src='"http://118.190.142.89:8090/3d?dataParam="+threrDArrString'></iframe>
                         <img class="xiazai" src="../../../assets/images/downicon.png" alt="">
                     </div>
                     <div class="fl crystalParameter">
-                        <div class="parameterTit" style="margin-right:10px">品格参数</div>
+                        <div class="parameterTit">品格参数</div>
                         <div class="tableBorer">
                             <el-row type="flex" class="row-bg">
                                 <el-col :span="24" v-if="paramLenght&&paramLenght.dataChildList">
-                                    <el-row v-for="itm in paramLenght.dataChildList" :key="itm.dataId">
+                                    <el-row v-for="itm in paramLenght.dataChildList" :key="itm.dataId+'b'">
                                         <el-col :span="12" class="parameterBox bgColor">{{itm.dataT}} (Å)</el-col>
                                         <el-col :span="12" class="parameterBox">
                                             <div :title="itm.dataValue">{{itm.dataValue}}</div>
@@ -48,20 +51,20 @@
                                     </el-row>
                                 </el-col>
                                 <el-col :span="24" v-if="paramAngle&&paramAngle.dataChildList">
-                                    <el-row v-for="itm in paramAngle.dataChildList" :key="itm.dataId">
+                                    <el-row v-for="itm in paramAngle.dataChildList" :key="itm.dataId+'c'">
                                         <el-col :span="12" class="parameterBox bgColor">{{itm.dataT}} (°)</el-col>
                                         <el-col :span="12" class="parameterBox"><div :title="itm.dataValue">{{itm.dataValue}}</div></el-col>
                                     </el-row>
                                 </el-col>
                             </el-row>
                         </div>
-                        <div class="parameterTit" style="margin-right:10px">原子位置(分数坐标)</div>
-                            <template v-for="(item,index) in data1.keyParentList" >
-                            <div v-if="item.dataKey == 29" :key="index" style="max-height:660px;overflow:scroll">
+                        <div class="parameterTit">原子位置(分数坐标)</div>
+                            <template v-for="(item,index2) in data1.keyParentList" >
+                            <div v-if="item.dataKey == 29" :key="index2+'d'" style="max-height:660px;overflow:auto">
                                 <template v-for="(itm,i) in item.dataChildList">
-                                    <div class="bgColor atomtit" :key="i" :style="i==0?'':'margin-top:30px'">{{itm.dataKey}}</div>
-                                    <ul class="yuanziAddressUl" :key="i">
-                                        <li v-for="(li,ai) in itm.tempList" :key="ai">
+                                    <div class="bgColor atomtit" :key="i+'e'" :style="i==0?'':'margin-top:30px'">{{itm.dataKey}}</div>
+                                    <ul class="yuanziAddressUl" :key="i+'f'">
+                                        <li v-for="(li,ai) in itm.tempList" :key="ai+'g'">
                                             <div>{{li.dataQ}}</div>
                                             <div>{{li.dataValue}}</div>
                                         </li>
@@ -74,25 +77,25 @@
             </div>
         </template>
     </template>
-    <template v-for="(data2,index) in pageData">
+    <template v-for="(data2,index3) in pageData">
         <template v-if="data2.classId==29">
-            <div class="wrap" :key="index">
+            <div class="wrap" :key="index3+'h'">
                 <div class="subfield" style="margin-top:42px">
                     <i></i>
                     界面相材料电子结构：
                 </div>
                 <div class="erpTit" v-if="data2.keyParentList.length">
-                    <div v-for="(item,index) in data2.keyParentList" :key="index" class="fl parameterTit" :style="index==0?'border-right:1px solid #fff':''">{{item.dataKeyName}}</div>
+                    <div v-for="(item,index4) in data2.keyParentList" :key="index4+'i'" class="fl parameterTit" :style="index4==0?'border-right:1px solid #fff':''">{{item.dataKeyName}}</div>
                     <!-- <div class="fl parameterTit">电子能态密度</div> -->
                 </div>
                 <div class="erpBigBox" v-if="data2.keyParentList.length">
-                    <div class="fl" v-for="(item,index) in data2.keyParentList" :key="index" :style="index==0?'border-right:1px solid #ddd;width:50%':'width:50%'">
+                    <div class="fl" v-for="(item,index5) in data2.keyParentList" :key="index5+'j'" :style="index5==0?'border-right:1px solid #ddd;width:50%':'width:50%'">
                         <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                        <img style="width:80%;height:90%" :src="item.dataValue?item.dataValue:'../../../assets/images/take.png'" alt="">
+                        <img style="width:80%;height:90%" class="spareImg" :src="item.dataValue?item.dataValue:'../../../assets/images/take.png'" alt="">
                     </div>
                     <!-- <div class="fl" style="width:50%">
                         <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                        <img src="../../../assets/images/take.png" alt="">
+                        <img src="../../../assets/images/nomore.png" alt="">
                     </div> -->
                 </div>
             </div>
@@ -100,9 +103,9 @@
     </template>
 
 
-    <template v-for="(data3,index) in pageData">
+    <template v-for="(data3,index6) in pageData">
         <template v-if="data3.classId==8">
-            <div class="wrap" :key="index">
+            <div class="wrap" :key="index6+'k'">
                 <div class="subfield" style="margin-top:42px">
                     <i></i>
                     界面相材料力学性能：
@@ -119,12 +122,12 @@
                                 <div v-for="(data, index2) in item" :key="index2">{{data}}</div>
                             </div> -->
                             <template v-for="item in data3.keyParentList">
-                                <img v-if="tabPosition=='left'?item.dataKey==31:item.dataKey==32" :key="item.dataId" :src="item.dataValue" style="width:100%;height:100%" alt="">
+                                <img v-if="tabPosition=='left'?item.dataKey==31:item.dataKey==32" :key="item.dataId+'l'" :src="item.dataValue" style="width:100%;height:100%" alt="">
                             </template>
                         </div>
                     </div>
-                    <div class="fl matrixDataBigBox borderTL" :style="data3.keyParentList.length>12?'overflow-y: scroll;width: 800px;margin-left: 15px;':''">
-                        <div v-for="item in data3.keyParentList" :key="item.dataKey">
+                    <div class="fl matrixDataBigBox borderTL" :style="data3.keyParentList.length>12?'overflow-y:auto;width: 800px;margin-left: 15px;':''">
+                        <div v-for="item in data3.keyParentList" :key="item.dataKey+'m'">
                             <div class="matrixRSmallBox fl" v-if="item.dataKey!=31&&item.dataKey!=32">
                                 <div class="matrixBgBox" >
                                     <span>{{item.dataKeyName}}</span>
@@ -140,18 +143,19 @@
         </template>
     </template>
 
-    <template v-for="(data4,index) in pageData">
+    <template v-for="(data4,index7) in pageData">
         <template v-if="data4.classId==10">
-            <div class="wrap" :key="index">
+            <div class="wrap" :key="index7+'n'">
                 <div class="subfield" style="margin-top:42px">
                     <i></i>
                     界面相合成：
                 </div>
-                <div class="hechengBigBox borderTL" :style="data4.keyParentList.length>10?'overflow-y: scroll;':''">
+                <div class="hechengBigBox borderTL" :style="data4.keyParentList.length>10?'height: auto;':''">
                     <div v-if="data4.keyParentList.length>3" @click="classId10=!classId10" class="downIcon"><img :style="!classId10?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
-                    <div v-for="(item, index) in data4.keyParentList" :key="index">
-                        <div class="hechengRowBox" v-if="classId10?index<3:true">
-                            <span>{{item.dataKeyName}}</span>{{item.dataValue}}
+                    <div v-for="(item, index8) in data4.keyParentList" :key="index8+'o'">
+                        <div class="hechengRowBox" v-if="classId10?index8<3:true">
+                            <span>{{item.dataKeyName}}</span>
+                            <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.dataValue}}</div>
                         </div>
                     </div>
 
@@ -162,16 +166,16 @@
         </template>
     </template>
 
-    <template v-for="(data5,index) in pageData">
+    <template v-for="(data5,index9) in pageData">
         <template v-if="data5.classId==9">
-            <div class="wrap" :key="index">
+            <div class="wrap" :key="index9+'p'">
                 <div class="subfield" style="margin-top:42px">
                     <i></i>
                     界面相结构和成分：
                 </div>
                 <template v-for="item1 in data5.keyParentList">
                     <template v-if="item1.dataKey==7&&item1.dataChildList.length">
-                            <div class="chengfenTable borderTL" :key="item1.dataId">
+                            <div class="chengfenTable borderTL" :key="item1.dataId+'q'">
                                 <ul class="chengfenTitle clearFloat">
                                     <li>
                                         <span style="right:4px;top:4px">成分</span>
@@ -180,9 +184,9 @@
                                     </li>
                                     <li>B</li><li>N</li><li>O</li>
                                 </ul>
-                                <ul class="chengfenTrs clearFloat" v-for="(data5,index) in chenfenTable" :key="index">
+                                <ul class="chengfenTrs clearFloat" v-for="(data5,indexa) in chenfenTable" :key="indexa+'i'">
                                     <li>{{data5.name}}</li>
-                                    <li v-for="(item,i) in data5.data" :key="i">{{item}}</li>
+                                    <li v-for="(item,i) in data5.data" :key="i+'s'">{{item}}</li>
                                 </ul>
                             </div>
                     </template>
@@ -196,10 +200,10 @@
                 <div class="erpBigBox" style="height:auto">
                     <div class="erpBigBoxFlex">
                         <template v-for="item in data5.keyParentList">
-                            <div style="height: 525px;border-right:1px solid #ddd;" :key="item.dataId" v-if="item.dataKey=='58'||item.dataKey=='59'||item.dataKey=='60'">
+                            <div style="height: 525px;border-right:1px solid #ddd;" :key="item.dataId+'t'" v-if="item.dataKey=='58'||item.dataKey=='59'||item.dataKey=='60'">
                                 <div class="parameterTit" style="border-right:1px solid #fff;height:40px;width:100%">{{item.dataKeyName}}</div>
                                 <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                                <img :src="item.dataValue" alt="" style="max-with:90%;margin:0 auto;max-height:360px">
+                                <img class="spareImg" :src="item.dataValue" alt="" style="max-with:90%;margin:0 auto;max-height:360px">
                             </div>
                         </template>
                     </div>
@@ -209,19 +213,24 @@
                         <div class="parameterTit" style="border-right:1px solid #fff;margin-top:20px">界面相形貌</div>
                         <div class="xingmaoBorder">
                             <div class="hechengBigBox borderTL">
-                                <div v-for="(item, index) in data5.keyParentList" :key="index">
+                                <div v-for="(item, indexb) in data5.keyParentList" :key="indexb+'u'">
                                     <div class="hechengRowBox" v-if="item.dataKey==4||item.dataKey==5">
-                                        <span>{{item.dataKeyName}}</span>{{item.dataValue}}
+                                        <span>{{item.dataKeyName}}</span>
+                                        <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.dataValue}}</div>
                                     </div>
                                 </div>
                             </div>
-                            <div v-for="(item, index) in data5.keyParentList" :key="index">
+                            <div v-for="(item, indexv) in data5.keyParentList" :key="indexv+'v'">
                                 <div class="borderTL imgDatailsList" v-if="item.dataKey==6">
                                     <ul class="clearFloat">
-                                        <li v-for="(itm, index) in item.dataValue" :key="index">
+                                        <li v-for="(itm, indexc) in item.dataValue" :key="indexc+'w'">
                                             <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                                            <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;max-height:190px;margin:0 auto" alt="">
+                                            <img class="spareImg" :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;max-height:190px;margin:0 auto" alt="">
                                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.dateTips}}</div>
+                                        </li>
+                                        <li v-for="(itm, indexr) in 5-item.dataValue.length" :key="indexr+'w1'">
+                                            <!-- <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt=""> -->
+                                            <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                                         </li>
                                     </ul>
                                 </div>
@@ -233,18 +242,19 @@
         </template>
     </template>
 
-    <template v-for="(data6,index) in pageData">
+    <template v-for="(data6,indexd) in pageData">
         <template v-if="data6.classId==11">
-            <div class="wrap" :key="index">
+            <div class="wrap" :key="indexd+'x'">
                 <div class="subfield" style="margin-top:42px">
                     <i></i>
                     复合材料结构和成分:
                 </div>
-                <div class="hechengBigBox borderTL" :style="data6.keyParentList.length>10?'overflow-y: scroll;':''">
+                <div class="hechengBigBox borderTL" :style="data6.keyParentList.length>10?'height: auto;':''">
                     <div v-if="data6.keyParentList.length>3" @click="classId11=!classId11" class="downIcon"><img :style="!classId11?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
-                    <div v-for="(item, index) in data6.keyParentList" :key="index">
-                        <div class="hechengRowBox" v-if="classId11?index<3:true">
-                            <span>{{item.dataKeyName}}</span>{{item.dataValue}}
+                    <div v-for="(item, indexz) in data6.keyParentList" :key="indexz+'y'">
+                        <div class="hechengRowBox" v-if="classId11?indexz<3:true">
+                            <span>{{item.dataKeyName}}</span>
+                            <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.dataValue}}</div>
                         </div>
                     </div>
                 </div>
@@ -252,29 +262,33 @@
         </template>
     </template>
 
-    <template v-for="(data7,index) in pageData">
+    <template v-for="(data7,indexx) in pageData">
         <template v-if="data7.classId==13">
-            <div class="wrap" :key="index">
+            <div class="wrap" :key="indexx+'z'">
                 <div class="subfield" style="margin-top:42px">
                     <i></i>
                     界面力学性能：
                 </div>
                 <div class="hechengBigBox borderTL">
-                    <!-- :style="data.keyParentList.length>10?'overflow-y: scroll;':''" -->
+                    <!-- :style="data.keyParentList.length>10?'height: auto;':''" -->
                     <!-- <div v-if="data.keyParentList.length>3" @click="classId13=!classId13" class="downIcon"><img :style="!classId13?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div> -->
-                    <div v-for="(item, index) in data7.keyParentList" :key="index">
+                    <div v-for="(item, indexy) in data7.keyParentList" :key="indexy+'qw'">
                         <div class="hechengRowBox" v-if="item.dataKey==18">
-                            <span>{{item.dataKeyName}}</span>{{item.dataValue}}
+                            <span>{{item.dataKeyName}}</span>
+                            <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.dataValue}}</div>
                         </div>
                     </div>
                 </div>
-                <div v-for="(item, index) in data7.keyParentList" :key="index">
+                <div v-for="(item, indext) in data7.keyParentList" :key="indext+'we'">
                     <div class="borderTL imgDatailsList" v-if="item.dataValue.length>0&&item.dataKey==61">
                         <ul class="clearFloat">
-                            <li v-for="(itm, index) in item.dataValue" :key="index">
+                            <li v-for="(itm, indexr) in item.dataValue" :key="indexr+'er'">
                                 <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                                <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
+                                <img class="spareImg" :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                                 <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.dateTips}}</div>
+                            </li>
+                            <li v-for="(itm, indexr) in 5-item.dataValue.length" :key="indexr+'er1'">
+                                <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                             </li>
                         </ul>
                     </div>
@@ -283,29 +297,33 @@
         </template>
     </template>
 
-    <template v-for="(data8,index) in pageData">
+    <template v-for="(data8,indexe) in pageData">
         <template v-if="data8.classId==14">
-            <div class="wrap" :key="index">
+            <div class="wrap" :key="indexe+'df'">
             <div class="subfield" style="margin-top:42px">
                 <i></i>
                 复合材料力学性能：
             </div>
             
-            <div class="hechengBigBox borderTL" :style="data8.keyParentList.length>10?'overflow-y: scroll;':''">
+            <div class="hechengBigBox borderTL" :style="data8.keyParentList.length>10?'height: auto;':''">
                 <div v-if="data8.keyParentList.length>3" @click="classId14=!classId14" class="downIcon"><img :style="!classId14?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
-                <div v-for="(item, index) in data8.keyParentList" :key="index">
-                    <div class="hechengRowBox" v-if="classId14?index<3:true&&item.dataKey!=23">
-                        <span>{{item.dataKeyName}}</span>{{item.dataValue}}
+                <div v-for="(item, indexs) in data8.keyParentList" :key="indexs+'as'">
+                    <div class="hechengRowBox" v-if="classId14?indexs<3:true&&item.dataKey!=23">
+                        <span>{{item.dataKeyName}}</span>
+                        <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.dataValue}}</div>
                     </div>
                 </div>
             </div>
-            <div v-for="(item, index) in data8.keyParentList" :key="index">
+            <div v-for="(item, indexn) in data8.keyParentList" :key="indexn+'df'">
                 <div class="borderTL imgDatailsList" v-if="item.dataValue.length>0&&item.dataKey==23">
                     <ul class="clearFloat">
-                        <li v-for="(itm, index) in item.dataValue" :key="index">
+                        <li v-for="(itm, indexm) in item.dataValue" :key="indexm+'fg'">
                             <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                            <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
+                            <img class="spareImg" :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.dateTips}}</div>
+                        </li>
+                        <li v-for="(itm, indexr) in 5-item.dataValue.length" :key="indexr+'wee'">
+                             <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                         </li>
                     </ul>
                 </div>
@@ -313,28 +331,34 @@
             </div>
         </template>
     </template>
-    <template v-for="(data9,index) in pageData">
+    <template v-for="(data9,indexk) in pageData">
         <template v-if="data9.classId==15">
-            <div class="wrap" :key="index">
+            <div class="wrap" :key="indexk+'ty'">
                 <div class="subfield" style="margin-top:42px">
                     <i></i>
                     复合材料抗氧化性能：
                 </div>
-                <div class="hechengBigBox borderTL" :style="data9.keyParentList.length>10?'overflow-y: scroll;':''">
-                    <div v-if="data9.keyParentList.length>3" @click="classId15=!classId15" class="downIcon"><img :style="!classId15?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
-                    <div v-for="(item, index) in data9.keyParentList" :key="index">
-                        <div class="hechengRowBox" v-if="classId15?index<3:true">
-                            <span>{{item.dataKeyName}}</span>{{item.dataValue}}
-                        </div>
+                <div class="hechengBigBox borderTL" :style="data9.keyParentList.length>10?'height: auto;':''">
+                    <div v-if="data9.keyParentList.length>4" @click="classId15=!classId15" class="downIcon"><img :style="!classId15?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
+                    <div v-for="(item, indexl) in data9.keyParentList" :key="indexl+'op'">
+                        <template v-if="classId15?indexl<3:true">
+                            <div class="hechengRowBox" v-if="item.dataKey!=63">
+                                <span>{{item.dataKeyName}}</span>
+                                <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.dataValue}}</div>
+                            </div>
+                        </template>
                     </div>
                 </div>
-                <div v-for="(item, index) in data9.keyParentList" :key="index">
+                <div v-for="(item, indexo) in data9.keyParentList" :key="indexo+'ed'">
                     <div class="borderTL imgDatailsList" v-if="item.dataValue.length>0&&item.dataKey==63">
                         <ul class="clearFloat">
-                            <li v-for="(itm, index) in item.dataValue" :key="index">
+                            <li v-for="(itm, indexp) in item.dataValue" :key="indexp+'lk'">
                                 <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                                <img :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
+                                <img class="spareImg" :src="itm!=null?itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                                 <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.dateTips}}</div>
+                            </li>
+                            <li v-for="(itm, indexr) in 5-item.dataValue.length" :key="indexr+'erw'">
+                                <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                             </li>
                         </ul>
                     </div>
@@ -344,7 +368,12 @@
     </template>
         <el-dialog title="" :visible.sync="bigImgBox" :destroy-on-close='true' :show-close='false'>
             <div style="text-align:center">
-                <img :src="nowImg" style="display:inline-block;width:90%;margin: 0 auto;height:auto;" alt="">
+                <img class="spareImg" :src="nowImg" style="display:inline-block;width:90%;margin: 0 auto;height:auto;" alt="">
+            </div>
+        </el-dialog>
+        <el-dialog title="" :visible.sync="bigIframeBox" :destroy-on-close='true' :show-close='false'>
+            <div style="height:700px">
+                <iframe id="iframe" style="height:100%;width:100%;" :src='"http://118.190.142.89:8090/3d?dataParam="+threrDArrString'></iframe>
             </div>
         </el-dialog>
     </div>
@@ -356,7 +385,9 @@ export default {
     data() {
         return {
             bigImgBox:false,
+            bigIframeBox:false,
             nowImg:'',
+            nowIframe:'',
             classId10:true,
             classId11:true,
             classId14:true,
@@ -396,18 +427,28 @@ export default {
         this.init()
     },
     methods: {
+        iframeBig(){
+            this.bigIframeBox = true
+            
+        },
         init(){
-            console.log(this.$route.query)
-            if(typeof this.$route.query.content == 'string'){
-                this.content = this.$route.query.content.split(':')
+            let iframe = document.getElementById('iframe')
+            console.log(iframe)
+            if(this.searchKeyWord!=0){
+                if(typeof this.$route.query.content == 'string'){
+                    this.content = this.$route.query.content.split(':')
+                }else{
+                    this.content = this.$route.query.content
+                }
+                if(typeof this.$route.query.element == 'string'){
+                    this.element = this.$route.query.element.split(',')
+                }else{
+                    this.element = this.$route.query.element
+                }
             }else{
-                this.content = this.$route.query.content
+                // return false
             }
-            if(typeof this.$route.query.element == 'string'){
-                this.element = this.$route.query.element.split(',')
-            }else{
-                this.element = this.$route.query.element
-            }
+            
             this.$api.getDataSource().then(res=>{ // 数据来源
                 res.data.data.map(x=>{
                     Object.assign(this.dataSourceObj,{[x.structureId]: x.stKey})
@@ -580,6 +621,24 @@ export default {
     }
 </style>
 <style scoped>
+    .iframeStyle{
+        height: 554px;
+        width: 580px;
+        position: absolute;
+        left: -42px;
+        top: 11px;
+    }
+    .spareImg:after { 
+    content: url('../../../assets/images/nomore.png');
+    display: block;
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 100%;
+    background-color: #fff;
+    }
     .yuanziAddressUl{
         border-left: 1px solid #e1e1e1;
         overflow: hidden;
@@ -723,12 +782,28 @@ export default {
         max-height:400px;
     }
     .hechengBigBox .hechengRowBox{
-        height: 40px;
+        min-height: 40px;
         border-bottom: 1px solid #ddd;
         border-right: 1px solid #ddd;
         line-height: 40px;
         font-size: 14px;
         color: #4d4d4d;
+        display: flex;
+        justify-content: flex-start;
+    }
+    .hechengRowBoxRow::-webkit-scrollbar { /*滚动条整体样式*/
+        width: 2px; /*高宽分别对应横竖滚动条的尺寸*/
+        height: 2px;
+    }
+    .hechengRowBoxRow::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+        border-radius: 5px;
+        -webkit-box-shadow: inset 0 0 5px #fafafa;
+        background: rgba(0,0,0,.075);
+    }
+    .hechengRowBoxRow::-webkit-scrollbar-track { /*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px #fafafa;
+        border-radius: 0;
+        background: #ececec;
     }
     .hechengBigBox span{
         display: inline-block;
@@ -737,7 +812,6 @@ export default {
         background: #E2FCF9;
         margin-right: 14px;
         border-right:1px solid #ddd;
-        height: 39px;
         font-weight: bold;
     }
     .matrixBgBox{
@@ -863,6 +937,7 @@ export default {
         height: 40px;
         text-align: center;
         border-right: 1px solid #ddd;
+        border-left: 1px solid #ddd;
         border-bottom: 1px solid #ddd;
         line-height: 40px;
         font-size: 14px;
@@ -875,11 +950,11 @@ export default {
         white-space: nowrap;
     }
     .tableBorer{
-        border-left: 1px solid #ddd;
+        /* border-left: 1px solid #ddd; */
         border-right: 1px solid #ddd;
         margin-bottom: 20px;
         max-height:160px;
-        overflow-y:scroll;
+        overflow-y:auto;
         overflow-x:hidden;
     }
     .parameterTit{

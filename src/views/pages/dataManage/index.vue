@@ -83,7 +83,7 @@
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
-                    共<span style="color:#33B0B5">{{tableData.totalPage}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条树
+                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条数据
                 </span>
 				<el-pagination
 					@current-change="handleCurrentChange"
@@ -94,7 +94,7 @@
 				</el-pagination>
 			</div>
         </div>
-        <removeComponent :visible.sync="isBoxShow" :data="isBoxData" @changeShow="changeShow"></removeComponent>
+        <removeComponent :visible.sync="isBoxShow" :msg="removeMsg" @changeShow="changeShow"></removeComponent>
     </div>
 </template>
 
@@ -105,7 +105,7 @@ export default {
         return {
         quanxian:localStorage.getItem('menuIdList'),
         isBoxShow:false,
-        isBoxData:'',
+        removeMsg:[],
 		currentPage: 1,
         formInline:{
             dataNum:'',
@@ -128,6 +128,8 @@ export default {
         dataTypeArr:{},
         dataSourceArr:{},
         nowCheckedArr:[], // 当前选中
+        deleteMultiple:false, // 批量删除
+        removeId:''
         }
     },
     components: {
@@ -139,19 +141,20 @@ export default {
     },
     methods:{
         onDown(){
-            this.$api.onFile('').then(res=>{
-                // const link = document.createElement('a')
-                // const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
-                // link.style.display = 'none'
-                // link.href = URL.createObjectURL(blob)
-                // link.setAttribute('download', `${name}.xlsx`)
-                // document.body.appendChild(link)
-                // link.click()
-                // document.body.removeChild(link)
-                let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});  // res就是接口返回的文件流了
-                let objectUrl = URL.createObjectURL(blob); 
-                window.location.href = objectUrl; 
-            })
+            if(this.nowCheckedArr.length==0){
+                this.$message({
+                    message: '请至少勾选一条数据',
+                    type: 'warning'
+                });
+                return
+            }else{
+                let parmas = this.nowCheckedArr.map(x=>{return x.dataId})
+                this.$api.onFile(parmas).then(res=>{
+                    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});  // res就是接口返回的文件流了
+                    let objectUrl = URL.createObjectURL(blob); 
+                    window.location.href = objectUrl; 
+                })
+            }
         },
         getSelectObj(){
             this.$api.dataTypelist().then(res=>{ // 数据类型
@@ -209,32 +212,33 @@ export default {
             this.isBoxShow = val;
         },
         delect(val){
-            let parmas = [val]
             if(val==''&&this.nowCheckedArr.length==0){
                 this.$message({
                     message: '请勾选需要删除的数据',
                     type: 'warning'
                 });
                 return
+            }else{
+                this.isBoxShow = true
             }
             if(val==''&&this.nowCheckedArr.length>0){
+                this.removeMsg=[]
+                this.deleteMultiple = true
                 this.isBoxShow = true
-                return
+            }else if (val){
+                this.removeMsg=['是否确定删除数据','数据删除后，不可恢复']
+                this.removeId = [val]
+                this.deleteMultiple = false
+                this.isBoxShow = true
             }
-            this.$api.deleteData(parmas).then(res=>{ // 数据类型
-                this.dataTypeObj = res.data.data
-                if(res.data.msg==='success'){
-                    this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                    this.getListdata()
-                }
-            })
-            
         },
         removeDataOk(){
-            let parmas = this.nowCheckedArr.map(x=>{return x.dataId})
+            let parmas
+            if(this.deleteMultiple){
+                parmas = this.nowCheckedArr.map(x=>{return x.dataId})
+            }else{
+                parmas = this.removeId
+            }
             this.$api.deleteData(parmas).then(res=>{ // 数据类型
                 this.dataTypeObj = res.data.data
                 if(res.data.msg==='success'){

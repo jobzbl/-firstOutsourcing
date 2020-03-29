@@ -94,7 +94,7 @@
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
-                    共<span style="color:#33B0B5">{{tableData.totalPage}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条树
+                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条树
                 </span>
 				<el-pagination
 					@current-change="handleCurrentChange"
@@ -138,7 +138,7 @@
                 </div>
             </el-form>
         </el-dialog>
-        <removeComponent :visible.sync="isBoxShow" :data="isBoxData" @changeShow="changeShow"></removeComponent>
+        <removeComponent :visible.sync="isBoxShow" :msg="removeMsg" @changeShow="changeShow"></removeComponent>
     </div>
 </template>
 
@@ -147,6 +147,7 @@ import removeComponent from '../component/remove.vue' // 将子组件引入父�
 export default {
     data() {
         return {
+            removeMsg:[],
             quanxian:localStorage.getItem('menuIdList'),
             isBoxShow:false,
             isBoxData:'',
@@ -205,7 +206,9 @@ export default {
             userInfo:{},
             selectMenuArr:[],
             userRoleArr:[],
-            nowCheckedArr:[]
+            nowCheckedArr:[],
+            deleteMultiple:false, // 批量删除
+            removeId:''
         }
     },
     created(){
@@ -214,23 +217,33 @@ export default {
     },
     methods:{
         onDown(){
-            this.$api.onDown('').then(res=>{
-                const link = document.createElement('a')
-                const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
-                link.style.display = 'none'
-                link.href = URL.createObjectURL(blob)
-                link.setAttribute('download', `${name}.xlsx`)
-                document.body.appendChild(link)
-                link.click()
-                document.body.removeChild(link)
-            })
+            if(this.nowCheckedArr.length==0){
+                this.$message({
+                    message: '请至少勾选一条数据',
+                    type: 'warning'
+                });
+                return
+            }else{
+                let parmas = this.nowCheckedArr.map(x=>{return x.dataId})
+                this.$api.onDown(parmas).then(res=>{
+                    const link = document.createElement('a')
+                    const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+                    link.style.display = 'none'
+                    link.href = URL.createObjectURL(blob)
+                    link.setAttribute('download', `${name}.xlsx`)
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link)
+                })
+            }
+            
         },
         roleChange(e){
             if(e==1){
                 this.editDataForm.menuIdList = [1,2,3,4]
             }
             if(e==2){
-                this.editDataForm.menuIdList = [1,3,4]
+                this.editDataForm.menuIdList = [1,2,4]
             }
             if(e==3){
                 this.editDataForm.menuIdList = [1]
@@ -311,8 +324,8 @@ export default {
         console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
-            this.getListdata()
-        console.log(`当前页: ${val}`);
+            this.getListData()
+            console.log(`当前页: ${val}`);
         },
         handleClose() {},
         close(formName){
@@ -345,30 +358,55 @@ export default {
                 }
             });
         },
-        removeData(data){
-            if(data==''&&this.nowCheckedArr.length==0){
+        removeData(val){
+            // if(data==''&&this.nowCheckedArr.length==0){
+            //     this.$message({
+            //         message: '请勾选需要删除的数据',
+            //         type: 'warning'
+            //     });
+            //     return
+            // }else{
+            //     this.isBoxShow = true;
+            // }
+            if(val==''&&this.nowCheckedArr.length==0){
                 this.$message({
                     message: '请勾选需要删除的数据',
                     type: 'warning'
                 });
                 return
+            }else{
+                this.isBoxShow = true
             }
-            if(data==''&&this.nowCheckedArr.length>0){
-                this.isBoxShow = true;
-                return
+            if(val==''&&this.nowCheckedArr.length>0){
+                this.removeMsg=[]
+                this.deleteMultiple = true
+                this.isBoxShow = true
+            }else if (val){
+                this.removeMsg=['是否确定删除数据','数据删除后，不可恢复']
+                this.removeId = [val]
+                this.deleteMultiple = false
+                this.isBoxShow = true
             }
-            this.$api.deleteUser([data]).then(res=>{
-                if(res.data.msg==='success'){
-                    this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                    this.getListData()
-                }
-            })
+            // if(data==''&&this.nowCheckedArr.length>0){
+            //     return
+            // }
+            // this.$api.deleteUser([data]).then(res=>{
+            //     if(res.data.msg==='success'){
+            //         this.$message({
+            //             message: '删除成功',
+            //             type: 'success'
+            //         });
+            //         this.getListData()
+            //     }
+            // })
         },
         removeDataOk(){
-            let parmas = this.nowCheckedArr.map(x=>{return x.userId})
+            let parmas
+            if(this.deleteMultiple){
+                parmas = this.nowCheckedArr.map(x=>{return x.userId})
+            }else{
+                parmas = this.removeId
+            }
             this.$api.deleteUser(parmas).then(res=>{
                 if(res.data.msg==='success'){
                     this.$message({

@@ -1,5 +1,9 @@
 <template>
   <div class="bigBox">
+    <div class="loginBgImg">
+      <img class="img1" src="../assets/images/login1.png" alt="">
+      <img class="img2" src="../assets/images/login2.png" alt="">
+    </div>
     <img src="../assets/images/loginBg.png" class="loginBg" alt="login">
     <div class="loginBox">
       <div class="loginName">{{loginText}}</div>
@@ -28,43 +32,8 @@
           <el-button style="width:100%;height:46px;font-size:18px" type="primary" @click="submitForm('ruleForm')">登录</el-button>
         </div>
         <div class="forgetPasBox">
-          <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="registerBut1('ruleForm')">注册</el-button>
+          <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="quzhuce('ruleForm')">注册</el-button>
         </div>
-      </el-form>
-      <el-form v-if="isLogin==2" :model="register" :rules="ruleRegister" ref="ruleRegister" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="用户名" prop="username">
-            <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
-            <el-input v-model="register.username" placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <el-form-item label="姓名" prop="name">
-            <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
-            <el-input v-model="register.name" placeholder="请输入姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="单位" prop="company">
-            <el-input v-model="register.company" placeholder="请输单位"></el-input>
-          </el-form-item>
-          <el-form-item label="部门" prop="department">
-            <el-input v-model="register.department" placeholder="请输入部门"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="register.email" placeholder="请输入邮箱"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="register.password" placeholder="请输入密码"></el-input>
-          </el-form-item>
-          <el-form-item label="确认密码" prop="confirmPassword">
-            <el-input v-model="register.confirmPassword" placeholder="请再次输入密码"></el-input>
-          </el-form-item>
-          <!-- <el-form-item label="用户名" prop="user">
-            <el-input v-model="register.user" placeholder="请输入用户名"></el-input>
-          </el-form-item> -->
-          <div class="forgetPasBox">
-            <el-button type="primary" style="width:100%;height:46px;font-size:18px" @click="registerBut2('ruleRegister')">确定</el-button>
-          </div>
-          <div class="forgetPasBox">
-            <el-button class="register" style="width:100%;height:46px;font-size:18px"  @click="goSubmitForm('ruleRegister')">返回登录</el-button>
-          </div>
-          
       </el-form>
       <el-form v-if="isforgetPW" :model="forgetPWArr" :rules="ruleforgetPWArr" ref="forgetPW" label-width="100px" class="demo-ruleForm">
         <div v-if="!mailDelivery">
@@ -144,15 +113,6 @@ export default {
         uuid:'',
         captcha: '',
       },
-      register: {
-        username: '',
-        name: '',
-        company: '',
-        department: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      },
       rulesetPassword:{
         password: [
             { required: true, message: '不能为空', trigger: 'blur' },
@@ -182,29 +142,6 @@ export default {
         captcha: [
             { required: true, message: '请输入验证码', trigger: 'blur' },
         ]
-      },
-      ruleRegister: {
-        username: [
-            { required: true, message: '请输入用户名', trigger: 'blur' },
-        ],
-        name: [
-            { required: true, message: '请输入姓名', trigger: 'blur' },
-        ],
-        company: [
-            { required: true, message: '请输入单位', trigger: 'blur' },
-        ],
-        department: [
-            { required: true, message: '请输入部门', trigger: 'blur' },
-        ],
-        email: [
-            { required: true, message: '请输入邮箱', trigger: 'blur' },
-        ],
-        password: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-        ],
-        confirmPassword: [
-            { required: true, message: '请再次输入密码', trigger: 'blur' },
-        ],
       },
       mailDelivery:false,
       init:true,
@@ -255,9 +192,6 @@ export default {
               })
               this.$nextTick(()=>{
                 this.$refs['forgetPW'].resetFields();
-              })
-              this.$nextTick(()=>{
-                this.$refs['ruleRegister'].resetFields();
               })
               this.$nextTick(()=>{
                 this.$refs['ruleForm'].resetFields();
@@ -342,12 +276,7 @@ export default {
 
     },
     forgetPW(){
-      this.mailDelivery = false
-      this.isforgetPW = true
-      this.loginText = '忘记密码'
-      this.isLogin = 3
-      this.forgetPWArr.email = ''
-      this.forgetPWArr.username = ''
+      this.$router.push('/forgetPas')
     },
     getUuid() {
       function S4() {
@@ -412,48 +341,10 @@ export default {
       }
       });
     },
-    goSubmitForm(formName) {
-      this.$nextTick(()=>{
-        this.$refs['ruleRegister'].resetFields();
-      })
-      this.loginText = '账号登录'
-      this.getUuid()
-      this.isLogin = 1
-      this.$nextTick(()=>{
-        this.$refs['ruleForm'].resetFields();
-      })
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          console.log(valid)
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
+    quzhuce() {
+      this.$router.push('/register')
     },
-    registerBut1(formName) {
-      this.verifyCodeIsShow = false
-      this.$nextTick(()=>{
-        this.$refs[formName].resetFields();
-      })
-        this.isLogin = 2
-        this.loginText = '账号注册'
-      this.$nextTick(()=>{
-        this.$refs['ruleRegister'].resetFields();
-      })  
-    },
-    registerBut2(formName) {
-      this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.$api.signIn(this.register).then( res => {
-              console.log(res)
-            })
-          } else {
-          console.log('error submit!!');
-          return false;
-          }
-        })
-    }
+    
   }
 }
 </script>
@@ -478,6 +369,25 @@ export default {
   }
 </style>
 <style scoped>
+  .loginBgImg{
+    width:100%;
+    height:100%;
+    position: absolute;
+    top:0;
+    left:0
+  }
+  .loginBgImg .img1{
+    position: absolute;
+    top:25%;
+    left:10%;
+    width:13%;
+  }
+  .loginBgImg .img2{
+    position: absolute;
+    left:10%;
+    top:35%;
+    width:30%
+  }
   .goLogin{
     position: relative;
   }

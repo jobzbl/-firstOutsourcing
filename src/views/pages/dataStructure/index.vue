@@ -56,7 +56,7 @@
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
-                    共<span style="color:#33B0B5">{{tableData.totalPage}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条树
+                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条数据
                 </span>
 				<el-pagination
 					@current-change="handleCurrentChange"
@@ -82,7 +82,7 @@
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <div class="formButtonBox">
-                            <el-button type="primary" @click="handleClose2(true)">下一步</el-button>
+                            <el-button type="primary" @click="next(true)">下一步</el-button>
                             <el-button @click="handleClose2">取 消</el-button>
                         </div>
                     </span>
@@ -102,12 +102,12 @@
                 <el-dialog title="确认提示" :visible.sync="mergeName" width="400px" :show-close='false'>
                     <div style="font-size:14px;color:#666;margin-bottom:37px">请选择合并关键词后的关键词名称：</div>
                     <div style="display:flex;justify-content: space-between;padding:0 70px">
-                        <el-radio v-if="checkArr.length>1" v-model="radio" label="0">{{checkArr[0].stKey}}</el-radio>
-                        <el-radio v-if="checkArr.length>1" v-model="radio1" label="0">{{dataTypeArr[checkArr[0].stType]}}</el-radio>
+                        <el-radio :title="checkArr[0].stKey" v-if="checkArr.length>1" v-model="radio" label="0">{{checkArr[0].stKey}}</el-radio>
+                        <el-radio :title="dataTypeArr[checkArr[0].stType]" v-if="checkArr.length>1" v-model="radio1" label="0">{{dataTypeArr[checkArr[0].stType]}}</el-radio>
                     </div>
                     <div style="display:flex;justify-content: space-between;padding:0 70px;margin-top:13px">
-                        <el-radio v-if="checkArr.length>1" v-model="radio" label="1">{{checkArr[1].stKey}}</el-radio>
-                        <el-radio v-if="checkArr.length>1" v-model="radio1" label="1">{{dataTypeArr[checkArr[1].stType]}}</el-radio>
+                        <el-radio :title="checkArr[1].stKey" v-if="checkArr.length>1" v-model="radio" label="1">{{checkArr[1].stKey}}</el-radio>
+                        <el-radio :title="dataTypeArr[checkArr[1].stType]" v-if="checkArr.length>1" v-model="radio1" label="1">{{dataTypeArr[checkArr[1].stType]}}</el-radio>
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <div class="formButtonBox">
@@ -123,12 +123,12 @@
                         <el-form-item label="关键词" prop="stKey">
                             <el-input v-model.trim="addKeyWordArr.stKey"></el-input>
                         </el-form-item>
-                        <el-form-item label="数据分类">
+                        <el-form-item label="数据分类" prop="stClassification">
                             <el-select clearable v-model ="addKeyWordArr.stClassification" style="width:240px" placeholder="请选择数据分类">
                                 <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="数据类型">
+                        <el-form-item label="数据类型" prop="stType">
                             <el-select clearable v-model ="addKeyWordArr.stType" style="width:240px" placeholder="请选择数据类型">
                                 <el-option v-for="item in dataTypeObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
@@ -159,8 +159,15 @@ export default {
         },
         addKeyWordRules:{
             stKey: [
-                   { required: true, message: '请输入关键词', trigger: 'blur' },
-               ],
+                { required: true, message: '请输入关键词', trigger: 'blur' },
+            ],
+            stClassification:[
+                { required: true, message: '请选择数据分类', trigger: 'blur', }
+            ],
+            stType:[
+                { required: true, message: '请选择数据类型', trigger: 'blur', }
+            ]
+
         },
         radio:'0',
         radio1:'0',
@@ -214,6 +221,7 @@ export default {
                 stType:this.checkArr[this.radio].stType,
                 }).then(res=>{ 
                     this.mergeName = false
+                    this.keywordShow = false
                     if(res.data.msg==='success'){
                         this.$message({
                             message: '合并成功',
@@ -262,23 +270,16 @@ export default {
             this.addKeyWord = true
         },
         mergeKeyWord() {
-            if(this.checkArr.length<2){
+            if(this.checkArr.length<2){ // 如果没有选择数据
                 this.$message({
                     message: '请选择两条',
                     type: 'warning'
                 });
                 return
-            }else{
-                let fisrt = this.checkArr[0].stType
-                let notLength = this.checkArr.filter(x=>x.stType!=fisrt)||[]
-                if(notLength.length>0){
-                    this.merge = true
-                }else{
-                    this.mergeName = true
-                }
+            }else{ // 选择数据之后进行确认弹框
+                this.keywordShow = true
             }
-            this.isdisabled=false
-            this.isCheck=false
+            
         },
         handleSelectionChange(){},
         onSubmit(){},
@@ -303,15 +304,24 @@ export default {
                 }
             });
         },
-
-        handleClose(){
-            this.keywordShow = false
+        next(){
+            let fisrt = this.checkArr[0].stType
+            let notLength = this.checkArr.filter(x=>x.stType!=fisrt)||[]
+            console.log(notLength.length)
+            if(notLength.length>0){
+                this.merge = true
+            }else{
+                this.mergeName = true
+            }
+            this.isdisabled=false
+            this.isCheck=false
         },
         handleClose2(){
-            this.merge = false
+            this.keywordShow = false
         },
         handleClose3(){
             this.mergeName = false
+            this.keywordShow = false
         },
         handleClose4(){
             this.addKeyWord = false
@@ -320,6 +330,13 @@ export default {
 }
 </script>
 <style lang="less">
+    .mergeName{
+        .el-radio{
+            width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
     .buttonRow2{
         button{
             height:36px;
