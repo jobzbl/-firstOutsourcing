@@ -85,9 +85,11 @@ export default {
       this.headerMenu = e
     },
     out(){
+      if(localStorage.getItem("autoLogin")=='false'){
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+      }
       this.$router.push('/login')
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
     },
     init() {
       console.log(this.$router.history.current.path)

@@ -60,9 +60,11 @@ export default {
       })
     },
     out(){
+      if(localStorage.getItem("autoLogin")=='false'){
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+      }
       this.$router.push('/login')
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
     },
     init() {
       this.name = JSON.parse(localStorage.getItem("user")).name

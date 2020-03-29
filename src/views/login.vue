@@ -12,7 +12,11 @@
             <el-input v-model="ruleForm.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input v-model="ruleForm.password" type="password" placeholder="请输入密码"></el-input>
+            <div style="position:relative">
+              <el-input v-model="ruleForm.password" :type="passwordBox?'password':'text'" placeholder="请输入密码">
+              </el-input>
+              <i @click="eyeButton()" :class="passwordBox?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+            </div>
           </el-form-item>
           <el-form-item label="验证码" prop="captcha">
             <div style="display:flex">
@@ -35,50 +39,6 @@
           <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="quzhuce('ruleForm')">注册</el-button>
         </div>
       </el-form>
-      <el-form v-if="isforgetPW" :model="forgetPWArr" :rules="ruleforgetPWArr" ref="forgetPW" label-width="100px" class="demo-ruleForm">
-        <div v-if="!mailDelivery">
-          <div class="goLogin">
-            <el-form-item label="用户名" prop="username">
-              <el-input v-model="forgetPWArr.username" placeholder="请输入用户名"></el-input>
-              <span style="cursor: pointer;" @click="goZhuce()">去注册<i class="iconfont icongengduo"></i></span>
-            </el-form-item>
-          </div>
-          <div class="goLogin">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="forgetPWArr.email" placeholder="请输入邮箱"></el-input>
-              <span :style="verifyCodeIsShow?'color:#999;pointer-events: none':''" style="cursor: pointer;right:-120px" @click="forgetSubmitForm()">
-                {{verifyCodeIsShow?totalTime+'s后重新发送':'发送验证邮件'}}
-              </span>
-            </el-form-item>
-          </div>
-          <el-form-item label="验证码" prop="verifyCode">
-            <el-input v-model="forgetPWArr.verifyCode" placeholder="请输入验证码"></el-input>
-          </el-form-item>
-        </div>
-        <!-- <div v-if="mailDelivery" style="font-size:16px;color:#999;text-align:center;margin-bottom:60px">
-          邮件已发送至你的邮箱<span style="color:#333">{{forgetPWArr.email}}</span>快去查收邮件吧
-        </div> -->
-        <div class="forgetPasBox">
-          <!-- <el-button v-if="!mailDelivery&&!verifyCodeIsShow" style="width:100%;height:46px;font-size:18px" type="primary" @click="forgetSubmitForm('')">发送验证邮件</el-button> -->
-          <!-- <el-button v-if="mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="sent('forgetPW')">邮件已发送 <i style="color:#fff" class="iconfont icondui"></i> </el-button> -->
-          <el-button v-if="!mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="nextStep('forgetPW')">下一步</el-button>
-        </div>
-        <div class="forgetPasBox">
-          <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="registerforget('forgetPW')">去登录</el-button>
-        </div>
-       </el-form>
-       
-      <el-form v-if="!init" :model="forgetPWArr" :rules="rulesetPassword" ref="setPassword" label-width="130px" class="demo-ruleForm">
-          <el-form-item label="新密码" prop="password">
-            <el-input v-model="forgetPWArr.password" placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <el-form-item label="再次输入新密码" prop="newPassword">
-            <el-input v-model="forgetPWArr.newPassword" placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <div class="forgetPasBox">
-            <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="setPasswordOk('setPassword')">确定</el-button>
-          </div>
-      </el-form>
     </div>
   </div>
 </template>
@@ -95,11 +55,6 @@ export default {
       totalTime:120,
       setPassword:{
         name:''
-      },
-      forgetPWArr:{
-        email:'',
-        username:'',
-        verifyCode:''
       },
       isforgetPW:false,
       url:base.sq,
@@ -121,17 +76,6 @@ export default {
             { required: true, message: '不能为空', trigger: 'blur' },
         ],
       },
-      ruleforgetPWArr:{
-        username: [
-            { required: true, message: '输入不能为空', trigger: 'blur' },
-        ],
-        email: [
-            { required: true, message: '输入不能为空', trigger: 'blur' },
-        ],
-        verifyCode: [
-            { required:true, message: '输入不能为空', trigger: 'blur' },
-        ],
-      },
       rules: {
         username: [
             { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -145,27 +89,17 @@ export default {
       },
       mailDelivery:false,
       init:true,
+      passwordBox:true,
     }
   },
   created() {
       this.getUuid()
-      this.initFun()
   },
   methods: {
-    initFun(){
-      if(!this.init){
-        this.loginText = '设置新密码'
-        this.isLogin = 3
-      }
-    },
-    goZhuce(){
-      this.mailDelivery = true
-      this.isforgetPW = false
-      this.isLogin = 2
-      this.loginText = '账号注册'
+    eyeButton(){
+      this.passwordBox=!this.passwordBox
     },
     setPasswordOk(formName){
-
       this.$refs[formName].validate((valid) => {
         if (valid) {
           var parmas = {
@@ -205,75 +139,6 @@ export default {
           return false;
         }
       });
-    },
-    forgetSubmitForm(){ // 发送邮箱验证
-      if(this.forgetPWArr.username==''){
-        this.$message({
-            message: '请输入用户名',
-            type: 'warning'
-        });
-        return
-      }else if(this.forgetPWArr.email==''){
-        this.$message({
-            message: '请输入邮箱',
-            type: 'warning'
-        });
-        return
-      }
-      var parmas = {
-        username:this.forgetPWArr.username,
-        email:this.forgetPWArr.email
-      }
-      this.verifyCodeIsShow = true
-      let time = window.setInterval(()=>{
-        this.totalTime--
-        if(this.totalTime == 0){
-          window.clearInterval(time)
-          this.totalTime = 120
-          this.verifyCodeIsShow = false
-        }
-      },1000)
-        console.log('123')
-        this.$api.forgetPassword(qs.stringify(parmas)).then(()=>{})
-    },
-    nextStep(formName){
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          var parmas = {
-            username:this.forgetPWArr.username,
-            verifyCode:this.forgetPWArr.verifyCode
-          }
-          this.$api.forgetPassword2(qs.stringify(parmas)).then(res=>{
-            if(res.data.msg == 'success'){
-              this.loginText = '设置新密码'
-              this.isLogin = 3
-              this.init = false
-              this.isforgetPW = false
-            }else{
-              this.$message({
-                message: res.data.msg,
-                type: 'warning'
-              });
-            }
-        })
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      })
-        
-    },
-    sent(){
-      
-    },
-    registerforget(){
-      this.verifyCodeIsShow = false
-        this.mailDelivery = true
-        this.isforgetPW = false
-        this.isLogin = 1
-        this.loginText = '账号登录'
-      this.getUuid()
-
     },
     forgetPW(){
       this.$router.push('/forgetPas')
@@ -320,6 +185,11 @@ export default {
           localStorage.setItem("roleIdList", JSON.stringify(res.data.roleIdList))
           localStorage.setItem("menuIdList", JSON.stringify(res.data.menuIdList))
           if(this.autoLogin){
+            localStorage.setItem("autoLogin", true)
+          }else{
+            localStorage.setItem("autoLogin", false)
+          }
+          if(this.autoLogin){
             this.setCookie(that.ruleForm, 7);
           }else{
             this.clearCookie();
@@ -349,7 +219,12 @@ export default {
 }
 </script>
 
-<style>
+<style style lang="less">
+  .bigBox{
+    .el-input.is-active .el-input__inner, .el-input__inner:focus{
+      background: rgba(51,176,181,.1);
+    }
+  } 
   .el-form-item__error{
     box-sizing: content-box;
     position: absolute;
@@ -369,6 +244,10 @@ export default {
   }
 </style>
 <style scoped>
+  .eyeButton{
+    position: absolute;
+    right:10px;
+  }
   .loginBgImg{
     width:100%;
     height:100%;

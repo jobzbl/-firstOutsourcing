@@ -8,26 +8,43 @@
   box-sizing: border-box;
 }
 .el-button--primary{
-    color: #FFF;
-    background-color: #33B0B5;
-    border-color: #33B0B5;
+    color: #FFF!important;
+    background-color: #33B0B5!important;
+    border-color: #33B0B5!important;
 }
 .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
-    background-color: #33B0B5;
-    border-color: #33B0B5;
+    background-color: #33B0B5!important;
+    border-color: #33B0B5!important;
 }
 .el-checkbox__input.is-checked+.el-checkbox__label{
-  color:#33B0B5
+  color:#33B0B5!important
 }
 .el-button--primary:focus, .el-button--primary:hover{
-  color: #FFF;
-  background-color: #33B0B5;
-  border-color: #33B0B5;
+  color: #FFF!important;
+  background-color: #33B0B5!important;
+  border-color: #33B0B5!important;
 }
 .el-button:focus, .el-button:hover{
+  color: #FFF!important;
+  background-color: #33B0B5!important;
+  border-color: #33B0B5!important;
+}
+.el-input.is-active .el-input__inner, .el-input__inner:focus{
+  border-color: #33B0B5!important;
+}
+.el-radio-button__orig-radio:checked+.el-radio-button__inner{
   color: #FFF;
-  background-color: #33B0B5;
-  border-color: #33B0B5;
+  background-color: #33B0B5!important;
+}
+.el-select-dropdown__item.selected{
+  color:#33B0B5!important;
+}
+.el-radio__input.is-checked+.el-radio__label{
+  color:#33B0B5!important;
+}
+.el-radio__input.is-checked .el-radio__inner{
+  border-color: #33B0B5!important;
+  background: #33B0B5!important;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

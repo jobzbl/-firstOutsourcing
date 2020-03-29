@@ -9,25 +9,39 @@
       <div class="loginName">账号注册</div>
       <el-form :model="register" :rules="ruleRegister" ref="ruleRegister" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="username">
+                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.username" autocomplete="new-password" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="姓名" prop="name">
+                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.name" autocomplete="new-password" placeholder="请输入姓名"></el-input>
           </el-form-item>
           <el-form-item label="单位" prop="company">
+                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.company" placeholder="请输单位"></el-input>
           </el-form-item>
           <el-form-item label="部门" prop="department">
+                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.department" placeholder="请输入部门"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
+                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
+
             <el-input v-model="register.email" placeholder="请输入邮箱"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input v-model="register.password" placeholder="请输入密码"></el-input>
+            <div style="postion:relative">
+                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
+              <el-input v-model="register.password" :type="passwordBox1?'password':'text'" placeholder="请输入密码"></el-input>
+              <i @click="eyeButton()" :class="passwordBox1?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+            </div>
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPassword">
-            <el-input v-model="register.confirmPassword" placeholder="请再次输入密码"></el-input>
+            <div style="postion:relative">
+                        <el-input style="position:fixed;left:-999999px" type="password"></el-input>
+              <el-input v-model="register.confirmPassword" :type="passwordBox2?'password':'text'" placeholder="请再次输入密码"></el-input>
+              <i @click="eyeButton2()" :class="passwordBox2?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+            </div>
           </el-form-item>
           <div class="forgetPasBox">
             <el-button type="primary" style="width:100%;height:46px;font-size:18px" @click="registerBut2('ruleRegister')">确定</el-button>
@@ -37,6 +51,12 @@
           </div>
       </el-form>
     </div>
+
+    <div v-if="zhuceSuccess" class="mask"></div>
+    <div v-if="zhuceSuccess" class="zhucechenggong">
+      <i class="iconfont icondui"></i>
+      <div>注册成功！</div>
+    </div>
   </div>
 </template>
 
@@ -45,6 +65,7 @@ export default {
     name: 'register',
   data() {
     return {
+      zhuceSuccess:false,
       register: {
         username: '',
         name: '',
@@ -79,12 +100,26 @@ export default {
             { min: 6, max: 20, message: '密码只能输入6-20个字母、数字、下划线！', trigger: 'blur' }
         ],
       },
+      passwordBox1:false,
+      passwordBox2:false
     }
   },
   created() {
-      this.initFun()
+    this.init()
   },
   methods: {
+    init(){
+      setTimeout(() => {
+        this.passwordBox1=true
+        this.passwordBox2 = true
+      }, 500);
+    },
+    eyeButton(){
+      this.passwordBox1=!this.passwordBox1
+    },
+    eyeButton2(){
+      this.passwordBox2=!this.passwordBox2
+    },
     goSubmitForm(){
       this.$router.push('/login')
     },
@@ -92,12 +127,19 @@ export default {
       this.$refs[formName].validate((valid) => {
             if (valid) {
               var reg = /^([a-zA-Z]|[0-9])(\w|)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
-            if(!reg.test(this.registe.email)){
+            if(!reg.test(this.register.email)){
+              this.$message({
+                  message: '邮箱格式不正确',
+                  type: 'warning'
+                });
               return false
             }
             this.$api.signIn(this.register).then( res => {
               if(res.data.code!=-1&&res.data.code!=500){
-                this.goSubmitForm()
+                this.zhuceSuccess = true
+                setTimeout(() => {
+                  this.goSubmitForm()
+                }, 2000);
               }else{
                 let msg
                 if(res.data.msg.indexOf('<br>')){
@@ -141,6 +183,40 @@ export default {
   }
 </style>
 <style scoped>
+  .eyeButton{
+    position: absolute;
+    right:10px;
+  }
+  .mask{
+    position: fixed;
+    left: 0;
+    top:0;
+    height: 100%;
+    width: 100%;
+    background:rgba(0,0,0,.8);
+
+  }
+  .zhucechenggong{
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    height: 255px;
+    width: 255px;
+    background:#fff;
+    border-radius:5px;
+    text-align:center;
+    padding-top:70px;
+  }
+  .zhucechenggong i{
+    font-size:90px;
+    color:#5cc0c4;
+  }
+  .zhucechenggong div{
+    font-size:14px;
+    color:#666;
+    line-height:20px
+  }
   .loginBgImg{
     width:100%;
     height:100%;
