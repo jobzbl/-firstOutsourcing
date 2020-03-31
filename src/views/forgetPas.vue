@@ -167,7 +167,12 @@ export default {
           newPassword:this.forgetPWArr.newPassword,
         }
         this.$api.forgetPassword3(qs.stringify(parmas)).then(res=>{
-          if(res.data.msg == 'success'){
+          if(res.data.code!=0){
+            this.$message({
+              message: res.data.msg,
+              type: 'warning'
+            });
+          }else{
             this.$message({
               message: '密码修改成功',
               type: 'success'
@@ -176,7 +181,6 @@ export default {
               this.$router.push('/login')
             }, 2000);
           }
-          
         })
         } else {
           console.log('error submit!!');
@@ -202,17 +206,24 @@ export default {
         username:this.forgetPWArr.username,
         email:this.forgetPWArr.email
       }
-      this.verifyCodeIsShow = true
-      let time = window.setInterval(()=>{
-        this.totalTime--
-        if(this.totalTime == 0){
-          window.clearInterval(time)
-          this.totalTime = 120
-          this.verifyCodeIsShow = false
-        }
-      },1000)
-        console.log('123')
-        this.$api.forgetPassword(qs.stringify(parmas)).then(()=>{})
+        this.$api.forgetPassword(qs.stringify(parmas)).then((res)=>{
+          if(res.data.code!=0){
+            this.$message({
+              message: res.data.msg,
+              type: 'warning'
+            });
+          }else{
+            this.verifyCodeIsShow = true
+            let time = window.setInterval(()=>{
+              this.totalTime--
+              if(this.totalTime == 0){
+                window.clearInterval(time)
+                this.totalTime = 120
+                this.verifyCodeIsShow = false
+              }
+            },1000)
+          }
+        })
     },
   }
 }

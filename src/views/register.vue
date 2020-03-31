@@ -10,35 +10,35 @@
       <el-form :model="register" :rules="ruleRegister" ref="ruleRegister" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="username">
             <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
-            <el-input v-model="register.username" placeholder="请输入用户名"></el-input>
+            <el-input v-model="register.username" autocomplete='new-password' placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="姓名" prop="name">
             <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
-            <el-input v-model="register.name" placeholder="请输入姓名"></el-input>
+            <el-input v-model="register.name"  autocomplete='new-password' placeholder="请输入姓名"></el-input>
           </el-form-item>
           <el-form-item label="单位" prop="company">
             <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
-            <el-input v-model="register.company" placeholder="请输单位"></el-input>
+            <el-input v-model="register.company"  autocomplete='new-password' placeholder="请输单位"></el-input>
           </el-form-item>
           <el-form-item label="部门" prop="department">
             <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
-            <el-input v-model="register.department" placeholder="请输入部门"></el-input>
+            <el-input v-model="register.department"  autocomplete='new-password' placeholder="请输入部门"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
             <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
-            <el-input v-model="register.email" placeholder="请输入邮箱"></el-input>
+            <el-input v-model="register.email"  autocomplete='new-password' placeholder="请输入邮箱"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
             <div style="postion:relative;">
               <el-input class="fakeInput" v-model="register.password" type="text"></el-input>
-              <el-input tabindex='-1' v-model="register.password" :type="passwordBox1?'password':'text'" placeholder="请输入密码"></el-input>
+              <el-input tabindex='-1' v-model="register.password" :type="passwordBox1?'password':'text'"  autocomplete='new-password' placeholder="请输入密码"></el-input>
               <i @click="eyeButton()" :class="passwordBox1?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
             </div>
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPassword" class="confirmPassword">
             <div style="postion:relative">
               <el-input class="fakeInput" v-model="register.confirmPassword" type="text"></el-input>
-              <el-input tabindex='-1' v-model="register.confirmPassword" :type="passwordBox2?'password':'text'" placeholder="请再次输入密码"></el-input>
+              <el-input tabindex='-1' v-model="register.confirmPassword" :type="passwordBox2?'password':'text'"  autocomplete='new-password' placeholder="请再次输入密码"></el-input>
               <i @click="eyeButton2()" :class="passwordBox2?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
             </div>
           </el-form-item>

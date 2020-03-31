@@ -69,13 +69,18 @@
                 </el-form>
             </div>
         </div>
-        
+        <div v-if="zhuceSuccess" class="mask"></div>
+        <div v-if="zhuceSuccess" class="zhucechenggong">
+        <i class="iconfont icondui"></i>
+        <div>保存成功！</div>
+        </div>
     </div>
 </template>
 <script>
 export default {
     data(){
         return {
+            zhuceSuccess:false,
             tabPosition:'left',
             details:{
                 username:'',
@@ -131,16 +136,23 @@ export default {
         getUserInfo(){
             this.$api.getNowUserInfo().then(res=>{
                 this.details = res.data.user
+                this.details.password = ''
             })
         },
         submitForm2(formName){
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.$api.editUser(this.details).then(res=>{ // 数据来源
-                        if(res.data.msg==='success'){
+                        if(res.data.code==0){
+                            this.zhuceSuccess = true
+                            setTimeout(()=>{
+                                this.zhuceSuccess = false
+                            },2000)
+                        }
+                        if(res.data.code==-1){
                             this.$message({
-                                message: '修改成功',
-                                type: 'success'
+                                message: res.data.msg,
+                                type: 'warning'
                             });
                         }
                     })
@@ -161,11 +173,11 @@ export default {
                         return
                     }
                     this.$api.editPasword({password:this.editPassword.password,newPassword:this.editPassword.newPassword}).then(res=>{ // 数据来源
-                        if(res.data.msg==='success'){
-                            this.$message({
-                                message: '修改成功',
-                                type: 'success'
-                            });
+                        if(res.data.code==0){
+                            this.zhuceSuccess = true
+                            setTimeout(()=>{
+                                this.zhuceSuccess = false
+                            },2000)
                         }
                     })
                 } else {
