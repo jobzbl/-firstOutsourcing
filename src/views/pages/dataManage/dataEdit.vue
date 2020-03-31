@@ -86,7 +86,7 @@
 			</div>
         </div>
         <div class="dateEditSeaveBox" v-if="type=='edit'">
-            <el-button @click="close('save')">保存</el-button>
+            <el-button class="lingleibaocun" @click="close('save')">保存</el-button>
             <el-button type="primary" @click="close('back')">提交数据</el-button>
         </div>
     </div>
@@ -232,6 +232,9 @@ export default {
 }
 </script>
 <style lang="less">
+    .lingleibaocun .el-button--primary:hover,.lingleibaocun .el-button--primary:focus,{
+        color: #33B0B5!important
+    }
     .tableEdit{
         .el-table__row{
             td{
@@ -264,6 +267,7 @@ export default {
 </style>
 
 <style scoped>
+    
     .icondui1,.iconguanbi{
         position: absolute;
         top: 50%;
@@ -302,6 +306,7 @@ export default {
         height: 40px;
         line-height: 40px;
         padding: 0;
+        
     }
     .buttonRow i{
         color: #33B0B5;

@@ -94,7 +94,7 @@
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
-                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条树
+                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条数据
                 </span>
 				<el-pagination
 					@current-change="handleCurrentChange"
@@ -158,7 +158,7 @@ export default {
                 company:'',
                 department:'',
                 email:'',
-                roleIdList:'',
+                roleIdList:'1',
                 menuIdList:[]
             },
             editData:false,
@@ -243,7 +243,7 @@ export default {
                 this.editDataForm.menuIdList = [1,2,3,4]
             }
             if(e==2){
-                this.editDataForm.menuIdList = [1,2,4]
+                this.editDataForm.menuIdList = [1,2,3]
             }
             if(e==3){
                 this.editDataForm.menuIdList = [1]
@@ -335,14 +335,12 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-
                     this.editDataForm.roleIdList = this.editDataForm.roleIdList.toString()
                     this.editDataForm.roleIdList = this.editDataForm.roleIdList.split('')
                     this.editDataForm.roleIdList[0] = parseInt(this.editDataForm.roleIdList[0])
                     console.log(this.editDataForm)
-
                     this.$api.editUser(this.editDataForm).then(res=>{
-                        if(res.data.msg==='success'){
+                        if(res.data.code==0){
                             this.$message({
                                 message: '修改成功',
                                 type: 'success'

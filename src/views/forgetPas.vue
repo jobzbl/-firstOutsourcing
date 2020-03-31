@@ -126,7 +126,6 @@ export default {
     }
   },
   created() {
-      this.getUuid()
   },
   methods: {
     goZhuce(){

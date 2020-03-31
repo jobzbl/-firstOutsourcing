@@ -11,7 +11,8 @@
               </el-input>
             </div>
             <div class="userButton">
-              <span :title="userName" :style="quanxian.indexOf('3')>0?'cursor:not-allowed;color:#d1d1d1;pointer-events: none':''" style="display: inline-block;
+               <!-- :style="quanxian.indexOf('3')>0?'cursor:not-allowed;color:#d1d1d1;pointer-events: none':''" -->
+              <span :title="userName" style="display: inline-block;
                     width: 55px;
                     overflow: hidden;
                     text-overflow: ellipsis;

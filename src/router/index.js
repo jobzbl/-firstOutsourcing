@@ -57,6 +57,11 @@ const routes = [
         name: 'upData',
         component: upData,
       },
+      {
+        path: '/result',
+        name: 'searchResult',
+        component: searchResult,
+      },
     ]
   },
   {
@@ -69,11 +74,6 @@ const routes = [
         path: '/',
         name: 'indexPage',
         component: indexPage,
-      },
-      {
-        path: '/result',
-        name: 'searchResult',
-        component: searchResult,
       },
       {
         path: '/dataManage',

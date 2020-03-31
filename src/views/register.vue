@@ -35,7 +35,7 @@
               <i @click="eyeButton()" :class="passwordBox1?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
             </div>
           </el-form-item>
-          <el-form-item label="确认密码" prop="confirmPassword">
+          <el-form-item label="确认密码" prop="confirmPassword" class="confirmPassword">
             <div style="postion:relative">
               <el-input class="fakeInput" v-model="register.confirmPassword" type="text"></el-input>
               <el-input tabindex='-1' v-model="register.confirmPassword" :type="passwordBox2?'password':'text'" placeholder="请再次输入密码"></el-input>
@@ -78,18 +78,23 @@ export default {
       ruleRegister: {
         username: [
             { required: true, message: '请输入用户名', trigger: 'blur' },
+            { min: 1, max: 32, message: '最多输入32个字符', trigger: 'blur' }
         ],
         name: [
             { required: true, message: '请输入姓名', trigger: 'blur' },
+            { min: 1, max: 32, message: '最多输入32个字符', trigger: 'blur' }
         ],
         company: [
             { required: true, message: '请输入单位', trigger: 'blur' },
+            { min: 1, max: 32, message: '最多输入32个字符', trigger: 'blur' }
         ],
         department: [
             { required: true, message: '请输入部门', trigger: 'blur' },
+            { min: 1, max: 32, message: '最多输入32个字符', trigger: 'blur' }
         ],
         email: [
             { required: true, message: '请输入邮箱', trigger: 'blur' },
+            { min: 1, max: 32, message: '最多输入32个字符', trigger: 'blur' }
         ],
         password: [
             { required: true, message: '请输入密码', trigger: 'blur' },
@@ -157,6 +162,9 @@ export default {
 </script>
 
 <style>
+  .confirmPassword .el-form-item__error{
+    z-index: 9999;
+  }
   .fakeInput {
     position:absolute!important;
     z-index:999;

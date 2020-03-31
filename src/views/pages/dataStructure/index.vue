@@ -31,8 +31,8 @@
             </el-form>
         </div>
         <div class="buttonRow buttonRow2" v-if="quanxian.indexOf(3)!=-1">
-            <el-button @click="addkeyWordFun"> <i class="iconfont iconshanchu"></i> 新增关键词</el-button>
-            <el-button @click="mergeKeyWord"> <i class="iconfont iconxiazai"></i> 合并关键词</el-button>
+            <el-button @click="addkeyWordFun"> <i class="iconfont iconjiahao"></i> 新增关键词</el-button>
+            <el-button @click="mergeKeyWord"> <i class="iconfont iconhebingbanqun"></i> 合并关键词</el-button>
         </div>
         <div class="tableBox">
             <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 

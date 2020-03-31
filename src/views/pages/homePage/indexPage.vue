@@ -30,7 +30,7 @@
 						</div>
 						<div class="fl listElements">
 							<div class="ul">
-								<div style="overflow:hidden">
+								<div style="overflow:hidden;width:582px">
 									<span
 										@click="threeLeveCli(item.id,item.content)"
 										:style="[{'font-size':(item.content.length>1?'20px':'24px')},

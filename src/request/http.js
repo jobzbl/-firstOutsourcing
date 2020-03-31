@@ -36,12 +36,12 @@ const errorHandle = (status, other) => {
     // 状态码判断
     switch (status) {
         // 401: 未登录状态，跳转登录页
-        case 401:
-            toLogin();
-            break;
+        // case 403:
+        //     toLogin();
+        //     break;
         // 403 token过期
         // 清除token并跳转登录页
-        case 403:
+        case 401:
             tip('登录过期，请重新登录');
             localStorage.removeItem('token');
             store.commit('loginSuccess', null);
@@ -97,7 +97,15 @@ instance.interceptors.response.use(
                 }
             }
             if(res.data.code =='401') {
-                toLogin();
+                tip('登录过期，请重新登录');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('roleIdList');
+                localStorage.removeItem('menuIdList');
+                store.commit('loginSuccess', null);
+                setTimeout(() => {
+                    toLogin();
+                }, 1000);
             }
             return Promise.resolve(res)
         }else{
