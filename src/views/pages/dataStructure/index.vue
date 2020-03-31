@@ -24,7 +24,7 @@
                     </el-col>
                     <el-col :span="4" style="text-align:right">
                         <el-form-item>
-                            <el-button type="primary" @click="getListdata()">查询</el-button>
+                            <el-button type="primary" @click="getListdata(true)">查询</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -255,7 +255,11 @@ export default {
             })
             
         },
-        getListdata(){
+        getListdata(judeg){
+            console.log(judeg)
+            if(judeg){
+                this.tableData.currPage = 1
+            }
             this.$api.getdataStrutureData({
                 page:this.tableData.currPage,
                 limit:this.tableData.pageSize,

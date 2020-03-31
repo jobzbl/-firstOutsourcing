@@ -3,7 +3,10 @@
     <div class="header">
       <div style="width:100%;background: #1A242F;">
         <div class="wrap flexSb logoTextBox">
-          <div class="logoText"></div>
+          <div class="flexSb">
+            <div class="logoText"></div>
+            <div class="logoName">SiC<sub>f</sub>/SiC<span>陶瓷基复合材料界面相数据库</span></div>
+          </div>
           <div class="searchBox">
             <div style="width:380px" class="inputBox">
               <el-input placeholder="输入关键字搜索" v-model="input3" class="input-with-select">
@@ -122,12 +125,21 @@ export default {
     align-self: center;
   }
   .logoText{
-    background: url('../assets/images/logo.png') no-repeat center;
+    background: url('../assets/images/logo.png') no-repeat left;
     color: #fff;
-    width: 442px;
+    width: 30px;
     font-size: 24px;
     font-family:FZCYJ;
     height: 60px;
     line-height: 60px;
+  }
+  .logoName{
+    color: #fff;
+    font-size: 26px;
+    margin-left: 10px;
+    font-family:"Times New Roman",Georgia,Serif;
+  }
+  .logoName span{
+    font-weight: bold;
   }
 </style>

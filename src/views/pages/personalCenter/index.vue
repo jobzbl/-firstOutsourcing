@@ -40,7 +40,7 @@
                     </el-form-item>
                     <el-form-item label="密码" prop="password">
                         <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
-                        <el-input v-model="details.password" type="password"></el-input>
+                        <el-input v-model="details.password" autocomplete="off" datatype="*" type="password"></el-input>
                     </el-form-item>
                     <div class="okButtonBox">
                         <el-button @click="resetForm('ruleForm')">取消</el-button>
@@ -51,16 +51,31 @@
             <div v-if="tabPosition=='right'">
                 <el-form :model="editPassword" :rules="editPasswordRules" ref="editPassword" label-width="120px" class="demo-ruleForm">
                     <el-form-item label="旧密码" prop="password">
-                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
-                        <el-input v-model="editPassword.password"></el-input>
+                        <div style="postion:relative;">
+                            <div class="passwordBox" v-if="passwordBox1">
+                                <div v-for="(item,index) in editPassword.password" :key="index"></div>
+                            </div>
+                            <el-input @focus='eyeInputFocue(1)' :class="passwordBox1?'passwordInput':''" v-model="editPassword.password" placeholder="请输入密码"></el-input>
+                            <i @click="eyeButton(1)" :class="passwordBox1?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+                        </div>
                     </el-form-item>
                     <el-form-item label="新密码" prop="newPassword">
-                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
-                        <el-input v-model="editPassword.newPassword"></el-input>
+                        <div style="postion:relative;">
+                            <div class="passwordBox" v-if="passwordBox2">
+                                <div v-for="(item,index) in editPassword.newPassword" :key="index"></div>
+                            </div>
+                            <el-input @focus='eyeInputFocue(2)' :class="passwordBox2?'passwordInput':''" v-model="editPassword.newPassword" placeholder="请输入密码"></el-input>
+                            <i @click="eyeButton(2)" :class="passwordBox2?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+                        </div>
                     </el-form-item>
                     <el-form-item label="确认新密码" prop="newPassword2">
-                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
-                        <el-input v-model="editPassword.newPassword2"></el-input>
+                        <div style="postion:relative;">
+                            <div class="passwordBox" v-if="passwordBox3">
+                                <div v-for="(item,index) in editPassword.newPassword2" :key="index"></div>
+                            </div>
+                            <el-input @focus='eyeInputFocue(3)' :class="passwordBox3?'passwordInput':''" v-model="editPassword.newPassword2" placeholder="请输入密码"></el-input>
+                            <i @click="eyeButton(3)" :class="passwordBox3?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+                        </div>
                     </el-form-item>
                     <div class="okButtonBox">
                         <el-button @click="resetForm('ruleForm')">取消</el-button>
@@ -80,7 +95,13 @@
 export default {
     data(){
         return {
+            passwordBox1:true,
+            passwordBox2:true,
+            passwordBox3:true,
             zhuceSuccess:false,
+            pasFocus3:false,
+            pasFocus2:false,
+            pasFocus1:false,
             tabPosition:'left',
             details:{
                 username:'',
@@ -133,6 +154,22 @@ export default {
         this.getUserInfo()
     },
     methods:{
+        pasFocus1Cl(){
+            this.pasFocus1 = true
+            console.log('asd')
+        },
+        eyeInputFocue(){
+          console.log('asd')  
+        },
+        eyeButton(e){
+            if(e==1){
+                this.passwordBox1 = !this.passwordBox1
+            }else if (e==2){
+                this.passwordBox2 = !this.passwordBox2
+            }else if (e==3){
+                this.passwordBox3 = !this.passwordBox3
+            }
+        },
         getUserInfo(){
             this.$api.getNowUserInfo().then(res=>{
                 this.details = res.data.user
@@ -198,9 +235,37 @@ export default {
             font-size: 16px;
         }
     }
+    .passwordInput{
+    top:-3px;
+    .el-input__inner{
+      color:transparent;
+      font-size: 0;
+    }
+  }
 </style>
 
 <style scoped>
+    .eyeButton{
+        position: absolute;
+        right:10px;
+        z-index: 99999;
+    }
+    .passwordBox{
+        position: absolute;
+        top:50%;
+        transform: translateY(-50%);
+        left:11px;
+        display: flex;
+        z-index: 999;
+    }
+    .passwordBox div{
+        justify-content: flex-start;
+        height: 5px;
+        width:5px;
+        background:#464646;
+        border-radius:5px;
+        margin-left:5px;
+    }
     .okButtonBox{
         width:430px;
         margin: 75px auto;

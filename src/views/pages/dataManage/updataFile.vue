@@ -440,7 +440,9 @@ export default {
 </style>
 
 <style scoped>
-    
+    .iconshangchuan{
+        color: #fff!important;
+    }
     .inputBoxDiv{
         border:1px solid #C0C4CC;
         height:40px;width:382px;

@@ -224,16 +224,19 @@ export default {
                 });
                 return
             }else{
-                let parmas = this.nowCheckedArr.map(x=>{return x.dataId})
+                let parmas = this.nowCheckedArr.map(x=>{return x.userId})
                 this.$api.onDown(parmas).then(res=>{
-                    const link = document.createElement('a')
-                    const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
-                    link.style.display = 'none'
-                    link.href = URL.createObjectURL(blob)
-                    link.setAttribute('download', `${name}.xlsx`)
-                    document.body.appendChild(link)
-                    link.click()
-                    document.body.removeChild(link)
+                    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});  // res就是接口返回的文件流了
+                    let objectUrl = URL.createObjectURL(blob); 
+                    window.location.href = objectUrl; 
+                    // const link = document.createElement('a')
+                    // const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+                    // link.style.display = 'none'
+                    // link.href = URL.createObjectURL(blob)
+                    // link.setAttribute('download', `${name}.xlsx`)
+                    // document.body.appendChild(link)
+                    // link.click()
+                    // document.body.removeChild(link)
                 })
             }
             
@@ -357,15 +360,7 @@ export default {
             });
         },
         removeData(val){
-            // if(data==''&&this.nowCheckedArr.length==0){
-            //     this.$message({
-            //         message: '请勾选需要删除的数据',
-            //         type: 'warning'
-            //     });
-            //     return
-            // }else{
-            //     this.isBoxShow = true;
-            // }
+            
             if(val==''&&this.nowCheckedArr.length==0){
                 this.$message({
                     message: '请勾选需要删除的数据',
@@ -385,18 +380,7 @@ export default {
                 this.deleteMultiple = false
                 this.isBoxShow = true
             }
-            // if(data==''&&this.nowCheckedArr.length>0){
-            //     return
-            // }
-            // this.$api.deleteUser([data]).then(res=>{
-            //     if(res.data.msg==='success'){
-            //         this.$message({
-            //             message: '删除成功',
-            //             type: 'success'
-            //         });
-            //         this.getListData()
-            //     }
-            // })
+            
         },
         removeDataOk(){
             let parmas

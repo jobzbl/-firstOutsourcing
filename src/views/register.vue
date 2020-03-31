@@ -9,38 +9,42 @@
       <div class="loginName">账号注册</div>
       <el-form :model="register" :rules="ruleRegister" ref="ruleRegister" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="username">
-            <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.username" autocomplete='new-password' placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="姓名" prop="name">
-            <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.name"  autocomplete='new-password' placeholder="请输入姓名"></el-input>
           </el-form-item>
           <el-form-item label="单位" prop="company">
-            <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.company"  autocomplete='new-password' placeholder="请输单位"></el-input>
           </el-form-item>
           <el-form-item label="部门" prop="department">
-            <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.department"  autocomplete='new-password' placeholder="请输入部门"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
-            <el-input tabindex='-1' style="position:fixed;left:-999999px" type="password"></el-input>
             <el-input v-model="register.email"  autocomplete='new-password' placeholder="请输入邮箱"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
             <div style="postion:relative;">
-              <el-input class="fakeInput" v-model="register.password" type="text"></el-input>
-              <el-input tabindex='-1' v-model="register.password" :type="passwordBox1?'password':'text'"  autocomplete='new-password' placeholder="请输入密码"></el-input>
+              <div class="passwordBox" v-if="passwordBox1">
+                <div v-for="(item,index) in register.password" :key="index"></div>
+              </div>
+              <el-input :class="passwordBox1?'passwordInput':''" v-model="register.password" type="text" placeholder="请输入密码"></el-input>
               <i @click="eyeButton()" :class="passwordBox1?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
             </div>
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPassword" class="confirmPassword">
-            <div style="postion:relative">
-              <el-input class="fakeInput" v-model="register.confirmPassword" type="text"></el-input>
-              <el-input tabindex='-1' v-model="register.confirmPassword" :type="passwordBox2?'password':'text'"  autocomplete='new-password' placeholder="请再次输入密码"></el-input>
+            <div style="postion:relative;">
+              <div class="passwordBox" v-if="passwordBox2">
+                <div v-for="(item,index) in register.confirmPassword" :key="index"></div>
+              </div>
+              <el-input :class="passwordBox2?'passwordInput':''" v-model="register.confirmPassword" type="text" placeholder="请输入密码"></el-input>
               <i @click="eyeButton2()" :class="passwordBox2?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
             </div>
+            <!-- <div style="postion:relative">
+              <el-input class="fakeInput" v-model="register.confirmPassword" type="text"></el-input>
+              <el-input tabindex='-1' v-model="register.confirmPassword" :type="passwordBox2?'text':'text'"  autocomplete='new-password' placeholder="请再次输入密码"></el-input>
+              <i @click="eyeButton2()" :class="passwordBox2?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+            </div> -->
           </el-form-item>
           <div class="forgetPasBox">
             <el-button type="primary" style="width:100%;height:46px;font-size:18px" @click="registerBut2('ruleRegister')">确定</el-button>
@@ -161,7 +165,14 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
+  .passwordInput{
+    top:-3px;
+    .el-input__inner{
+      color:transparent;
+      font-size: 0;
+    }
+  }
   .confirmPassword .el-form-item__error{
     z-index: 9999;
   }
@@ -193,6 +204,23 @@ export default {
   }
 </style>
 <style scoped>
+  .passwordBox{
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%);
+    left:11px;
+    display: flex;
+    z-index: 999;
+  }
+  .passwordBox div{
+    justify-content: flex-start;
+    height: 5px;
+    width:5px;
+    background:#464646;
+    border-radius:5px;
+    margin-left:5px;
+  }
+  
   .eyeButton{
     position: absolute;
     right:10px;

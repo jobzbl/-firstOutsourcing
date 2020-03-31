@@ -36,7 +36,7 @@
                     </el-col>
                     <el-col :span="8" style="text-align:right">
                         <el-form-item>
-                            <el-button type="primary" @click="getListdata()">查询</el-button>
+                            <el-button type="primary" @click="getListdata(true)">查询</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -179,7 +179,10 @@ export default {
             })
             
         },
-        getListdata(){
+        getListdata(judeg){
+            if(judeg){
+                this.tableData.currPage = 1
+            }
             this.$api.dataManage({
                 page:this.tableData.currPage,
                 limit:this.tableData.pageSize,

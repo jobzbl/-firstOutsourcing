@@ -13,7 +13,7 @@
             action="0"
             :before-upload="beforeUpload"
             :file-list="fileList">
-            <el-button style="background:none;color:#33B0B5" @click="shangchuanB()" size="small" type="primary"><i class="iconfont iconshangchuan"></i>上传更新数据</el-button>
+            <el-button style="background:none;color:#33B0B5" @click="shangchuanB()" size="small" type="primary"><i class="iconfont iconshangchuan" style="color:#fff"></i>上传更新数据</el-button>
             </el-upload>
             <!-- <el-button> <i class="iconfont iconshangchuan"></i> 上传更新数据</el-button> -->
         </div>

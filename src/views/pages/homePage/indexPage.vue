@@ -64,6 +64,7 @@
 							</router-link>
 						</div>
 					</div>
+					<img v-if="searchData.list.length<1" src="../../../assets/images/nomore.png" alt="">
 				</div>
 				<div class="paginationDiv">
 					<el-pagination 
@@ -169,11 +170,9 @@ export default {
 			this.threeLeveArr = res.data.data
         })
 	},
-	threeLeveCli(id,value){
-		console.log(value)
-		this.selectList.nowElement = id
-		this.selectList.threeLeveArr = value
-		this.$api.getSysDataList({page:this.searchData.currPage,limit:this.searchData.pageSize,dataContail:value}).then( res => {
+	search() { // 单机搜索
+		console.log(this.selectList)
+		this.$api.getSysDataList({page:this.searchData.currPage,limit:this.searchData.pageSize,dataContail:this.selectList.threeLeveArr}).then( res => {
 			console.log(res.data.page)
 			this.searchData = res.data.page
             for(var i=0; i<this.searchData.list.length; i++){
@@ -192,9 +191,12 @@ export default {
 			
         })
 	},
-	search() { // 单机搜索
-		console.log(this.selectList)
+	threeLeveCli(id,value){
+		console.log(value)
+		this.selectList.nowElement = id
+		this.selectList.threeLeveArr = value
 	},
+	
 	
 	selectTitCli() { // 点击下拉框
 		if(this.animationSwitch){
@@ -374,6 +376,14 @@ export default {
 		margin: 40px 0 136px;
 		padding: 43px 48px;
 	}
+	.searchConBox img{
+		position:absolute;
+		width: 148px;
+		height: auto;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%,-50%)
+	}
 	.searchConBoxOver a{
 		text-decoration: none;
 		color: inherit;
@@ -396,6 +406,7 @@ export default {
 		overflow: hidden;
 	}
 	.searchConBox{
+		position: relative;
 		width: 1135px;
 		margin-top: 21px;
 		min-height: 508px;
