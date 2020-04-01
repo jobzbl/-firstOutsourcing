@@ -194,13 +194,18 @@ export default {
           }else{
             this.clearCookie();
           }
-          if(res.data.msg==='success'){
+          if(res.data.code==0){
             this.$api.getNowUserInfo().then(res2=>{
               localStorage.setItem("user", JSON.stringify(res2.data.user))
               if(res.data.code==0){
                 that.$router.push('/')
               }
             })
+          }else{
+            this.$message({
+              message: res.data.msg,
+              type: 'warning'
+            });
           }
           
         })

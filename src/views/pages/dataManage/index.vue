@@ -253,6 +253,11 @@ export default {
             this.nowCheckedArr = val
         },
         handleCurrentChange(val) {
+            this.formInline.dataNum=''
+            this.formInline.dataContail=''
+            this.formInline.classification=''
+            this.formInline.dataSource=''
+            this.formInline.dataType=''
             this.getListdata()
             console.log(`当前页: ${val}`);
         },

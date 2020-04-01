@@ -178,7 +178,7 @@ export default {
         submitForm2(formName){
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.$api.editUser(this.details).then(res=>{ 
+                    this.$api.editUser2(this.details).then(res=>{ 
                         if(res.data.code==0){
                             this.zhuceSuccess = true
                             setTimeout(()=>{
