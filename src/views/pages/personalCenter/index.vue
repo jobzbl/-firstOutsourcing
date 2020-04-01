@@ -170,6 +170,7 @@ export default {
             }
         },
         getUserInfo(){
+            console.log('2020/4/2 00:40')
             this.$api.getNowUserInfo().then(res=>{
                 this.details = res.data.user
                 this.details.password = ''
@@ -214,6 +215,11 @@ export default {
                             setTimeout(()=>{
                                 this.zhuceSuccess = false
                             },2000)
+                        }else{
+                            this.$message({
+                                message: res.data.msg,
+                                type: 'warning'
+                            });
                         }
                     })
                 } else {

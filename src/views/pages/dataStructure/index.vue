@@ -56,7 +56,7 @@
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
-                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条数据
+                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.list.length}}</span> 条数据
                 </span>
 				<el-pagination
 					@current-change="handleCurrentChange"
@@ -118,10 +118,10 @@
                 </el-dialog>
             </div>
             <div class="removeDialog addKeyWordBox">
-                <el-dialog title="关键词信息" :visible.sync="addKeyWord" width="400px" :show-close='false'>
+                <el-dialog title="关键词信息" destroy-on-close :visible.sync="addKeyWord" width="400px" :show-close='false'>
                     <el-form ref="addKeyWord" :rules="addKeyWordRules" :model="addKeyWordArr" label-width="80px">
                         <el-form-item label="关键词" prop="stKey">
-                            <el-input v-model.trim="addKeyWordArr.stKey"></el-input>
+                            <el-input v-model.trim="addKeyWordArr.stKey" placeholder="请输入关键词"></el-input>
                         </el-form-item>
                         <el-form-item label="数据分类" prop="stClassification">
                             <el-select clearable v-model ="addKeyWordArr.stClassification" style="width:240px" placeholder="请选择数据分类">
@@ -221,14 +221,19 @@ export default {
                 }).then(res=>{ 
                     this.mergeName = false
                     this.keywordShow = false
-                    if(res.data.msg==='success'){
+                    if(res.data.code==0){
                         this.$message({
                             message: '合并成功',
                             type: 'success'
                         });
-                    this.getListdata()
-                    this.isCheck = false
-                    this.isdisabled=false
+                        this.getListdata()
+                        this.isCheck = false
+                        this.isdisabled=false
+                    }else{
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'warning'
+                        });
                     }
             }) 
         },
@@ -288,20 +293,32 @@ export default {
         },
         handleSelectionChange(){},
         onSubmit(){},
-        handleCurrentChange(val) {
-        this.getListdata()
-        console.log(`当前页: ${val}`);
+        handleCurrentChange() {
+            this.formInline.stKey=''
+            this.formInline.stType=''
+            this.formInline.stClassification=''
+            this.getListdata()
         },
         saveKey(formName){
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.$api.addKey(this.addKeyWordArr).then(res=>{ // 数据来源
-                        if(res.data.msg==='success'){
+                        if(res.data.code==0){
                             this.$message({
                                 message: '保存成功',
                                 type: 'success'
                             });
                             this.addKeyWord = false
+                            this.addKeyWordArr = {
+                                stKey:'',
+                                stClassification:'',
+                                stType:'',
+                            }
+                        }else{
+                            this.$message({
+                                message: res.data.msg,
+                                type: 'warning'
+                            });
                         }
                     })
                 } else {

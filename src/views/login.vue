@@ -45,7 +45,6 @@
 
 <script>
 import base from '../request/base'; // 导入接口域名列表
-import qs from 'qs'
 
 export default {
     name: 'login',
@@ -98,47 +97,6 @@ export default {
   methods: {
     eyeButton(){
       this.passwordBox=!this.passwordBox
-    },
-    setPasswordOk(formName){
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          var parmas = {
-          username:this.forgetPWArr.username,
-          password:this.forgetPWArr.password,
-          newPassword:this.forgetPWArr.newPassword,
-        }
-        this.$api.forgetPassword3(qs.stringify(parmas)).then(res=>{
-          if(res.data.msg == 'success'){
-            this.$message({
-              message: '密码修改成功',
-              type: 'success'
-            });
-            setTimeout(() => {
-              this.verifyCodeIsShow = true
-              this.mailDelivery = false
-              this.isforgetPW = false
-              this.isLogin = 1
-              this.loginText = '账号登录'
-              this.init= true
-              this.getUuid()
-              this.$nextTick(()=>{
-                this.$refs['setPassword'].resetFields();
-              })
-              this.$nextTick(()=>{
-                this.$refs['forgetPW'].resetFields();
-              })
-              this.$nextTick(()=>{
-                this.$refs['ruleForm'].resetFields();
-              })
-            }, 2000);
-          }
-          
-        })
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
     },
     forgetPW(){
       this.$router.push('/forgetPas')

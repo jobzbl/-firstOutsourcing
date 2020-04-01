@@ -42,7 +42,7 @@
                     </el-col>
                     <el-col :span="6" style="text-align:right">
                         <el-form-item>
-                            <el-button type="primary" @click="getListData()">查询</el-button>
+                            <el-button type="primary" @click="getListData(true)">查询</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -94,7 +94,7 @@
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
-                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条数据
+                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.list.length}}</span> 条数据
                 </span>
 				<el-pagination
 					@current-change="handleCurrentChange"
@@ -279,7 +279,10 @@ export default {
                 })
             })
         },
-        getListData(){
+        getListData(judeg){
+            if(judeg){
+                this.tableData.currPage = 1
+            }
             var parmas = {
                 page:this.tableData.currPage,
                 limit:this.tableData.pageSize,
@@ -310,12 +313,17 @@ export default {
             pranam.userId = data.userId,
             pranam.status = value?1:0
             this.$api.editStatus(pranam).then(res=>{
-                if(res.data.msg==='success'){
+                if(res.data.code==0){
                     this.$message({
                         message: '修改成功',
                         type: 'success'
                     });
                     this.getListData()
+                }else{
+                    this.$message({
+                        message: res.data.msg,
+                        type: 'warning'
+                    });
                 }
             })
         },
@@ -326,9 +334,12 @@ export default {
         handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
         },
-        handleCurrentChange(val) {
+        handleCurrentChange() {
+            this.formInline.name=''
+            this.formInline.company=''
+            this.formInline.department=''
+            this.formInline.status=''
             this.getListData()
-            console.log(`当前页: ${val}`);
         },
         handleClose() {},
         close(formName){
@@ -349,6 +360,11 @@ export default {
                                 type: 'success'
                             });
                             this.getListData()
+                        }else{
+                            this.$message({
+                                message: res.data.msg,
+                                type: 'warning'
+                            });
                         }
                         // this.selectMenu = res.data.data
                     })
@@ -390,12 +406,17 @@ export default {
                 parmas = this.removeId
             }
             this.$api.deleteUser(parmas).then(res=>{
-                if(res.data.msg==='success'){
+                if(res.data.msg==0){
                     this.$message({
                         message: '删除成功',
                         type: 'success'
                     });
                     this.getListData()
+                }else{
+                    this.$message({
+                        message: res.data.msg,
+                        type: 'warning'
+                    });
                 }
             })
         },

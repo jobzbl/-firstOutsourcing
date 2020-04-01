@@ -152,7 +152,7 @@ export default {
         },
         close(type){
             this.$api.eidtSave(this.saveArr).then(res=>{ // 数据来源
-                if(res.data.msg==='success'){
+                if(res.data.code==0){
                     this.$message({
                         message: '保存成功',
                         type: 'success'

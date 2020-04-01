@@ -93,7 +93,7 @@ instance.interceptors.response.use(
                 // 在这里把用户名和token保存起来
             if(res.config.url.indexOf('/regedit')=='-1'&&res.config.url.indexOf('/export')=='-1'){
                 if(res.data.code!='0'&&res.data.code!='-1') {
-                    tip(res.data.msg); 
+                    // tip(res.data.msg); 
                 }
             }
             if(res.data.code =='401') {

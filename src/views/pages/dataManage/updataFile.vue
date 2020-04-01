@@ -339,7 +339,7 @@ export default {
                     }
                     
                     this.$api.upData(this.formInline).then(res=>{
-                        if(res.data.msg==='success'){
+                        if(res.data.code==0){
                             this.$message({
                                 message: '保存成功',
                                 type: 'success'

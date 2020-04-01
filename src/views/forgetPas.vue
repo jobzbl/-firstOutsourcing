@@ -139,7 +139,7 @@ export default {
             verifyCode:this.forgetPWArr.verifyCode
           }
           this.$api.forgetPassword2(qs.stringify(parmas)).then(res=>{
-            if(res.data.msg == 'success'){
+            if(res.data.code == 0){
               this.loginText = '设置新密码'
               this.setNewPas = true
             }else{
@@ -213,6 +213,10 @@ export default {
               type: 'warning'
             });
           }else{
+            this.$message({
+              message: '邮箱已发送',
+              type: 'success'
+            });
             this.verifyCodeIsShow = true
             let time = window.setInterval(()=>{
               this.totalTime--

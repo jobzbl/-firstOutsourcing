@@ -79,7 +79,7 @@
             </el-table>
             <div class="paginationDiv2">
                 <span style="font-size:14px;float:left;height:40px;line-height:40px">
-                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.pageSize}}</span> 条数据
+                    共<span style="color:#33B0B5">{{tableData.totalCount}}</span>条数据，当前页显示 <span style="color:#33B0B5">{{tableData.list.length}}</span> 条数据
                 </span>
 				<el-pagination
 					@current-change="handleCurrentChange"
@@ -240,12 +240,17 @@ export default {
             }
             this.$api.deleteData(parmas).then(res=>{ // 数据类型
                 this.dataTypeObj = res.data.data
-                if(res.data.msg==='success'){
+                if(res.data.code==0){
                     this.$message({
                         message: '删除成功',
                         type: 'success'
                     });
                     this.getListdata()
+                }else{
+                    this.$message({
+                        message: res.data.msg,
+                        type: 'warning'
+                    });
                 }
             })
         },

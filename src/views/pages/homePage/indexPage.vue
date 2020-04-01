@@ -387,6 +387,8 @@ export default {
 	.searchConBoxOver a{
 		text-decoration: none;
 		color: inherit;
+		border-bottom: 1px solid #33B0B5;
+		padding-bottom: 2px;
 	}
 	.searchConBoxOver div{
 		cursor: pointer;
@@ -397,7 +399,7 @@ export default {
 		line-height: 40px;
 		color: #33B0B5;
 		font-size: 14px;
-		text-decoration: underline;
+		/* text-decoration: underline; */
 		float: left;
 		margin-left: -1px;
 		margin-top: -1px;
