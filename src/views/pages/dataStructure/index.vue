@@ -199,7 +199,6 @@ export default {
         }
     },
     created(){
-        this.getListdata()
         this.getSelectObj()
     },
     methods:{
@@ -236,12 +235,14 @@ export default {
         getSelectObj(){
             this.$api.dataTypelist().then(res=>{ // 数据类型
                 this.dataTypeObj = res.data.data
+                this.getListdata()
                 this.dataTypeObj.map(x=>{
                     Object.assign(this.dataTypeArr,{[x.id]: x.paramValue})
                 })
             })
             this.$api.dataClassify().then(res=>{ // 数据分类
                 this.dataClassifyObj = res.data.data
+                this.getListdata()
                 this.dataClassifyObj.map(x=>{
                     Object.assign(this.dataClassifyArr,{[x.id]: x.paramValue})
                 })

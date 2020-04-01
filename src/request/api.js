@@ -107,7 +107,7 @@ const article = {
     },
     // 修改用户信息
     editUser(params){
-        return axios.post(`${base.sq}/sys/user/update`,params)
+        return axios.post(`${base.sq}/sys/user/updateInfo`,params)
     },
     // 修改密码
     editPasword(params){

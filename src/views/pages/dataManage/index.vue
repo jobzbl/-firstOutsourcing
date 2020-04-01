@@ -59,11 +59,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column>
-                <el-table-column label="数据来源" width="130">
-                    <template slot-scope="scope">
-                        {{dataSourceArr[scope.row.dataSource]}}
-                    </template>
-                </el-table-column>
+                <el-table-column prop="dataSourceName" label="数据来源" width="130">    </el-table-column>
                 <el-table-column prop="typeName" label="数据类型" width="106"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">

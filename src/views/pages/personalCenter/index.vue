@@ -16,7 +16,6 @@
             <div v-if="tabPosition=='left'" >
                 <el-form :model="details" :rules="detailsRules" ref="detailsRule" label-width="100px" class="demo-ruleForm">
                     <el-form-item label="用户名" prop="username">
-                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
                         <el-input v-model="details.username" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="姓名" prop="name">
@@ -85,9 +84,9 @@
             </div>
         </div>
         <div v-if="zhuceSuccess" class="mask"></div>
-        <div v-if="zhuceSuccess" class="zhucechenggong">
-        <i class="iconfont icondui"></i>
-        <div>保存成功！</div>
+            <div v-if="zhuceSuccess" class="zhucechenggong">
+            <i class="iconfont icondui"></i>
+            <div>保存成功！</div>
         </div>
     </div>
 </template>
@@ -179,7 +178,7 @@ export default {
         submitForm2(formName){
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.$api.editUser(this.details).then(res=>{ // 数据来源
+                    this.$api.editUser(this.details).then(res=>{ 
                         if(res.data.code==0){
                             this.zhuceSuccess = true
                             setTimeout(()=>{
@@ -245,6 +244,36 @@ export default {
 </style>
 
 <style scoped>
+    .mask{
+        position: fixed;
+        left: 0;
+        top:0;
+        height: 100%;
+        width: 100%;
+        background:rgba(0,0,0,.8);
+
+    }
+    .zhucechenggong{
+        position: fixed;
+        top:50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+        height: 255px;
+        width: 255px;
+        background:#fff;
+        border-radius:5px;
+        text-align:center;
+        padding-top:70px;
+    }
+    .zhucechenggong i{
+        font-size:90px;
+        color:#5cc0c4;
+    }
+    .zhucechenggong div{
+        font-size:14px;
+        color:#666;
+        line-height:20px
+    }
     .eyeButton{
         position: absolute;
         right:10px;
