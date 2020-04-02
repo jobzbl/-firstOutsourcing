@@ -5,7 +5,9 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="数据编号">
-                            <el-input v-model="formInline.dataNum" style="width:250px" placeholder="例如：0002，0003-0023，0027"></el-input>
+                            <el-input v-model="formInline.beginNum" style="width:100px" placeholder="最小值"></el-input>
+                            -
+                            <el-input v-model="formInline.endNum" style="width:100px" placeholder="最大值"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -104,7 +106,9 @@ export default {
         removeMsg:[],
 		currentPage: 1,
         formInline:{
-            dataNum:'',
+            // dataNum:'',
+            beginNum:'',
+            endNum:'',
             dataContail:'',
             classification:'',
             dataSource:'',
@@ -179,10 +183,18 @@ export default {
             if(judeg){
                 this.tableData.currPage = 1
             }
+            console.log(this.formInline.beginNum == false)
+            if(!this.formInline.beginNum){
+                this.formInline.beginNum = this.formInline.endNum
+            }
+            if(!this.formInline.endNum){
+                this.formInline.endNum = this.formInline.beginNum
+            }
             this.$api.dataManage({
                 page:this.tableData.currPage,
                 limit:this.tableData.pageSize,
-                dataNum:this.formInline.dataNum,
+                beginNum:this.formInline.beginNum,
+                endNum:this.formInline.endNum,
                 dataContail:this.formInline.dataContail,
                 classification:this.formInline.classification,
                 dataSource:this.formInline.dataSource,

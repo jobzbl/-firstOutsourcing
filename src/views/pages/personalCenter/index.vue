@@ -14,7 +14,7 @@
         </div>
         <div class="tabDiv">
             <div v-if="tabPosition=='left'" >
-                <el-form :model="details" :rules="detailsRules" ref="detailsRule" label-width="100px" class="demo-ruleForm">
+                <el-form :model="details" autocomplete="off" :rules="detailsRules" ref="detailsRule" label-width="100px" class="demo-ruleForm">
                     <el-form-item label="用户名" prop="username">
                         <el-input v-model="details.username" disabled></el-input>
                     </el-form-item>
@@ -38,8 +38,14 @@
                         <el-input v-model="details.tips"></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="password">
-                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
-                        <el-input v-model="details.password" autocomplete="off" datatype="*" type="password"></el-input>
+                        <div style="postion:relative;">
+                            <div class="passwordBox">
+                                <div v-for="(item,index) in details.password" :key="index"></div>
+                            </div>
+                            <el-input class="passwordInput" v-model="details.password" placeholder="请输入密码"></el-input>
+                        </div>
+                        <!-- <el-input v-model="details.password" style="position:fixed;bottom:-999999px" type="password"></el-input> -->
+                        <!-- <el-input v-model="details.password" autocomplete="off" datatype="*" type="password"></el-input> -->
                     </el-form-item>
                     <div class="okButtonBox">
                         <el-button @click="resetForm('ruleForm')">取消</el-button>

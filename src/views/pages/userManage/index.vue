@@ -406,7 +406,7 @@ export default {
                 parmas = this.removeId
             }
             this.$api.deleteUser(parmas).then(res=>{
-                if(res.data.msg==0){
+                if(res.data.code==0){
                     this.$message({
                         message: '删除成功',
                         type: 'success'

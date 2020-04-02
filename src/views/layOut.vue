@@ -95,6 +95,9 @@ export default {
       this.$router.push('/login')
     },
     init() {
+      if(!localStorage.getItem("token")){
+        this.$router.push('/login') 
+      }
       console.log(this.$router.history.current.path)
       if(this.$router.history.current.path == '/'){
           this.headerMenu = 1
@@ -108,10 +111,12 @@ export default {
         if(this.$router.history.current.path == '/userManage'){
           this.headerMenu = 6
         }
-      this.name = JSON.parse(localStorage.getItem("user")).name||''
-      this.userName = JSON.parse(localStorage.getItem("user")).username||''
-      this.roleIdList = JSON.parse(localStorage.getItem("roleIdList"))[0]||[]
-      // this.$router.push('/login') 
+        
+      this.name = JSON.parse(localStorage.getItem("user")).name
+      this.userName = JSON.parse(localStorage.getItem("user")).username
+      this.roleIdList = JSON.parse(localStorage.getItem("roleIdList"))[0]
+      console.log(this.roleIdList)
+
     },
   },
   watch: {
