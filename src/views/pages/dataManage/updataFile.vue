@@ -148,11 +148,12 @@
                             <el-input v-model="item.dataValue" style="width:495px" placeholder="请输入数据值"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="12" style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px" v-if="sub[index].dataType==3">
+                    <el-col :span="24" style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex" v-if="sub[index].dataType==3">
                         <span class="labelSpan">文件上传/图片上传</span>
                         <div class="inputBoxDiv" style="">
                             <span v-for="(item,i) in item.dataFile" :key="i">{{item}} <i @click="removeFile(index,i)" class="iconfont iconcuowu"></i> </span>
                         </div>
+                        
                         <!-- <el-input v-model="item.dataFile " style="width:382px"></el-input> -->
                         <el-upload
                         class="upload-demo upDataBox"
@@ -161,6 +162,7 @@
                         :file-list="fileList">
                         <el-button @click="shangchuanB(index)" size="small" type="primary">上传</el-button>
                         </el-upload>
+                        <span class="updataTip">(请上传png/jpg/jpeg格式的图片)</span>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -256,12 +258,20 @@ export default {
             }
             // this.formInline.itemList.dataKey ==31 32 58 59 60
             let fd = new FormData();
-            fd.append('file',file);//传文件
-            this.$api.fileUpData(fd).then(res=>{
-                this.formInline.itemList[this.nowIndex].dataFile.push(base.sq+res.data.url)
-                this.sub[this.nowIndex].dataFile.push(fd)
-                console.log(this.formInline)
-            })
+            console.log(file.type)
+            if(file.type=='image/png'||file.type=='image/jpg'||file.type=='image/jpeg'){
+                fd.append('file',file);//传文件
+                this.$api.fileUpData(fd).then(res=>{
+                    this.formInline.itemList[this.nowIndex].dataFile.push(base.sq+res.data.url)
+                    this.sub[this.nowIndex].dataFile.push(fd)
+                    console.log(this.formInline)
+                })
+            }else{
+                this.$message({
+                    message: '请上传png/jpg/jpeg格式的图片',
+                    type: 'warning'
+                });
+            }
             return false  //屏蔽了action的默认上传
         },
         updata(file){
@@ -442,6 +452,12 @@ export default {
 <style scoped>
     .iconshangchuan{
         color: #fff!important;
+    }
+    .updataTip{
+        font-size: 14px;
+        color: #999;
+        margin-left: 20px;
+        margin-top: 6px;
     }
     .inputBoxDiv{
         border:1px solid #C0C4CC;

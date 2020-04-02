@@ -12,7 +12,8 @@
 			<el-row :gutter="20">
 				<el-col :span="22">
 					<div class="selectContentBox" @click="selectTitCli()"><!--  下拉框选中值box -->
-						<span>BN基界面相-掺杂元素</span>
+						<span style="color:#bbb" v-if="!selectDataKey.first">请在下拉中选择</span>
+						<span v-if="selectDataKey.first">{{selectDataKey.first}}{{selectDataKey.second?'-':''}}{{selectDataKey.second}}</span>
 						<i class="iconfont iconxiala"></i>
 					</div>
 					<div class="selectItemBigBox" :class="animationSwitch?'unfold':'close'">
@@ -43,7 +44,7 @@
 					</div>
 				</el-col>
 				<el-col :span="2">
-					<div @click="search()" style="width:40px;height:36px;background:#33B0B5;border-radius:4px;text-align:center;line-height:36px;">
+					<div @click="search()" style="cursor: pointer;width:40px;height:36px;background:#33B0B5;border-radius:4px;text-align:center;line-height:36px;">
 						<i class="iconfont iconsousuo" style="font-size:20px;color:#fff;"></i>
 					</div>
 				</el-col>
@@ -137,7 +138,10 @@ export default {
 			currPage:1,
 			list:[]
 		},
-		
+		selectDataKey:{
+			first:'',
+			second:'',
+		}
     }
   },
   created() {
@@ -152,6 +156,8 @@ export default {
 	},
 	// 获取一级列表数据
 	stairItemCli(e){
+		let newData = this.stairListArr.filter(x=>x.id == e)
+		this.selectDataKey.first = newData[0].content
 		this.secondListArr = []
 		this.getSecondList(e)
 		this.selectList.stairItemIsCli = e;
@@ -164,6 +170,8 @@ export default {
         })
 	},
 	selectItemCli(id){ // 获取三级列表
+		let newData = this.secondListArr.filter(x=>x.id == id)
+		this.selectDataKey.second = newData[0].content
 		this.selectList.nowElement = ''  // 每次选择先清空三级列表的选项
 		this.selectList.isElementList = id
 		this.$api.threeLeve(id).then( res => {
