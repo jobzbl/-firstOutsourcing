@@ -241,10 +241,10 @@ export default {
         }
     }
     .passwordInput{
-    top:-3px;
+    // top:-3px;
     .el-input__inner{
       color:transparent;
-      font-size: 0;
+    //   font-size: 0;
     }
   }
 </style>
@@ -299,7 +299,7 @@ export default {
         width:5px;
         background:#464646;
         border-radius:5px;
-        margin-left:5px;
+        margin-left:3px;
     }
     .okButtonBox{
         width:430px;

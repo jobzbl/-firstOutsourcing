@@ -108,10 +108,10 @@ export default {
         if(this.$router.history.current.path == '/userManage'){
           this.headerMenu = 6
         }
-      this.name = JSON.parse(localStorage.getItem("user")).name
-      this.userName = JSON.parse(localStorage.getItem("user")).username
-      this.roleIdList = JSON.parse(localStorage.getItem("roleIdList"))[0]
-        // this.$router.push('/login') 
+      this.name = JSON.parse(localStorage.getItem("user")).name||''
+      this.userName = JSON.parse(localStorage.getItem("user")).username||''
+      this.roleIdList = JSON.parse(localStorage.getItem("roleIdList"))[0]||[]
+      // this.$router.push('/login') 
     },
   },
   watch: {

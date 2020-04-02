@@ -167,24 +167,39 @@ export default {
 
 <style lang="less">
   .passwordInput{
-    top:-3px;
+    // top:-3px;
     .el-input__inner{
       color:transparent;
-      font-size: 0;
+      caret-color:#000!important;
     }
+    // input::placeholder{
+    //   color:#e1e1e1!important;
+    // }
+    // input::-webkit-input-placeholder{
+    //   color:#e1e1e1!important;
+    // }
+    // input:-moz-placeholder{
+    //   color:#e1e1e1!important;
+    // }
+    // input::-moz-placeholder{
+    //   color:#e1e1e1!important;
+    // }
+    // input:-ms-placeholder{
+    //   color:#e1e1e1!important;
+    // }
   }
   .confirmPassword .el-form-item__error{
     z-index: 9999;
   }
-  .fakeInput {
-    position:absolute!important;
-    z-index:999;
-  }
-  .fakeInput .el-input__inner{
-    color:rgba(0,0,0,.0);
-    background:rgba(0,0,0,.0);
-    font-size: 1px;
-  }
+  // .fakeInput {
+  //   position:absolute!important;
+  //   z-index:999;
+  // }
+  // .fakeInput .el-input__inner{
+  //   color:rgba(0,0,0,.0);
+  //   background:rgba(0,0,0,.0);
+  //   font-size: 1px;
+  // }
   .el-form-item__error{
     box-sizing: content-box;
     position: absolute;
@@ -218,7 +233,7 @@ export default {
     width:5px;
     background:#464646;
     border-radius:5px;
-    margin-left:5px;
+    margin-left:3px;
   }
   
   .eyeButton{
