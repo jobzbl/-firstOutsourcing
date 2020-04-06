@@ -176,7 +176,7 @@ export default {
             }
         },
         getUserInfo(){
-            console.log('2020/4/2 00:40')
+            console.log('2020/4/3 00:03')
             this.$api.getNowUserInfo().then(res=>{
                 this.details = res.data.user
                 this.details.password = ''

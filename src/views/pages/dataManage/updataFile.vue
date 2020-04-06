@@ -148,12 +148,12 @@
                             <el-input v-model="item.dataValue" style="width:495px" placeholder="请输入数据值"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="24" style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex" v-if="sub[index].dataType==3">
-                        <span class="labelSpan">文件上传/图片上传</span>
+                    <el-col :span="item.dataKey==29?12:24" style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex" v-if="sub[index].dataType==3||item.dataKey==29">
+                        <span class="labelSpan" v-if="item.dataKey!==29">文件上传/图片上传</span>
+                        <span class="labelSpan" v-if="item.dataKey==29" :style="item.dataKey==29?'align-self: center;':'align-self: auto;'" >文件上传</span>
                         <div class="inputBoxDiv" style="">
                             <span v-for="(item,i) in item.dataFile" :key="i">{{item}} <i @click="removeFile(index,i)" class="iconfont iconcuowu"></i> </span>
                         </div>
-                        
                         <!-- <el-input v-model="item.dataFile " style="width:382px"></el-input> -->
                         <el-upload
                         class="upload-demo upDataBox"
@@ -162,7 +162,7 @@
                         :file-list="fileList">
                         <el-button @click="shangchuanB(index)" size="small" type="primary">上传</el-button>
                         </el-upload>
-                        <span class="updataTip">(请上传png/jpg/jpeg格式的图片)</span>
+                        <span class="updataTip">{{item.dataKey==29?'':'(请上传png/jpg/jpeg格式的图片)'}}</span>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -204,7 +204,7 @@ export default {
                 ],
             },
             sub:[
-                {classify:'', dataType:'',dataFile:[]}
+                {classify:'', dataType:'',dataFile:[],dataKey:''}
             ],
             dataClassifyArr:[], // 数据分类
             dataTypeArr:[], // 数据类型
@@ -258,20 +258,44 @@ export default {
             }
             // this.formInline.itemList.dataKey ==31 32 58 59 60
             let fd = new FormData();
-            console.log(file.type)
-            if(file.type=='image/png'||file.type=='image/jpg'||file.type=='image/jpeg'){
+            if(this.formInline.itemList[this.nowIndex].dataKey!==29){
+                if(file.type=='image/png'||file.type=='image/jpg'||file.type=='image/jpeg'){
+                    fd.append('file',file);//传文件
+                    this.$api.fileUpData(fd).then(res=>{
+                        if(res.data.code==0){
+                            this.formInline.itemList[this.nowIndex].dataFile.push(base.sq+res.data.url)
+                            this.sub[this.nowIndex].dataFile.push(fd)
+                            console.log(this.formInline)
+                        }else{
+                            this.$message({
+                                message: res.data.msg,
+                                type: 'warning'
+                            });
+                        }
+                        
+                    })
+                }else{
+                    this.$message({
+                        message: '请上传png/jpg/jpeg格式的图片',
+                        type: 'warning'
+                    });
+                }
+            }else{
                 fd.append('file',file);//传文件
                 this.$api.fileUpData(fd).then(res=>{
-                    this.formInline.itemList[this.nowIndex].dataFile.push(base.sq+res.data.url)
-                    this.sub[this.nowIndex].dataFile.push(fd)
-                    console.log(this.formInline)
+                    if(res.data.code==0){
+                        this.formInline.itemList[this.nowIndex].dataFile.push(base.sq+res.data.url)
+                        this.sub[this.nowIndex].dataFile.push(fd)
+                        console.log(this.formInline)
+                    }else{
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'warning'
+                        });
+                    }
                 })
-            }else{
-                this.$message({
-                    message: '请上传png/jpg/jpeg格式的图片',
-                    type: 'warning'
-                });
             }
+
             return false  //屏蔽了action的默认上传
         },
         updata(file){
@@ -287,7 +311,7 @@ export default {
                     this.formInline = res.data.data
                 }
                 for(var i=0;i<this.formInline.itemList.length;i++){
-                    this.sub.push( {classify:'', dataType:'',dataFile:[]})
+                    this.sub.push( {classify:'', dataType:'',dataFile:[],dataKey:''})
                 }
                 console.log(this.formInline)
             })
@@ -305,13 +329,13 @@ export default {
                 dataTips:'',
                 dataFile:[]
             })
-            this.sub.push({classify:'', dataType:'',dataFile:[]})
+            this.sub.push({classify:'', dataType:'',dataFile:[],dataKey:''})
         },
         saveUpdata(formName){
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     for(let i=0;i<this.formInline.itemList.length;i++){
-                        if(this.sub[i].dataType==3){
+                        if(this.sub[i].dataType==3||this.formInline.itemList[i].dataKey==29){
                             if(this.formInline.itemList[i].dataFile&&this.formInline.itemList[i].dataFile.length){
                                 this.formInline.itemList[i].dataValue = this.formInline.itemList[i].dataFile.toString()
                             }else{
