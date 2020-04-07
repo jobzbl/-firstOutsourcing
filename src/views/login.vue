@@ -1,45 +1,50 @@
 <template>
   <div class="bigBox">
-    <div class="loginBgImg">
-      <img class="img1" src="../assets/images/login1.png" alt="">
-      <img class="img2" src="../assets/images/login2.png" alt="">
-    </div>
-    <img src="../assets/images/loginBg.png" class="loginBg" alt="login">
-    <div class="loginBox">
-      <div class="loginName">{{loginText}}</div>
-      <el-form v-if="isLogin==1" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="ruleForm.username" placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <div style="position:relative">
-              <el-input v-model="ruleForm.password" :type="passwordBox?'password':'text'" placeholder="请输入密码">
-              </el-input>
-              <i @click="eyeButton()" :class="passwordBox?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+    <img class="bigBgimg" src="../assets/images/bigbgimg.png" alt="">
+    <!-- <img src="../assets/images/loginBg.png" class="loginBg" alt="login"> -->
+    <div class="borderBox">
+      <img class="huawen" src="../assets/images/huawen.png" alt="">
+      <div class="loginBgImg">
+        <img class="img1" src="../assets/images/login1.png" alt="">
+        <img class="img2" src="../assets/images/login2.png" alt="">
+      </div>
+      <div class="loginBox">
+        <div class="loginName">{{loginText}}</div>
+        <el-form v-if="isLogin==1" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="用户名" prop="username">
+              <el-input v-model="ruleForm.username" placeholder="请输入用户名"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <div style="position:relative">
+                <el-input v-model="ruleForm.password" :type="passwordBox?'password':'text'" placeholder="请输入密码">
+                </el-input>
+                <i @click="eyeButton()" :class="passwordBox?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+              </div>
+            </el-form-item>
+            <el-form-item label="验证码" prop="captcha">
+              <div style="display:flex">
+                <el-input v-model="ruleForm.captcha" placeholder="请输入验证码" style="width:35%"></el-input>
+                <img @click="getUuid()" :src="url+'/captcha.jpg?uuid='+ruleForm.uuid" alt="" class="codeImg" style="width:24%">
+                <span>看不清楚？ <a class="inA" @click="getUuid()">换一张</a></span>
+              </div>
+            </el-form-item>
+            <div class="forgetPasBox">
+                <el-checkbox v-model="autoLogin">下次自动登录</el-checkbox>
+              <!-- <el-radio-group v-model="autoLogin">
+                <el-radio label="下次自动登录"></el-radio>
+              </el-radio-group> -->
+              <span @click="forgetPW">忘记密码？</span>
             </div>
-          </el-form-item>
-          <el-form-item label="验证码" prop="captcha">
-            <div style="display:flex">
-              <el-input v-model="ruleForm.captcha" placeholder="请输入验证码" style="width:35%"></el-input>
-              <img @click="getUuid()" :src="url+'/captcha.jpg?uuid='+ruleForm.uuid" alt="" class="codeImg" style="width:24%">
-              <span>看不清楚？ <a class="inA" @click="getUuid()">换一张</a></span>
-            </div>
-          </el-form-item>
           <div class="forgetPasBox">
-              <el-checkbox v-model="autoLogin">下次自动登录</el-checkbox>
-            <!-- <el-radio-group v-model="autoLogin">
-              <el-radio label="下次自动登录"></el-radio>
-            </el-radio-group> -->
-            <span @click="forgetPW">忘记密码？</span>
+            <el-button style="width:100%;height:46px;font-size:18px" type="primary" @click="submitForm('ruleForm')">登录</el-button>
           </div>
-        <div class="forgetPasBox">
-          <el-button style="width:100%;height:46px;font-size:18px" type="primary" @click="submitForm('ruleForm')">登录</el-button>
-        </div>
-        <div class="forgetPasBox">
-          <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="quzhuce('ruleForm')">注册</el-button>
-        </div>
-      </el-form>
+          <div class="forgetPasBox">
+            <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="quzhuce('ruleForm')">注册</el-button>
+          </div>
+        </el-form>
+      </div>
     </div>
+    
   </div>
 </template>
 
@@ -285,11 +290,83 @@ export default {
         top: 50%;
         transform: translate(0,-50%);
     }
+    .borderBox{
+      width: 90%;
+      height: 80%;
+      background:#fff;
+      box-shadow: 0 0 20px rgba(29,37,47,.24);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      border-radius: 50px;
+    }
+    .huawen{
+      max-height: auto;
+      max-width: 48%;
+    }
+    @media screen and (max-width: 1680px) {
+      .loginBox{
+        left: 53%;
+      }
+      .bigBgimg{
+        width: 57%!important
+      }
+    }
+    @media screen and (max-width: 1660px) {
+      .bigBgimg{
+        width: 56.6%
+      }
+    }
+    @media screen and (max-width: 1600px) {
+      .bigBgimg{
+        width: 52.4%!important
+      }
+      .huawen{
+        height: 90%;
+      }
+      .borderBox{
+        height: 90%;
+      }
+    }
+    @media screen and (max-width: 1440px) {
+      .huawen{
+        height:84%;
+      }
+      .bigBgimg{
+        width: 54%!important
+      }
+    }
+    @media screen and (max-width: 1400px) {
+      .huawen{
+        height: 67%;
+      }
+      .bigBgimg{
+        width: 55%
+      }
+    }
+    
+    @media screen and (max-width: 1366px) {
+      .huawen{
+        height: 92%;
+      }
+      .bigBgimg{
+        width: 52%!important
+      }
+    }
+    .bigBgimg{
+      height: auto;
+      width: 54.8%;
+    }
     .bigBox{
         width: 100%;
         height: 100vh;
         position: relative;
-        /* background: url('../assets/images/loginBg.png'); */
+        /* background-image: url('../assets/images/loginBg.png');
+        background-repeat:no-repeat;
+        background-size: auto 100vh;
+        background-attachment:fixed; */
+        /* background-position:center; */
     }
     .bigBox .loginBg{
         position: absolute;

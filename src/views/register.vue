@@ -1,60 +1,67 @@
 <template>
   <div class="bigBox">
+    <img class="bigBgimg" src="../assets/images/bigbgimg.png" alt="">
     <div class="loginBgImg">
       <img class="img1" src="../assets/images/login1.png" alt="">
       <img class="img2" src="../assets/images/login2.png" alt="">
     </div>
-    <img src="../assets/images/loginBg.png" class="loginBg" alt="login">
-    <div class="loginBox">
-      <div class="loginName">账号注册</div>
-      <el-form :model="register" :rules="ruleRegister" ref="ruleRegister" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="用户名" prop="username">
-            <el-input v-model="register.username" autocomplete='new-password' placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <el-form-item label="姓名" prop="name">
-            <el-input v-model="register.name"  autocomplete='new-password' placeholder="请输入姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="单位" prop="company">
-            <el-input v-model="register.company"  autocomplete='new-password' placeholder="请输单位"></el-input>
-          </el-form-item>
-          <el-form-item label="部门" prop="department">
-            <el-input v-model="register.department"  autocomplete='new-password' placeholder="请输入部门"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="register.email"  autocomplete='new-password' placeholder="请输入邮箱"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <div style="postion:relative;">
-              <div class="passwordBox" v-if="passwordBox1">
-                <div v-for="(item,index) in register.password" :key="index"></div>
+    <!-- <img src="../assets/images/loginBg.png" class="loginBg" alt="login"> -->
+    <div class="borderBox">
+      <img class="huawen" src="../assets/images/huawen.png" alt="">
+      <div class="loginBgImg">
+        <img class="img1" src="../assets/images/login1.png" alt="">
+        <img class="img2" src="../assets/images/login2.png" alt="">
+      </div>
+      <div class="loginBox">
+        <div class="loginName">账号注册</div>
+        <el-form :model="register" :rules="ruleRegister" ref="ruleRegister" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="用户名" prop="username">
+              <el-input v-model="register.username" autocomplete='new-password' placeholder="请输入用户名"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="register.name"  autocomplete='new-password' placeholder="请输入姓名"></el-input>
+            </el-form-item>
+            <el-form-item label="单位" prop="company">
+              <el-input v-model="register.company"  autocomplete='new-password' placeholder="请输单位"></el-input>
+            </el-form-item>
+            <el-form-item label="部门" prop="department">
+              <el-input v-model="register.department"  autocomplete='new-password' placeholder="请输入部门"></el-input>
+            </el-form-item>
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="register.email"  autocomplete='new-password' placeholder="请输入邮箱"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <div style="postion:relative;">
+                <div class="passwordBox" v-if="passwordBox1">
+                  <div v-for="(item,index) in register.password" :key="index"></div>
+                </div>
+                <el-input :class="passwordBox1?'passwordInput':''" v-model="register.password" type="text" placeholder="请输入密码"></el-input>
+                <i @click="eyeButton()" :class="passwordBox1?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
               </div>
-              <el-input :class="passwordBox1?'passwordInput':''" v-model="register.password" type="text" placeholder="请输入密码"></el-input>
-              <i @click="eyeButton()" :class="passwordBox1?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
-            </div>
-          </el-form-item>
-          <el-form-item label="确认密码" prop="confirmPassword" class="confirmPassword">
-            <div style="postion:relative;">
-              <div class="passwordBox" v-if="passwordBox2">
-                <div v-for="(item,index) in register.confirmPassword" :key="index"></div>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="confirmPassword" class="confirmPassword">
+              <div style="postion:relative;">
+                <div class="passwordBox" v-if="passwordBox2">
+                  <div v-for="(item,index) in register.confirmPassword" :key="index"></div>
+                </div>
+                <el-input :class="passwordBox2?'passwordInput':''" v-model="register.confirmPassword" type="text" placeholder="请输入密码"></el-input>
+                <i @click="eyeButton2()" :class="passwordBox2?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
               </div>
-              <el-input :class="passwordBox2?'passwordInput':''" v-model="register.confirmPassword" type="text" placeholder="请输入密码"></el-input>
-              <i @click="eyeButton2()" :class="passwordBox2?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+              <!-- <div style="postion:relative">
+                <el-input class="fakeInput" v-model="register.confirmPassword" type="text"></el-input>
+                <el-input tabindex='-1' v-model="register.confirmPassword" :type="passwordBox2?'text':'text'"  autocomplete='new-password' placeholder="请再次输入密码"></el-input>
+                <i @click="eyeButton2()" :class="passwordBox2?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
+              </div> -->
+            </el-form-item>
+            <div class="forgetPasBox">
+              <el-button type="primary" style="width:100%;height:46px;font-size:18px" @click="registerBut2('ruleRegister')">确定</el-button>
             </div>
-            <!-- <div style="postion:relative">
-              <el-input class="fakeInput" v-model="register.confirmPassword" type="text"></el-input>
-              <el-input tabindex='-1' v-model="register.confirmPassword" :type="passwordBox2?'text':'text'"  autocomplete='new-password' placeholder="请再次输入密码"></el-input>
-              <i @click="eyeButton2()" :class="passwordBox2?'iconyanjing':'iconyanjing1'" class="iconfont eyeButton "></i>
-            </div> -->
-          </el-form-item>
-          <div class="forgetPasBox">
-            <el-button type="primary" style="width:100%;height:46px;font-size:18px" @click="registerBut2('ruleRegister')">确定</el-button>
-          </div>
-          <div class="forgetPasBox">
-            <el-button class="register" style="width:100%;height:46px;font-size:18px"  @click="goSubmitForm('ruleRegister')">返回登录</el-button>
-          </div>
-      </el-form>
+            <div class="forgetPasBox">
+              <el-button class="register" style="width:100%;height:46px;font-size:18px"  @click="goSubmitForm('ruleRegister')">返回登录</el-button>
+            </div>
+        </el-form>
+      </div>
     </div>
-
     <div v-if="zhuceSuccess" class="mask"></div>
     <div v-if="zhuceSuccess" class="zhucechenggong">
       <i class="iconfont icondui"></i>
@@ -345,11 +352,83 @@ export default {
         top: 50%;
         transform: translate(0,-50%);
     }
+    .borderBox{
+      width: 90%;
+      height: 80%;
+      background:#fff;
+      box-shadow: 0 0 20px rgba(29,37,47,.24);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      border-radius: 50px;
+    }
+    .huawen{
+      max-height: auto;
+      max-width: 48%;
+    }
+    @media screen and (max-width: 1680px) {
+      .loginBox{
+        left: 53%;
+      }
+      .bigBgimg{
+        width: 57%!important
+      }
+    }
+    @media screen and (max-width: 1660px) {
+      .bigBgimg{
+        width: 56.6%
+      }
+    }
+    @media screen and (max-width: 1600px) {
+      .bigBgimg{
+        width: 52.4%!important
+      }
+      .huawen{
+        height: 90%;
+      }
+      .borderBox{
+        height: 90%;
+      }
+    }
+    @media screen and (max-width: 1440px) {
+      .huawen{
+        height:84%;
+      }
+      .bigBgimg{
+        width: 54%!important
+      }
+    }
+    @media screen and (max-width: 1400px) {
+      .huawen{
+        height: 67%;
+      }
+      .bigBgimg{
+        width: 55%
+      }
+    }
+    
+    @media screen and (max-width: 1366px) {
+      .huawen{
+        height: 92%;
+      }
+      .bigBgimg{
+        width: 52%!important
+      }
+    }
+    .bigBgimg{
+      height: auto;
+      width: 54.8%;
+    }
     .bigBox{
         width: 100%;
         height: 100vh;
         position: relative;
-        /* background: url('../assets/images/loginBg.png'); */
+        /* background-image: url('../assets/images/loginBg.png');
+        background-repeat:no-repeat;
+        background-size: auto 100vh;
+        background-attachment:fixed; */
+        /* background-position:center; */
     }
     .bigBox .loginBg{
         position: absolute;

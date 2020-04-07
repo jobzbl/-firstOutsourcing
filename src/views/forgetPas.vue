@@ -1,56 +1,64 @@
 <template>
   <div class="bigBox">
+    <img class="bigBgimg" src="../assets/images/bigbgimg.png" alt="">
     <div class="loginBgImg">
       <img class="img1" src="../assets/images/login1.png" alt="">
       <img class="img2" src="../assets/images/login2.png" alt="">
     </div>
-    <img src="../assets/images/loginBg.png" class="loginBg" alt="login">
-    <div class="loginBox">
-      <div class="loginName">忘记密码</div>
-      <el-form v-if="!setNewPas" :model="forgetPWArr" :rules="ruleforgetPWArr" ref="forgetPW" label-width="100px" class="demo-ruleForm">
-        <div v-if="!mailDelivery">
-          <div class="goLogin">
-            <el-form-item label="用户名" prop="username">
-              <el-input v-model="forgetPWArr.username" placeholder="请输入用户名"></el-input>
-              <span style="cursor: pointer;" @click="goZhuce()">去注册<i class="iconfont icongengduo"></i></span>
-            </el-form-item>
-          </div>
-          <div class="goLogin">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="forgetPWArr.email" placeholder="请输入邮箱"></el-input>
-              <span :style="verifyCodeIsShow?'color:#999;pointer-events: none':''" style="cursor: pointer;right:-120px" @click="forgetSubmitForm()">
-                {{verifyCodeIsShow?totalTime+'s后重新发送':'发送验证邮件'}}
-              </span>
-            </el-form-item>
+    <!-- <img src="../assets/images/loginBg.png" class="loginBg" alt="login"> -->
+    <div class="borderBox">
+      <img class="huawen" src="../assets/images/huawen.png" alt="">
+      <div class="loginBgImg">
+        <img class="img1" src="../assets/images/login1.png" alt="">
+        <img class="img2" src="../assets/images/login2.png" alt="">
+      </div>
+      <div class="loginBox">
+        <div class="loginName">忘记密码</div>
+        <el-form v-if="!setNewPas" :model="forgetPWArr" :rules="ruleforgetPWArr" ref="forgetPW" label-width="100px" class="demo-ruleForm">
+          <div v-if="!mailDelivery">
+            <div class="goLogin">
+              <el-form-item label="用户名" prop="username">
+                <el-input v-model="forgetPWArr.username" placeholder="请输入用户名"></el-input>
+                <span style="cursor: pointer;" @click="goZhuce()">去注册<i class="iconfont icongengduo"></i></span>
+              </el-form-item>
             </div>
-            <el-form-item label="验证码" prop="verifyCode">
-              <el-input v-model="forgetPWArr.verifyCode" placeholder="请输入验证码"></el-input>
-            </el-form-item>
-          </div>
-          <!-- <div v-if="mailDelivery" style="font-size:16px;color:#999;text-align:center;margin-bottom:60px">
-            邮件已发送至你的邮箱<span style="color:#333">{{forgetPWArr.email}}</span>快去查收邮件吧
-          </div> -->
-          <div class="forgetPasBox">
-            <!-- <el-button v-if="!mailDelivery&&!verifyCodeIsShow" style="width:100%;height:46px;font-size:18px" type="primary" @click="forgetSubmitForm('')">发送验证邮件</el-button> -->
-            <!-- <el-button v-if="mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="sent('forgetPW')">邮件已发送 <i style="color:#fff" class="iconfont icondui"></i> </el-button> -->
-            <el-button v-if="!mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="nextStep('forgetPW')">下一步</el-button>
-          </div>
-          <div class="forgetPasBox">
-            <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="registerforget('forgetPW')">去登录</el-button>
-          </div>
-        </el-form>
+            <div class="goLogin">
+              <el-form-item label="邮箱" prop="email">
+                <el-input v-model="forgetPWArr.email" placeholder="请输入邮箱"></el-input>
+                <span :style="verifyCodeIsShow?'color:#999;pointer-events: none':''" style="cursor: pointer;right:-120px" @click="forgetSubmitForm()">
+                  {{verifyCodeIsShow?totalTime+'s后重新发送':'发送验证邮件'}}
+                </span>
+              </el-form-item>
+              </div>
+              <el-form-item label="验证码" prop="verifyCode">
+                <el-input v-model="forgetPWArr.verifyCode" placeholder="请输入验证码"></el-input>
+              </el-form-item>
+            </div>
+            <!-- <div v-if="mailDelivery" style="font-size:16px;color:#999;text-align:center;margin-bottom:60px">
+              邮件已发送至你的邮箱<span style="color:#333">{{forgetPWArr.email}}</span>快去查收邮件吧
+            </div> -->
+            <div class="forgetPasBox">
+              <!-- <el-button v-if="!mailDelivery&&!verifyCodeIsShow" style="width:100%;height:46px;font-size:18px" type="primary" @click="forgetSubmitForm('')">发送验证邮件</el-button> -->
+              <!-- <el-button v-if="mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="sent('forgetPW')">邮件已发送 <i style="color:#fff" class="iconfont icondui"></i> </el-button> -->
+              <el-button v-if="!mailDelivery" style="width:100%;height:46px;font-size:18px" type="primary" @click="nextStep('forgetPW')">下一步</el-button>
+            </div>
+            <div class="forgetPasBox">
+              <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="registerforget('forgetPW')">去登录</el-button>
+            </div>
+          </el-form>
 
-        <el-form v-if="setNewPas" :model="forgetPWArr" :rules="rulesetPassword" ref="setPassword" label-width="130px" class="demo-ruleForm">
-          <el-form-item label="新密码" prop="password">
-            <el-input v-model="forgetPWArr.password" placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <el-form-item label="再次输入新密码" prop="newPassword">
-            <el-input v-model="forgetPWArr.newPassword" placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <div class="forgetPasBox">
-            <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="setPasswordOk('setPassword')">确定</el-button>
-          </div>
-        </el-form>
+          <el-form v-if="setNewPas" :model="forgetPWArr" :rules="rulesetPassword" ref="setPassword" label-width="130px" class="demo-ruleForm">
+            <el-form-item label="新密码" prop="password">
+              <el-input v-model="forgetPWArr.password" placeholder="请输入用户名"></el-input>
+            </el-form-item>
+            <el-form-item label="再次输入新密码" prop="newPassword">
+              <el-input v-model="forgetPWArr.newPassword" placeholder="请输入用户名"></el-input>
+            </el-form-item>
+            <div class="forgetPasBox">
+              <el-button class="register" style="width:100%;height:46px;font-size:18px" @click="setPasswordOk('setPassword')">确定</el-button>
+            </div>
+          </el-form>
+        </div>
       </div>
     </div>
 </template>
@@ -327,11 +335,83 @@ export default {
         top: 50%;
         transform: translate(0,-50%);
     }
+    .borderBox{
+      width: 90%;
+      height: 80%;
+      background:#fff;
+      box-shadow: 0 0 20px rgba(29,37,47,.24);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      border-radius: 50px;
+    }
+    .huawen{
+      max-height: auto;
+      max-width: 48%;
+    }
+    @media screen and (max-width: 1680px) {
+      .loginBox{
+        left: 53%;
+      }
+      .bigBgimg{
+        width: 57%!important
+      }
+    }
+    @media screen and (max-width: 1660px) {
+      .bigBgimg{
+        width: 56.6%
+      }
+    }
+    @media screen and (max-width: 1600px) {
+      .bigBgimg{
+        width: 52.4%!important
+      }
+      .huawen{
+        height: 90%;
+      }
+      .borderBox{
+        height: 90%;
+      }
+    }
+    @media screen and (max-width: 1440px) {
+      .huawen{
+        height:84%;
+      }
+      .bigBgimg{
+        width: 54%!important
+      }
+    }
+    @media screen and (max-width: 1400px) {
+      .huawen{
+        height: 67%;
+      }
+      .bigBgimg{
+        width: 55%
+      }
+    }
+    
+    @media screen and (max-width: 1366px) {
+      .huawen{
+        height: 92%;
+      }
+      .bigBgimg{
+        width: 52%!important
+      }
+    }
+    .bigBgimg{
+      height: auto;
+      width: 54.8%;
+    }
     .bigBox{
         width: 100%;
         height: 100vh;
         position: relative;
-        /* background: url('../assets/images/loginBg.png'); */
+        /* background-image: url('../assets/images/loginBg.png');
+        background-repeat:no-repeat;
+        background-size: auto 100vh;
+        background-attachment:fixed; */
+        /* background-position:center; */
     }
     .bigBox .loginBg{
         position: absolute;
