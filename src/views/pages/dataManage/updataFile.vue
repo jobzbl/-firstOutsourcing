@@ -67,7 +67,7 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row type="flex" class="row-bg" justify="space-between" v-if="item.dataKey == 29">
+                <!-- <el-row type="flex" class="row-bg" justify="space-between" v-if="item.dataKey == 29">
                     <el-col :span="12">
                         <el-form-item label="选择字段" class="marginZero">
                             <el-select v-model="item.dataQ" style="width:495px" placeholder="请选择字段">
@@ -83,37 +83,12 @@
                                 <el-option label="B" value="B"></el-option>
                                 <el-option label="N" value="N"></el-option>
                                 <el-option label="O" value="O"></el-option>
-                                <!-- <el-option v-for="(item,index) in elementArr" :key="index" :label="item" :value="item"></el-option> -->
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <!-- <el-row type="flex" class="row-bg" justify="space-between" v-if="item.dataKey == 7||item.dataKey == 8">
-                    <el-col :span="12">
-                        <el-form-item label="选择字段" class="marginZero">
-                            <el-select v-model="item.dataQ" style="width:495px" placeholder="请选择字段">
-                                <el-option label="XPS" value="XPS"></el-option>
-                                <el-option label="AES" value="AES"></el-option>
-                                <el-option label="EELS" value="EELS"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="选择字段" class="marginZero">
-                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择字段">
-                                <el-option label="B" value="B"></el-option>
-                                <el-option label="N" value="N"></el-option>
-                                <el-option label="O" value="O"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row> -->
+               
                 <el-row type="flex" class="row-bg" justify="space-between">
-                    <!-- item.dataKey == 27  dataT a ( Å)a (Å) b (Å) v (Å) -->
-                    <!-- item.dataKey == 28  dataT α (°) β (°) b (Å) γ (°) -->
-                    <!-- item.dataKey == 29  dataT  ->B  dataQ->X  -->
-                    <!-- item.dataKey == 8  dataT  ->B  dataQ->XPS  -->
-                    <!-- item.dataKey == 7  dataT  ->B  dataQ->XPS  -->
                     <el-col :span="12" v-if="item.dataKey == 7||item.dataKey == 8">
                         <el-form-item label="选择字段" class="marginZero">
                             <el-select v-model="item.dataT" style="width:495px" placeholder="请选择字段">
@@ -142,15 +117,24 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    
-                    <el-col :span="12" v-if="sub[index].dataType!=3">
+                    <!-- 数值与字段 -->
+                    <el-col :span="12" v-if="sub[index].dataType==2||sub[index].dataType==5">
                         <el-form-item label="数据值" class="marginZero">
                             <el-input v-model="item.dataValue" style="width:495px" placeholder="请输入数据值"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="item.dataKey==29?12:24" style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex" v-if="sub[index].dataType==3||item.dataKey==29">
-                        <span class="labelSpan" v-if="item.dataKey!==29">文件上传/图片上传</span>
-                        <span class="labelSpan" v-if="item.dataKey==29" :style="item.dataKey==29?'align-self: center;':'align-self: auto;'" >文件上传</span>
+                    <!-- 字段候选 -->
+                    <el-col :span="12" v-if="sub[index].dataType==6">
+                        <el-form-item label="数据值" class="marginZero">
+                            <el-select v-model="item.dataValue" style="width:495px" placeholder="请选择数据值">
+                                <!-- <el-option label="请选择数据值" value="1"></el-option> -->
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <!-- 文件与图片 -->
+                    <el-col v-if="sub[index].dataType==4||sub[index].dataType==3" span="24" style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex">
+                        <span class="labelSpan" v-if="sub[index].dataType==3" style="align-self: center;">图片上传</span>
+                        <span class="labelSpan" v-if="sub[index].dataType==4" style="align-self: center;" >文件上传</span>
                         <div class="inputBoxDiv" style="">
                             <span v-for="(item,i) in item.dataFile" :key="i">{{item}} <i @click="removeFile(index,i)" class="iconfont iconcuowu"></i> </span>
                         </div>
@@ -162,13 +146,13 @@
                         :file-list="fileList">
                         <el-button @click="shangchuanB(index)" size="small" type="primary">上传</el-button>
                         </el-upload>
-                        <span class="updataTip">{{item.dataKey==29?'':'(请上传png/jpg/jpeg格式的图片)'}}</span>
+                        <span class="updataTip">{{sub[index].dataType==4?'(请上传cif格式的结构文件)':'(请上传png/jpg/jpeg格式的图片)'}}</span>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="数据摘要">
-                            <el-input type="textarea" :rows="7" v-model="item.dataTips" style="width:1074px;height:150px"></el-input>
+                            <el-input type="textarea" :rows="2" v-model="item.dataTips" style="width:1074px;"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -541,7 +525,7 @@ export default {
         /* margin-left: 24px; */
     }
     .updataBigBox{
-        min-height: 338px;
+        min-height: 240px;
         background-color: #F3FBFB;
         border: 1px solid #DDDDDD;
         margin-top:20px;

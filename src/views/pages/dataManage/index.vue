@@ -45,7 +45,7 @@
             </el-form>
         </div>
         <div class="buttonRow">
-            <el-button v-if="quanxian.indexOf(2)!=-1" @click="updata()"> <i class="iconfont iconshangchuan"></i> 上传文件</el-button>
+            <el-button v-if="quanxian.indexOf(2)!=-1" @click="updata()"> <i class="iconfont iconshangchuan"></i> 上传数据</el-button>
             <el-button v-if="quanxian.indexOf(4)!=-1" @click="delect('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
             <el-button @click="onDown()"> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
         </div>

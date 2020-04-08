@@ -270,7 +270,7 @@ export default {
     
     .icondui1,.iconguanbi{
         position: absolute;
-        top: 50%;
+        top: 25%;
         transform: translateY(-50%);
         cursor: pointer;
     }

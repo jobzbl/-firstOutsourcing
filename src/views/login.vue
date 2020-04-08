@@ -356,7 +356,7 @@ export default {
     }
     .bigBgimg{
       height: auto;
-      width: 54.8%;
+      width: 54.4%;
     }
     .bigBox{
         width: 100%;
