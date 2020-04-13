@@ -18,53 +18,59 @@
         </div>
         <el-form style="margin-top:20px;" ref="updataTab" :rules="rules" :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="auto">
             <el-row>
-                <el-col :span="7">
-                    <el-form-item label="界面相成分-元素" prop="dataElement">
-                        <el-input v-model.trim="formInline.dataElement" @change="dataElementArr()" style="width:213px" placeholder="请输入界面相成分-元素"></el-input>
+                <el-col :span="9">
+                    <el-form-item label="界面相主成分" prop="dataElement">
+                        <el-select v-model="formInline.dataElement" style="width:100%" placeholder="请选择数据来源">
+                            <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
+                        </el-select>
+                        <!-- <el-input v-model.trim="formInline.dataElement" @change="dataElementArr()" style="width:213px" placeholder="请输入界面相成分-元素"></el-input> -->
                     </el-form-item>
                 </el-col>
-                <el-col :span="7">
+                <!-- <el-col :span="7">
                     <el-form-item label="界面相成分-含量" prop="dataContent">
                         <el-input v-model.trim="formInline.dataContent" style="width:213px" placeholder="请输入界面相成分-含量"></el-input>
                     </el-form-item>  
-                </el-col>
-                <el-col :span="5">
+                </el-col> -->
+                <el-col :span="6">
                     <el-form-item label="数据来源" class="marginZero" prop="dataSource">
-                        <el-select v-model="formInline.dataSource" style="width:160px" placeholder="请选择数据来源">
+                        <el-select v-model="formInline.dataSource" style="width:100%" placeholder="请选择数据来源">
                             <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="5">
-                    <el-form-item>
-                        <el-input v-model.trim="formInline.dataDescription " style="width:250px" placeholder="请填写数据描述"></el-input>
-                    </el-form-item>
+                <el-col :span="9">
+                    <el-input v-model.trim="formInline.dataDescription " style="width:100%" placeholder="请填写数据描述"></el-input>
                 </el-col>
             </el-row>
         </el-form>
         <div class="updataBigBox" v-for="(item, index) in formInline.itemList" :key="index">
             <el-form :inline="true" :model="item" class="demo-form-inline" label-position="right" label-width="68px">
-                <el-row>
-                    <el-col :span="7">
-                        <el-form-item label="数据分类">
-                            <el-select v-model ="sub[index].classify" style="width:240px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
+                <el-row :gutter="20">
+                    <el-col :span="5">
+                        <!-- <el-form-item label="数据分类"> -->
+                            <el-select v-model ="sub[index].classify" style="width:100%" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据分类">
                                 <el-option v-for="item in dataClassifyArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
-                        </el-form-item>
+                        <!-- </el-form-item> -->
                     </el-col>
                     <el-col :span="5">
-                        <el-form-item label="数据类型" class="marginZero">
+                        <el-select v-model ="item.dataKey" style="width:100%" placeholder="请选择关键词">
+                            <el-option v-for="item in keywordArr" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
+                        </el-select>
+                        <!-- <el-form-item label="数据类型" class="marginZero">
                             <el-select v-model ="sub[index].dataType" style="width:160px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
                                 <el-option v-for="item in dataTypeArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
-                        </el-form-item>
+                        </el-form-item> -->
                     </el-col>
-                    <el-col :span="12" style="text-align:right">
-                        <el-form-item label="关键词">
-                            <el-select v-model ="item.dataKey" style="width:460px" placeholder="请选择数据来源">
+                    <el-col :span="3">
+                        <div class="dataTypeClass" style="border:1px solid #e1e1e1">数据类型</div>
+                    </el-col>
+                    <el-col :span="11" style="text-align:right;">
+                        <el-input v-model.trim="formInline.dataDescription " style="width:100"></el-input>
+                            <!-- <el-select v-model ="item.dataKey" style="width:460px" placeholder="请选择数据来源">
                                 <el-option v-for="item in keywordArr" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
-                            </el-select>
-                        </el-form-item>
+                            </el-select> -->
                     </el-col>
                 </el-row>
                 <!-- <el-row type="flex" class="row-bg" justify="space-between" v-if="item.dataKey == 29">
@@ -151,9 +157,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="24">
-                        <el-form-item label="数据摘要">
-                            <el-input type="textarea" :rows="2" v-model="item.dataTips" style="width:1074px;"></el-input>
-                        </el-form-item>
+                            <el-input type="textarea" placeholder="请输入数据摘要" :rows="2" v-model="item.dataTips" style="width:100%;margin-top:10px"></el-input>
                     </el-col>
                 </el-row>
             </el-form>
@@ -537,5 +541,14 @@ export default {
     .buttonRow{
         text-align: right;
         color: #33B0B5
+    }
+    .dataTypeClass{
+        height: 40px;
+        line-height: 40px;
+        background: #fff;
+        border-radius: 3px;
+        text-align: center;
+        font-size: 14px;
+        color: #999
     }
 </style>
