@@ -1,48 +1,66 @@
 <template>
     <div class="wrap">
-        <div class="haederBox">
-            <el-form v-if="quanxian.indexOf(1)!=-1" :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="120px">
-                <el-row>
-                    <el-col :span="8">
-                        <el-form-item label="数据编号">
+        <div class="haederBox" v-if="quanxian.indexOf(1)!=-1">
+            <el-row :gutter="20">
+                <el-col :span="7">
+                    <el-row :gutter="20">
+                        <el-col :span="6"><div class="formLabel">数据编号</div></el-col>
+                        <el-col :span="18">
                             <el-input v-model="formInline.beginNum" style="width:100px" placeholder="最小值"></el-input>
                             -
                             <el-input v-model="formInline.endNum" style="width:100px" placeholder="最大值"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="界面相成分">
-                            <el-input v-model="formInline.dataContail" style="width:250px" placeholder="请输入界面相成分"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="数据分类">
-                            <el-select clearable v-model ="formInline.classification" style="width:268px" placeholder="请选择数据分类">
+                        </el-col>
+                    </el-row>
+                </el-col>
+                <el-col :span="7">
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="formLabel">界面主相成分</div></el-col>
+                        <el-col :span="16">
+                            <!-- dataClassifyObj 为数据分类的数据 -->
+                            <!-- dataTypeObj 数据类型 -->
+                            <el-select clearable v-model ="formInline.classification" style="width:100%" placeholder="请选择界面主相成分">
                                 <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                             </el-select>
-                        </el-form-item>  
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="数据来源">
-                            <el-select clearable v-model ="formInline.dataSource" placeholder="请选择数据来源">
+                        </el-col>
+                    </el-row>
+                </el-col>
+                <el-col :span="10">
+                    <el-row :gutter="20">
+                        <el-col :span="5"><div class="formLabel">数据来源</div></el-col>
+                        <el-col :span="18">
+                            <el-select clearable v-model ="formInline.dataSource" style="width:100%" placeholder="请选择数据来源">
                                 <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                             </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="数据类型">
-                            <el-select clearable v-model ="formInline.dataType" placeholder="请选择数据类型">
-                                <el-option v-for="item in dataTypeObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8" style="text-align:right">
-                        <el-form-item>
-                            <el-button type="primary" @click="getListdata(true)">查询</el-button>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20" v-for="(item,index) in queryCondition" :key='index' style="margin-top:20px">
+                <el-col :span="2">
+                    <el-select v-model="item.andOr" style="width:100%" placeholder="请选择界面主相成分">
+                        <el-option label="And" value="And"></el-option>
+                        <el-option label="Or" value="Or"></el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="5">
+                    <el-select clearable v-model="item.dataClass" style="width:100%" placeholder="请选择数据分类">
+                        <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="5">
+                    <el-select clearable v-model ="item.dataKey" style="width:100%" placeholder="请选择关键词">
+                        <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="12">
+                    <el-input v-model="item.searchCon" style="width:100%" placeholder="请输入搜索条件"></el-input>
+                </el-col>
+            </el-row>
+            <div class="buttonRow" style="margin:20px 0;">
+                <el-button @click="addSearch()"><i class="iconfont iconjiahao"></i>查询条件</el-button>
+                <el-button @click="reset()">重置</el-button>
+                <el-button type="primary" @click="getListdata(true)">查询</el-button>
+            </div>
         </div>
         <div class="buttonRow">
             <el-button v-if="quanxian.indexOf(2)!=-1" @click="updata()"> <i class="iconfont iconshangchuan"></i> 上传数据</el-button>
@@ -53,14 +71,17 @@
             <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="dataNum" label="数据编号" width="190"></el-table-column>
-                <el-table-column prop="dataContail" label="界面相成分" width="190">
+                <el-table-column prop="dataNum" label="数据编号" width="100"></el-table-column>
+                <el-table-column prop="dataContail" label="界面相主成分" width="130">
                     <template slot-scope="scope">
                         <span v-for="(item,index) in scope.row.dataElement" :key='index'>{{item}}<sub style="font-size:10px">{{scope.row.dataContent[index]>1?scope.row.dataContent[index]:''}}</sub>
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column>
+                <el-table-column prop="classificationName" label="界面相合成方法" width="160"></el-table-column>
+                <el-table-column prop="classificationName" label="复合材料类型" width="150"></el-table-column>
+                <el-table-column prop="classificationName" label="复合材料合成方法" width="160"></el-table-column>
+                <!-- <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column> -->
                 <el-table-column prop="dataSourceName" label="数据来源" width="130">    </el-table-column>
                 <el-table-column prop="typeName" label="数据类型" width="106"></el-table-column>
                 <el-table-column label="操作">
@@ -101,6 +122,9 @@ import removeComponent from '../component/remove.vue' // 将子组件引入父�
 export default {
     data() {
         return {
+        queryCondition:[
+            {andOr:'And',dataClass:'',dataKey:'',searchCon:''}
+        ],
         quanxian:localStorage.getItem('menuIdList'),
         isBoxShow:false,
         removeMsg:[],
@@ -140,6 +164,29 @@ export default {
         this.getListdata()
     },
     methods:{
+        // 增加查询条件
+        addSearch(){
+            if(this.queryCondition.length<5){
+                this.queryCondition = [
+                    ...this.queryCondition,
+                    {andOr:'And',dataClass:'',dataKey:'',searchCon:''}
+                ]
+            }
+        },
+        reset(){
+            this.queryCondition = [
+                {andOr:'And',dataClass:'',dataKey:'',searchCon:''}
+            ]
+            this.formInline={
+                beginNum:'',
+                endNum:'',
+                dataContail:'',
+                classification:'',
+                dataSource:'',
+                dataType:''
+            }
+            this.getListdata()
+        },
         onDown(){
             if(this.nowCheckedArr.length==0){
                 this.$message({
@@ -362,6 +409,15 @@ export default {
 </style>
 
 <style scoped>
+    .formLabel{
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        color: #333;
+        width: 100%;
+        text-align: right
+
+    }
     .caozuoBox{
         text-align: center;
     }
