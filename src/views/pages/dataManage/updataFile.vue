@@ -19,22 +19,23 @@
         <el-form style="margin-top:20px;" ref="updataTab" :rules="rules" :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="auto">
             <el-row>
                 <el-col :span="9">
-                    <el-form-item label="界面相主成分" prop="dataElement">
-                        <el-select v-model="formInline.dataElement" style="width:100%" placeholder="请选择数据来源">
-                            <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
+                    <el-form-item label="界面相主成分" prop="dataContail">
+                        <el-select v-model="formInline.dataContail" style="width:100%" placeholder="请选择界面相主成分">
+                            <el-option label="BN" value="BN"></el-option>
+                            <el-option label="C" value="C"></el-option>
+                            <el-option label="RE2SiO5" value="RE2SiO5"></el-option>
+                            <el-option label="RE2Si2O7" value="RE2Si2O7"></el-option>
+                            <el-option label="BN/SiC" value="BN/SiC"></el-option>
+                            <el-option label="BN/C" value="BN/C"></el-option>
+                            <el-option label="C/SiC" value="C/SiC"></el-option>
+                            <el-option label="其他" value="其他"></el-option>
                         </el-select>
-                        <!-- <el-input v-model.trim="formInline.dataElement" @change="dataElementArr()" style="width:213px" placeholder="请输入界面相成分-元素"></el-input> -->
                     </el-form-item>
                 </el-col>
-                <!-- <el-col :span="7">
-                    <el-form-item label="界面相成分-含量" prop="dataContent">
-                        <el-input v-model.trim="formInline.dataContent" style="width:213px" placeholder="请输入界面相成分-含量"></el-input>
-                    </el-form-item>  
-                </el-col> -->
                 <el-col :span="6">
                     <el-form-item label="数据来源" class="marginZero" prop="dataSource">
                         <el-select v-model="formInline.dataSource" style="width:100%" placeholder="请选择数据来源">
-                            <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
+                            <el-option v-for="item in dataSourceObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -47,30 +48,36 @@
             <el-form :inline="true" :model="item" class="demo-form-inline" label-position="right" label-width="68px">
                 <el-row :gutter="20">
                     <el-col :span="5">
-                        <!-- <el-form-item label="数据分类"> -->
-                            <el-select v-model ="sub[index].classify" style="width:100%" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据分类">
-                                <el-option v-for="item in dataClassifyArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
-                            </el-select>
-                        <!-- </el-form-item> -->
+                        <el-select v-model ="sub[index].classify" style="width:100%" @change="dataSel(sub[index].dataType)" placeholder="请选择数据分类">
+                            <el-option v-for="item in dataClassifyArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
+                        </el-select>
                     </el-col>
                     <el-col :span="5">
-                        <el-select v-model ="item.dataKey" style="width:100%" placeholder="请选择关键词">
+                        <el-select v-model ="item.dataKey" style="width:100%" @change="dataKeyChange($event,index)" placeholder="请选择关键词">
                             <el-option v-for="item in keywordArr" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                         </el-select>
-                        <!-- <el-form-item label="数据类型" class="marginZero">
-                            <el-select v-model ="sub[index].dataType" style="width:160px" @change="dataSel(sub[index].classify,sub[index].dataType)" placeholder="请选择数据来源">
-                                <el-option v-for="item in dataTypeArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
-                            </el-select>
-                        </el-form-item> -->
                     </el-col>
                     <el-col :span="3">
-                        <div class="dataTypeClass" style="border:1px solid #e1e1e1">数据类型</div>
+                        <div class="dataTypeClass" style="border:1px solid #e1e1e1">{{dataTypeArr[sub[index].dataType]||'数据类型'}}</div>
                     </el-col>
-                    <el-col :span="11" style="text-align:right;">
-                        <el-input v-model.trim="formInline.dataDescription " style="width:100"></el-input>
-                            <!-- <el-select v-model ="item.dataKey" style="width:460px" placeholder="请选择数据来源">
-                                <el-option v-for="item in keywordArr" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
-                            </el-select> -->
+                    <el-col :span="11" v-if="sub[index].dataType!=3&&sub[index].dataType!=4" style="text-align:right;">
+                        <el-input v-model.trim="item.dataValue " style="width:100"></el-input>
+                    </el-col>
+                    <el-col :span="11" v-if="sub[index].dataType==4||sub[index].dataType==3"  style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex">
+                        <div class="inputBoxDiv" style="width:88%">
+                            <span v-if="!item.dataFile.length" class="updataTip">{{sub[index].dataType==4?'(请上传cif格式的结构文件)':'(请上传png/jpg/jpeg格式的图片)'}}</span>
+                            <span class="fangkuai" v-for="(item,i) in item.dataFile" :key="i">{{item}} <i @click="removeFile(index,i)" class="iconfont iconcuowu"></i> </span>
+                        </div>
+                        <!-- <el-input v-model="item.dataFile " style="width:382px"></el-input> -->
+                        <el-upload
+                        class="upload-demo upDataBox"
+                        action="0"
+                        style="display: flex;width:6%;margin-left:2%"
+                        :before-upload="beforeUpload"
+                        :file-list="fileList">
+                        <el-button @click="shangchuanB(index)" size="small" type="primary">上传</el-button>
+                        </el-upload>
+                        <!-- <span class="updataTip">{{sub[index].dataType==4?'(请上传cif格式的结构文件)':'(请上传png/jpg/jpeg格式的图片)'}}</span> -->
                     </el-col>
                 </el-row>
                 <!-- <el-row type="flex" class="row-bg" justify="space-between" v-if="item.dataKey == 29">
@@ -94,57 +101,13 @@
                     </el-col>
                 </el-row> -->
                
-                <el-row type="flex" class="row-bg" justify="space-between">
-                    <el-col :span="12" v-if="item.dataKey == 7||item.dataKey == 8">
-                        <el-form-item label="选择字段" class="marginZero">
-                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择字段">
-                                <el-option label="B" value="B"></el-option>
-                                <el-option label="N" value="N"></el-option>
-                                <el-option label="O" value="O"></el-option>
-                                <!-- <el-option v-for="(item,index) in elementArr" :key="index" :label="item" :value="item"></el-option> -->
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" v-if="item.dataKey == 27">
-                        <el-form-item label="选择字段" class="marginZero">
-                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择数据来源">
-                                <el-option label="a (Å)" value="a"></el-option>
-                                <el-option label="b (Å)" value="b"></el-option>
-                                <el-option label="c (Å)" value="c"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" v-if="item.dataKey == 28">
-                        <el-form-item label="选择字段" class="marginZero">
-                            <el-select v-model="item.dataT" style="width:495px" placeholder="请选择数据来源">
-                                <el-option label="α (°)" value="α"></el-option>
-                                <el-option label="β (°)" value="β"></el-option>
-                                <el-option label="γ (°)" value="γ"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <!-- 数值与字段 -->
-                    <el-col :span="12" v-if="sub[index].dataType==2||sub[index].dataType==5">
-                        <el-form-item label="数据值" class="marginZero">
-                            <el-input v-model="item.dataValue" style="width:495px" placeholder="请输入数据值"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <!-- 字段候选 -->
-                    <el-col :span="12" v-if="sub[index].dataType==6">
-                        <el-form-item label="数据值" class="marginZero">
-                            <el-select v-model="item.dataValue" style="width:495px" placeholder="请选择数据值">
-                                <!-- <el-option label="请选择数据值" value="1"></el-option> -->
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <!-- 文件与图片 -->
+                <!-- <el-row type="flex" class="row-bg" justify="space-between">
                     <el-col v-if="sub[index].dataType==4||sub[index].dataType==3" span="24" style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex">
                         <span class="labelSpan" v-if="sub[index].dataType==3" style="align-self: center;">图片上传</span>
                         <span class="labelSpan" v-if="sub[index].dataType==4" style="align-self: center;" >文件上传</span>
                         <div class="inputBoxDiv" style="">
                             <span v-for="(item,i) in item.dataFile" :key="i">{{item}} <i @click="removeFile(index,i)" class="iconfont iconcuowu"></i> </span>
                         </div>
-                        <!-- <el-input v-model="item.dataFile " style="width:382px"></el-input> -->
                         <el-upload
                         class="upload-demo upDataBox"
                         action="0"
@@ -154,7 +117,7 @@
                         </el-upload>
                         <span class="updataTip">{{sub[index].dataType==4?'(请上传cif格式的结构文件)':'(请上传png/jpg/jpeg格式的图片)'}}</span>
                     </el-col>
-                </el-row>
+                </el-row> -->
                 <el-row>
                     <el-col :span="24">
                             <el-input type="textarea" placeholder="请输入数据摘要" :rows="2" v-model="item.dataTips" style="width:100%;margin-top:10px"></el-input>
@@ -176,10 +139,10 @@ export default {
     name:'updata',
     data(){
         return {
+            nowStType:'',
             fileList: [],
             formInline:{
-                dataElement:'',
-                dataContent:'',
+                dataContail:'',
                 dataSource:'',
                 dataDescription:'',
                 itemList:[
@@ -195,22 +158,19 @@ export default {
                 {classify:'', dataType:'',dataFile:[],dataKey:''}
             ],
             dataClassifyArr:[], // 数据分类
-            dataTypeArr:[], // 数据类型
+            dataTypeArr:{}, // 数据类型
             keywordArr:[], // 关键词
             dataSourceObj:[], // 来源
             rules:{
                 dataSource: [
                     { required: true, message: '请输入数据来源', trigger: 'blur' },
                 ],
-                dataContent: [
-                    { required: true, message: '请输入界面相成分-含量', trigger: 'blur' },
-                ],
-                dataElement: [
+                dataContail: [
                     { required: true, message: '请输入界面相成分-元素', trigger: 'blur' },
                 ],
             },
             nowIndex:0,
-            elementArr:[]
+            // elementArr:[]
         }
     },
     created(){
@@ -218,7 +178,7 @@ export default {
     },
     methods:{
         dataElementArr(){
-            this.elementArr = this.formInline.dataElement.split(',')
+            // this.elementArr = this.formInline.dataElement.split(',')
         },
         removeFile(index,i){
             // this.$api.fileDelete(this.sub[index].dataFile[i]).then(res=>{
@@ -320,6 +280,8 @@ export default {
             this.sub.push({classify:'', dataType:'',dataFile:[],dataKey:''})
         },
         saveUpdata(formName){
+                // dataSource:'',
+            let dataSource = this.formInline.dataSource
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     for(let i=0;i<this.formInline.itemList.length;i++){
@@ -343,23 +305,12 @@ export default {
                         });
                         return false
                     }
-                    let _elementReg = /^,?(?:[a-zA-Z]+,)*(?:[a-zA-Z]+)?$/
-                    let _contentReg = /^[0-9:]*$/
-                    if(!_elementReg.test(this.formInline.dataElement)){
-                        this.$message({
-                            message: '界面相成分-元素输入格式错误',
-                            type: 'warning'
-                        });
-                        return false
-                    }
-                    if(!_contentReg.test(this.formInline.dataContent)){
-                        this.$message({
-                            message: '界面相成分-含量输入格式错误',
-                            type: 'warning'
-                        });
-                        return false
-                    }
-                    
+                    this.formInline.itemList.push({
+                        dataKey:'2',
+                        dataValue:dataSource,
+                        dataTips:''
+                    })
+                    delete this.formInline.dataSource
                     this.$api.upData(this.formInline).then(res=>{
                         if(res.data.code==0){
                             this.$message({
@@ -388,8 +339,9 @@ export default {
         
         getSelectArr(){
             this.$api.dataTypelist().then(res=>{
-                this.dataTypeArr = res.data.data
-                console.log(res)
+                res.data.data.map(x=>{
+                    Object.assign(this.dataTypeArr,{[x.id]:x.paramValue})
+                })
             })
             this.$api.dataClassify().then(res=>{
                 this.dataClassifyArr = res.data.data
@@ -399,10 +351,15 @@ export default {
                 this.dataSourceObj = res.data.data
             })
         },
-        dataSel(data1,data2){
-            this.$api.getKeyword({paramClass:data1,paramType:data2}).then(res=>{
+        dataSel(data2){
+            this.$api.getKeyword({paramType:data2}).then(res=>{
                 this.keywordArr = res.data.data
             })
+        },
+        dataKeyChange(e,index){
+            this.sub[index].dataType = this.keywordArr[e].stType
+            // console.log(this.keywordArr[e])
+            // this.nowStType = this.keywordArr[e].stType
         },
     }
 }
@@ -429,7 +386,13 @@ export default {
             line-height: 40px;
             font-size: 18px!important;
     }
+    .upDataBox{
+            .el-upload{
+                align-self: center
+            }
+        }
     .row-bg{
+        
         .upDataBox{
         width: 60px;
         border: 1px solid #33B0B5!important;
@@ -441,6 +404,7 @@ export default {
         font-size: 16px!important;
         line-height: 34px;
         margin-left: 19px!important;
+        
         .el-button--primary{
             padding: 0;
             width: 100%;
@@ -472,7 +436,7 @@ export default {
         margin-top: 6px;
     }
     .inputBoxDiv{
-        border:1px solid #C0C4CC;
+        border:1px solid #DCDFE6;
         height:40px;width:382px;
         background:#fff;
         border-radius:3px;
@@ -484,7 +448,7 @@ export default {
         text-overflow: ellipsis;
         word-wrap: normal
     }
-    .inputBoxDiv span{
+    .fangkuai{
         display: inline-block;
         overflow: hidden;
         height: 20px;

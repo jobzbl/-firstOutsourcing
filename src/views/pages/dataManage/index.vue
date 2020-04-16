@@ -18,8 +18,15 @@
                         <el-col :span="16">
                             <!-- dataClassifyObj 为数据分类的数据 -->
                             <!-- dataTypeObj 数据类型 -->
-                            <el-select clearable v-model ="formInline.classification" style="width:100%" placeholder="请选择界面主相成分">
-                                <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
+                            <el-select clearable v-model ="formInline.dataContail" style="width:100%" placeholder="请选择界面主相成分">
+                                <el-option label="BN" value="BN"></el-option>
+                                <el-option label="C" value="C"></el-option>
+                                <el-option label="RE2SiO5" value="RE2SiO5"></el-option>
+                                <el-option label="RE2Si2O7" value="RE2Si2O7"></el-option>
+                                <el-option label="BN/SiC" value="BN/SiC"></el-option>
+                                <el-option label="BN/C" value="BN/C"></el-option>
+                                <el-option label="C/SiC" value="C/SiC"></el-option>
+                                <el-option label="其他" value="其他"></el-option>
                             </el-select>
                         </el-col>
                     </el-row>
@@ -29,7 +36,7 @@
                         <el-col :span="5"><div class="formLabel">数据来源</div></el-col>
                         <el-col :span="18">
                             <el-select clearable v-model ="formInline.dataSource" style="width:100%" placeholder="请选择数据来源">
-                                <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
+                                <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.paramValue" :value="item.structureId"></el-option>
                             </el-select>
                         </el-col>
                     </el-row>
@@ -39,21 +46,21 @@
                 <el-col :span="2">
                     <el-select v-model="item.andOr" style="width:100%" placeholder="请选择界面主相成分">
                         <el-option label="And" value="And"></el-option>
-                        <el-option label="Or" value="Or"></el-option>
+                        <el-option label="Or" :disabled="true" value="Or"></el-option>
                     </el-select>
                 </el-col>
                 <el-col :span="5">
-                    <el-select clearable v-model="item.dataClass" style="width:100%" placeholder="请选择数据分类">
+                    <el-select @change="dataClassChange($event)" clearable v-model="item.dataClass" style="width:100%" placeholder="请选择数据分类">
                         <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
                     </el-select>
                 </el-col>
                 <el-col :span="5">
                     <el-select clearable v-model ="item.dataKey" style="width:100%" placeholder="请选择关键词">
-                        <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
+                        <el-option v-for="item in dataKeyObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                     </el-select>
                 </el-col>
                 <el-col :span="12">
-                    <el-input v-model="item.searchCon" style="width:100%" placeholder="请输入搜索条件"></el-input>
+                    <el-input v-model="item.dataValue" style="width:100%" placeholder="请输入搜索条件"></el-input>
                 </el-col>
             </el-row>
             <div class="buttonRow" style="margin:20px 0;">
@@ -73,17 +80,18 @@
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="dataNum" label="数据编号" width="100"></el-table-column>
                 <el-table-column prop="dataContail" label="界面相主成分" width="130">
-                    <template slot-scope="scope">
+                    <!-- <template slot-scope="scope">
                         <span v-for="(item,index) in scope.row.dataElement" :key='index'>{{item}}<sub style="font-size:10px">{{scope.row.dataContent[index]>1?scope.row.dataContent[index]:''}}</sub>
                         </span>
-                    </template>
+                    </template> -->
                 </el-table-column>
-                <el-table-column prop="classificationName" label="界面相合成方法" width="160"></el-table-column>
-                <el-table-column prop="classificationName" label="复合材料类型" width="150"></el-table-column>
-                <el-table-column prop="classificationName" label="复合材料合成方法" width="160"></el-table-column>
+                <el-table-column prop="params.30" label="界面相材料密度（g/cm3）" width="140"></el-table-column>
+                <el-table-column prop="params.39" label="杨氏模量EV" width="130"></el-table-column>
+                <el-table-column prop="params.74" label="热膨胀系数" width="140"></el-table-column>
                 <!-- <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column> -->
-                <el-table-column prop="dataSourceName" label="数据来源" width="130">    </el-table-column>
-                <el-table-column prop="typeName" label="数据类型" width="106"></el-table-column>
+                <el-table-column prop="params.74" label="复合材料合成方法" width="110">    </el-table-column>
+                <el-table-column prop="params.74" label="基体成分" width="90">    </el-table-column>
+                <el-table-column prop="params.2" label="数据来源" width="106"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <div class="caozuoBox" style="text-align:center">
@@ -123,20 +131,17 @@ export default {
     data() {
         return {
         queryCondition:[
-            {andOr:'And',dataClass:'',dataKey:'',searchCon:''}
+            {andOr:'And',dataClass:'',dataKey:'',dataValue:''}
         ],
         quanxian:localStorage.getItem('menuIdList'),
         isBoxShow:false,
         removeMsg:[],
 		currentPage: 1,
         formInline:{
-            // dataNum:'',
             beginNum:'',
             endNum:'',
             dataContail:'',
-            classification:'',
             dataSource:'',
-            dataType:''
         },
         tableData:{
             totalCount:0,
@@ -148,6 +153,7 @@ export default {
         dataClassifyObj:[], // 数据分类
         dataTypeObj:[], // 数据类型
         dataSourceObj:[], // 数据来源
+        dataKeyObj:[], // 关键词
         dataClassifyArr:{},
         dataTypeArr:{},
         dataSourceArr:{},
@@ -164,24 +170,34 @@ export default {
         this.getListdata()
     },
     methods:{
+        dataClassChange(e){
+            this.dataSel(e)
+        },
+        // 查询关键字
+        dataSel(data1){
+            this.$api.getKeyword({paramType:data1}).then(res=>{
+                console.log(res)
+                this.dataKeyObj = res.data.data
+                // this.keywordArr = res.data.data
+            })
+        },
         // 增加查询条件
         addSearch(){
             if(this.queryCondition.length<5){
                 this.queryCondition = [
                     ...this.queryCondition,
-                    {andOr:'And',dataClass:'',dataKey:'',searchCon:''}
+                    {andOr:'And',dataClass:'',dataKey:'',dataValue:''}
                 ]
             }
         },
         reset(){
             this.queryCondition = [
-                {andOr:'And',dataClass:'',dataKey:'',searchCon:''}
+                {andOr:'And',dataClass:'',dataKey:'',dataValue:''}
             ]
             this.formInline={
                 beginNum:'',
                 endNum:'',
                 dataContail:'',
-                classification:'',
                 dataSource:'',
                 dataType:''
             }
@@ -237,31 +253,46 @@ export default {
             if(!this.formInline.endNum){
                 this.formInline.endNum = this.formInline.beginNum
             }
-            this.$api.dataManage({
+            let params = []
+            this.queryCondition.map(x=>{
+                console.log(x)
+                if(x.dataKey&&x.dataValue){
+                    params.push({
+                        dataKey:x.dataKey,
+                        dataValue:x.dataValue
+                    })
+                }
+            })
+            
+            let paramsAll = {
                 page:this.tableData.currPage,
                 limit:this.tableData.pageSize,
                 beginNum:this.formInline.beginNum,
                 endNum:this.formInline.endNum,
                 dataContail:this.formInline.dataContail,
-                classification:this.formInline.classification,
                 dataSource:this.formInline.dataSource,
-                dataType:this.formInline.dataType,
-                }).then(res=>{
-                this.tableData = res.data.page
-                for(var i=0;i<this.tableData.list.length;i++){
-                    if(this.tableData.list[i].dataElement){
-                        this.tableData.list[i].dataElement = this.tableData.list[i].dataElement.split(',')
-                    }else{
-                        this.tableData.list[i].dataElement = []
-                    }
-
-                    if(this.tableData.list[i].dataContent){
-                        this.tableData.list[i].dataContent = this.tableData.list[i].dataContent.split(':')
-                    }else{
-                        this.tableData.list[i].dataContent = []
-                    }
+                params:params.length?JSON.stringify(params):'',
+            }
+            Object.keys(paramsAll).forEach(x=>{
+                if(!paramsAll[x]){
+                    delete paramsAll[x]
                 }
             })
+            this.$api.dataManage(paramsAll).then(res=>{
+                    this.tableData = res.data.page
+                    let dataList = this.tableData.list 
+                    for(var i=0;i<dataList.length;i++){
+                        // 将字符串转为数组 后面五个关键词的数组
+                        let dataKeyArr = dataList[i].params.split('~')
+                        this.tableData.list[i].params = {}
+                        for(let r=0;r<dataKeyArr.length;r++){
+                            Object.assign(this.tableData.list[i].params,{
+                                [dataKeyArr[r].split('-')[0]]:dataKeyArr[r].split('-')[1]
+                            });
+                        }
+                    }
+                    console.log(this.tableData.list)
+                })
         },
         updata(){
             this.$router.push({path:'/data-cen/dataManage/updata'})
@@ -317,11 +348,8 @@ export default {
             this.nowCheckedArr = val
         },
         handleCurrentChange(val) {
-            this.formInline.dataNum=''
             this.formInline.dataContail=''
-            this.formInline.classification=''
             this.formInline.dataSource=''
-            this.formInline.dataType=''
             this.getListdata()
             console.log(`当前页: ${val}`);
         },
