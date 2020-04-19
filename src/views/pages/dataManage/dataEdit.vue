@@ -36,15 +36,15 @@
                 </el-table-column>
                 <el-table-column label="数据值" width="344">
                     <template slot-scope="scope">
-                        <div style="padding:0" v-if="scope.row.typeName=='图片'">
-                            <img :src="scope.row.dataValue" alt="" style="max-height:100px;max-width:100%;" @dblclick="editSpan1C(scope.row)">
+                        <div style="padding:0" v-if="scope.row.typeName=='图片'||scope.row.typeName=='文件'" @dblclick="editSpan1C(scope.row)">
+                            <img :src="scope.row.dataValue" alt="" style="max-height:100px;max-width:100%;">
                             <el-upload
                             :style="scope.row.status?'display:none':'display:block'"
                             class="upload-demo upDataBox"
                             action="0"
                             :before-upload="beforeUpload2"
                             :file-list="fileList2">
-                            <el-button @click="shangchuanB()" size="small" type="primary">替换图片</el-button>
+                            <el-button @click="shangchuanB()" size="small" type="primary">替换{{scope.row.typeName}}</el-button>
                             </el-upload>
                             <!-- style="visibility: hidden;" -->
 
@@ -92,6 +92,7 @@
     </div>
 </template>
 <script>
+import base from '../../../request/base'; // 导入接口域名列表
 export default {
     name:'dataEdit',
     data(){
@@ -110,7 +111,7 @@ export default {
                 itemList:[]
             },
             type:this.$route.query.type,
-            nowRowData:''
+            nowRowData:{}
         }
     },
     created(){
@@ -122,7 +123,8 @@ export default {
             fd.append('file',file);//传文件
             this.$api.fileUpData(fd).then(res=>{
                 this.fileList2.push(fd)
-                this.nowRowData.dataValue = res.data.url
+                this.nowRowData.dataValue = base.sq+res.data.url
+                console.log(this.nowRowData)
                 this.saveData(this.nowRowData,'status')
             })
             return false
@@ -207,8 +209,9 @@ export default {
         editSpan1C(data){
             if(this.type=='edit'){
                 data.status = false
-                if(data.typeName=='图片'){
+                if(data.typeName=='图片'||data.typeName=='文件'){
                     console.log('')
+                    console.log(data)
                     this.nowRowData = data
                 }
             }

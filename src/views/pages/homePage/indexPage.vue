@@ -57,11 +57,8 @@
 				<div class="searchConBox">
 					<div class="searchConBoxOver">
 						<div v-for="(data, index) in searchData.list" :key="index">
-							<router-link :to="{path:'/result',query:{'id':data.dataContail,'source':data.dataSource,'content':data.dataContent,'element':data.dataElement}}">
-							<!-- {{item.dataContail}} -->
-							<span v-for="(item,index) in data.dataElement" :key='index'>
-								{{item}}<sub style="font-size:10px;">{{data.dataContent[index]>1?data.dataContent[index]:''}}</sub>
-							</span>
+							<router-link :to="{path:'/result',query:{'id':data.dataContail,'dataTips':data.dataTips,'dataPid':data.dataPid,'dataValue':data.dataValue}}">
+							{{data.dataContail}}
 							</router-link>
 						</div>
 					</div>
@@ -183,19 +180,19 @@ export default {
 		this.$api.getSysDataList({page:this.searchData.currPage,limit:this.searchData.pageSize,dataContail:this.selectList.threeLeveArr}).then( res => {
 			console.log(res.data.page)
 			this.searchData = res.data.page
-            for(var i=0; i<this.searchData.list.length; i++){
-				if( this.searchData.list[i].dataElement ) {
-                this.searchData.list[i].dataElement = this.searchData.list[i].dataElement.split(',')
-				}else{
-					this.searchData.list[i].dataElement = []
-				}
+            // for(var i=0; i<this.searchData.list.length; i++){
+			// 	if( this.searchData.list[i].dataElement ) {
+            //     this.searchData.list[i].dataElement = this.searchData.list[i].dataElement.split(',')
+			// 	}else{
+			// 		this.searchData.list[i].dataElement = []
+			// 	}
 
-				if(this.searchData.list[i].dataContent) {
-					this.searchData.list[i].dataContent = this.searchData.list[i].dataContent.split(':')
-				}else{
-					this.searchData.list[i].dataContent = []
-				}
-			}
+			// 	if(this.searchData.list[i].dataContent) {
+			// 		this.searchData.list[i].dataContent = this.searchData.list[i].dataContent.split(':')
+			// 	}else{
+			// 		this.searchData.list[i].dataContent = []
+			// 	}
+			// }
 			
         })
 	},
@@ -393,10 +390,11 @@ export default {
 		transform: translate(-50%,-50%)
 	}
 	.searchConBoxOver a{
-		text-decoration: none;
+		text-decoration: underline;
 		color: inherit;
-		border-bottom: 1px solid #33B0B5;
-		padding-bottom: 2px;
+	}
+	.searchConBoxOver{
+		width: 1150px
 	}
 	.searchConBoxOver div{
 		cursor: pointer;

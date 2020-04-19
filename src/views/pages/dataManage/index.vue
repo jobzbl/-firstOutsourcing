@@ -91,7 +91,13 @@
                 <!-- <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column> -->
                 <el-table-column prop="params.74" label="复合材料合成方法" width="110">    </el-table-column>
                 <el-table-column prop="params.74" label="基体成分" width="90">    </el-table-column>
-                <el-table-column prop="params.2" label="数据来源" width="106"></el-table-column>
+                <el-table-column prop="params.2" label="数据来源" width="106">
+                    <template slot-scope="scope">
+                        <span>
+                            {{dataSourceArr[scope.row.params[2]]}}
+                        </span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <div class="caozuoBox" style="text-align:center">
@@ -235,10 +241,11 @@ export default {
             })
             this.$api.getDataSource().then(res=>{ // 数据来源
                 this.dataSourceObj = res.data.data
+                let _dataSourceArr = {}
                 this.dataSourceObj.map(x=>{
-                    Object.assign(this.dataSourceArr,{[x.structureId]: x.stKey})
+                    Object.assign(_dataSourceArr,{[x.id]: x.paramValue})
                 })
-                
+                this.dataSourceArr = _dataSourceArr
             })
             
         },

@@ -39,7 +39,7 @@
 </template>
 <script>
 export default {
-  name: 'header',
+  name: 'Dheader',
   data() {
     return {
       input3:'',

@@ -177,5 +177,9 @@ const article = {
     bulkImport(params){
         return axios.post(`${base.sq}/sys/sysData/batchImport`,params)
     },
+    // 获取原子位置坐标
+    atomSeat(params){
+        return axios.get(`${base.sq}/sys/sysData/transt`,{params})
+    },
 }
 export default article;
