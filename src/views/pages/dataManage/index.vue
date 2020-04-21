@@ -2,17 +2,17 @@
     <div class="wrap">
         <div class="haederBox" v-if="quanxian.indexOf(1)!=-1">
             <el-row :gutter="20">
-                <el-col :span="7">
+                <el-col :span="8">
                     <el-row :gutter="20">
-                        <el-col :span="6"><div class="formLabel">数据编号</div></el-col>
-                        <el-col :span="18">
-                            <el-input v-model="formInline.beginNum" style="width:100px" placeholder="最小值"></el-input>
+                        <el-col :span="8"><div class="formLabel">数据编号</div></el-col>
+                        <el-col :span="16">
+                            <el-input v-model="formInline.beginNum" style="width:45%" placeholder="最小值"></el-input>
                             -
-                            <el-input v-model="formInline.endNum" style="width:100px" placeholder="最大值"></el-input>
+                            <el-input v-model="formInline.endNum" style="width:45%" placeholder="最大值"></el-input>
                         </el-col>
                     </el-row>
                 </el-col>
-                <el-col :span="7">
+                <el-col :span="8">
                     <el-row :gutter="20">
                         <el-col :span="8"><div class="formLabel">界面主相成分</div></el-col>
                         <el-col :span="16">
@@ -31,40 +31,112 @@
                         </el-col>
                     </el-row>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="8">
                     <el-row :gutter="20">
-                        <el-col :span="5"><div class="formLabel">数据来源</div></el-col>
-                        <el-col :span="18">
-                            <el-select clearable v-model ="formInline.dataSource" style="width:100%" placeholder="请选择数据来源">
-                                <el-option v-for="item in dataSourceObj" :key="item.structureId" :label="item.paramValue" :value="item.structureId"></el-option>
+                        <el-col :span="8"><div class="formLabel">界面相类型</div></el-col>
+                        <el-col :span="16">
+                            <el-select clearable v-model ="formInline.param80" style="width:100%" placeholder="请选择界面相类型">
+                                <el-option label="多层" value="多层"></el-option>
+                                <el-option label="单层" value="单层"></el-option>
+                                <el-option label="其他" value="其他"></el-option>
                             </el-select>
                         </el-col>
                     </el-row>
                 </el-col>
             </el-row>
-            <el-row :gutter="20" v-for="(item,index) in queryCondition" :key='index' style="margin-top:20px">
-                <el-col :span="2">
-                    <el-select v-model="item.andOr" style="width:100%" placeholder="请选择界面主相成分">
-                        <el-option label="And" value="And"></el-option>
-                        <el-option label="Or" :disabled="true" value="Or"></el-option>
-                    </el-select>
+
+            <el-row :gutter="20" style="margin-top:20px">
+                <el-col :span="8">
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="formLabel">数据来源</div></el-col>
+                        <el-col :span="16">
+                            <el-select clearable v-model ="formInline.param2" style="width:100%" placeholder="请选择数据来源">
+                                <el-option v-for="item in dataSourceObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
+                            </el-select>
+                        </el-col>
+                    </el-row>
                 </el-col>
-                <el-col :span="5">
-                    <el-select @change="dataClassChange($event)" clearable v-model="item.dataClass" style="width:100%" placeholder="请选择数据分类">
-                        <el-option v-for="item in dataClassifyObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
-                    </el-select>
+                <el-col :span="8">
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="formLabel">界面相掺杂元素</div></el-col>
+                        <el-col :span="16">
+                            <el-input v-model="formInline.param7" style="width:100%" placeholder="请输入界面相掺杂元素"></el-input>
+                        </el-col>
+                    </el-row>
                 </el-col>
-                <el-col :span="5">
-                    <el-select clearable v-model ="item.dataKey" style="width:100%" placeholder="请选择关键词">
-                        <el-option v-for="item in dataKeyObj" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
-                    </el-select>
+                <el-col :span="8">
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="formLabel" style="line-height:16px">界面相材料密度 （g/cm<sup>3</sup>)</div></el-col>
+                        <el-col :span="16">
+                            <el-input v-model="formInline.param30[0]" style="width:45%" placeholder="最小值"></el-input>
+                            -
+                            <el-input v-model="formInline.param30[1]" style="width:45%" placeholder="最大值"></el-input>
+                        </el-col>
+                    </el-row>
                 </el-col>
-                <el-col :span="12">
-                    <el-input v-model="item.dataValue" style="width:100%" placeholder="请输入搜索条件"></el-input>
+            </el-row>
+
+            <el-row :gutter="20" style="margin-top:20px">
+                <el-col :span="8">
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="formLabel" style="line-height:16px">界面相材料杨氏模量 Ev(GPa)</div></el-col>
+                        <el-col :span="16">
+                            <el-input v-model="formInline.param39[0]" style="width:45%" placeholder="最小值"></el-input>
+                            -
+                            <el-input v-model="formInline.param39[1]" style="width:45%" placeholder="最大值"></el-input>
+                        </el-col>
+                    </el-row>
+                </el-col>
+                <el-col :span="8">
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="formLabel" style="line-height:16px">复合材料合成方法</div></el-col>
+                        <el-col :span="16">
+                            <el-input v-model="formInline.param79" style="width:100%" placeholder="请输入复合材料合成方法"></el-input>
+                        </el-col>
+                    </el-row>
+                </el-col>
+                <el-col :span="8">
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="formLabel">复合材料类型</div></el-col>
+                        <el-col :span="16">
+                            <el-select clearable v-model ="formInline.param12" style="width:100%" placeholder="请选择复合材料类型">
+                                <el-option label="model-composite" value="model-composite"></el-option>
+                                <el-option label="mini-composite" value="mini-composite"></el-option>
+                                <el-option label="1D" value="1D"></el-option>
+                                <el-option label="2D" value="2D"></el-option>
+                                <el-option label="2.5D" value="2.5D"></el-option>
+                                <el-option label="3D" value="3D"></el-option>
+                                <el-option label="其他" value="其他"></el-option>
+                            </el-select>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="20" style="margin-top:20px">
+                <el-col :span="8">
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="formLabel" style="line-height:16px">热膨胀系数<br/>（10 <sup>6</sup>k<sup>1</sup>）</div></el-col>
+                        <el-col :span="16">
+                            <el-input v-model="formInline.param74[0]" style="width:45%" placeholder="最小值"></el-input>
+                            -
+                            <el-input v-model="formInline.param74[1]" style="width:45%" placeholder="最大值"></el-input>
+                        </el-col>
+                    </el-row>
+                </el-col>
+                <el-col :span="8">
+                    <el-row :gutter="20">
+                        <el-col :span="8"><div class="formLabel" style="line-height:16px">弯曲强度 （MPa)</div></el-col>
+                        <el-col :span="16">
+                            <el-input v-model="formInline.param99[0]" style="width:45%" placeholder="最小值"></el-input>
+                            -
+                            <el-input v-model="formInline.param99[1]" style="width:45%" placeholder="最大值"></el-input>
+                        </el-col>
+                    </el-row>
                 </el-col>
             </el-row>
             <div class="buttonRow" style="margin:20px 0;">
-                <el-button @click="addSearch()"><i class="iconfont iconjiahao"></i>查询条件</el-button>
+                <!-- <el-button @click="addSearch()"><i class="iconfont iconjiahao"></i>查询条件</el-button> -->
                 <el-button @click="reset()">重置</el-button>
                 <el-button type="primary" @click="getListdata(true)">查询</el-button>
             </div>
@@ -77,24 +149,27 @@
         <div class="tableBox">
             <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
-                <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="dataNum" label="数据编号" width="100"></el-table-column>
-                <el-table-column prop="dataContail" label="界面相主成分" width="130">
+                <el-table-column type="selection" width="40"></el-table-column>
+                <el-table-column prop="dataNum" label="数据编号" width="90"></el-table-column>
+                <el-table-column prop="dataContail" label="界面相主成分" width="90">
                     <!-- <template slot-scope="scope">
                         <span v-for="(item,index) in scope.row.dataElement" :key='index'>{{item}}<sub style="font-size:10px">{{scope.row.dataContent[index]>1?scope.row.dataContent[index]:''}}</sub>
                         </span>
                     </template> -->
                 </el-table-column>
-                <el-table-column prop="params.30" label="界面相材料密度（g/cm3）" width="140"></el-table-column>
-                <el-table-column prop="params.39" label="杨氏模量EV" width="130"></el-table-column>
-                <el-table-column prop="params.74" label="热膨胀系数" width="140"></el-table-column>
+                <el-table-column prop="param7" label="界面相掺杂元素" width="90"></el-table-column>
+                <el-table-column prop="param80" label="界面相类型" width="90"></el-table-column>
+                <el-table-column prop="param30" label="界面相材料密度 （g/cm³)" width="110"></el-table-column>
                 <!-- <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column> -->
-                <el-table-column prop="params.74" label="复合材料合成方法" width="110">    </el-table-column>
-                <el-table-column prop="params.74" label="基体成分" width="90">    </el-table-column>
-                <el-table-column prop="params.2" label="数据来源" width="106">
+                <el-table-column prop="param39" label="界面相材料杨氏模量 Ev(GPa)" width="110">    </el-table-column>
+                <el-table-column prop="param79" label="复合材料合成方法" width="90">    </el-table-column>
+                <el-table-column prop="param74" label="热膨胀系数(10¯⁶K¯¹" width="90">    </el-table-column>
+                <el-table-column prop="param99" label="弯曲强度（MPa)" width="90">    </el-table-column>
+                <el-table-column prop="param12" label="复合材料类型" width="90">    </el-table-column>
+                <el-table-column prop="param2" label="数据来源" width="106">
                     <template slot-scope="scope">
                         <span>
-                            {{dataSourceArr[scope.row.params[2]]}}
+                            {{dataSourceArr[scope.row.param2]}}
                         </span>
                     </template>
                 </el-table-column>
@@ -137,7 +212,14 @@ export default {
     data() {
         return {
         queryCondition:[
-            {andOr:'And',dataClass:'',dataKey:'',dataValue:''}
+            {beiyong:[],dataKey:'80',dataValue:''}, // 界面相类型
+            {beiyong:[],dataKey:'7',dataValue:''}, // 界面相掺杂元素
+            {beiyong:[],dataKey:'30',dataValue:''}, // 界面相材料密度 （g/cm
+            {beiyong:[],dataKey:'39',dataValue:''}, // 界面相材料杨氏模量 Ev(GPa)
+            {beiyong:[],dataKey:'79',dataValue:''}, // 复合材料合成方法
+            {beiyong:[],dataKey:'12',dataValue:''}, // 复合材料类型
+            {beiyong:[],dataKey:'74',dataValue:''}, // 热膨胀系数 （10
+            {beiyong:[],dataKey:'99',dataValue:''}, // 弯曲强度 （MPa)
         ],
         quanxian:localStorage.getItem('menuIdList'),
         isBoxShow:false,
@@ -147,7 +229,18 @@ export default {
             beginNum:'',
             endNum:'',
             dataContail:'',
-            dataSource:'',
+            param30:[],
+            param39:[],
+            param74:[],
+            param99:[],
+            param79:'',
+            param13:'',
+            param2:'',
+            param7:'',
+            param12:'',
+            param80:'',
+            page:'',
+            limit:'',
         },
         tableData:{
             totalCount:0,
@@ -197,15 +290,22 @@ export default {
             }
         },
         reset(){
-            this.queryCondition = [
-                {andOr:'And',dataClass:'',dataKey:'',dataValue:''}
-            ]
             this.formInline={
                 beginNum:'',
                 endNum:'',
                 dataContail:'',
-                dataSource:'',
-                dataType:''
+                param30:[],
+                param39:[],
+                param74:[],
+                param99:[],
+                param79:'',
+                param13:'',
+                param2:'',
+                param7:'',
+                param12:'',
+                param80:'',
+                page:'',
+                limit:'',
             }
             this.getListdata()
         },
@@ -260,32 +360,107 @@ export default {
             if(!this.formInline.endNum){
                 this.formInline.endNum = this.formInline.beginNum
             }
-            let params = []
-            this.queryCondition.map(x=>{
-                console.log(x)
-                if(x.dataKey&&x.dataValue){
-                    params.push({
-                        dataKey:x.dataKey,
-                        dataValue:x.dataValue
-                    })
-                }
-            })
+            // typeof(this.formInline.param30)=='string'?.this.formInline.param30 = this.formInline.param30.split(','):this.formInline.param30
+            // typeof(this.formInline.param39)=='string'?.this.formInline.param39 = this.formInline.param39.split(','):this.formInline.param39
+            // typeof(this.formInline.param74)=='string'?.this.formInline.param74 = this.formInline.param74.split(','):this.formInline.param74
+            // typeof(this.formInline.param99)=='string'?.this.formInline.param99 = this.formInline.param99.split(','):this.formInline.param99
             
-            let paramsAll = {
-                page:this.tableData.currPage,
-                limit:this.tableData.pageSize,
-                beginNum:this.formInline.beginNum,
-                endNum:this.formInline.endNum,
-                dataContail:this.formInline.dataContail,
-                dataSource:this.formInline.dataSource,
-                params:params.length?JSON.stringify(params):'',
+            let params = Object.assign({}, this.formInline);
+            params.page=this.tableData.currPage;
+            params.limit = this.tableData.pageSize;
+            // params.param30 = params.param30.filter(x=>x.trim())
+            // params.param39 = params.param30.filter(x=>x.trim())
+            // params.param74 = params.param30.filter(x=>x.trim())
+            // params.param99 = params.param30.filter(x=>x.trim())
+            let verOff = true
+            for(let i=0;i<params.param30.length;i++){
+                if(params.param30[0]>params.param30[1]){
+                    this.$message({
+                        message: '最小值不能大于最大值',
+                        type: 'warning'
+                    });
+                    verOff = false
+                }
+                if(params.param30[i]==''){
+                    params.param30 = []
+                }
             }
-            Object.keys(paramsAll).forEach(x=>{
-                if(!paramsAll[x]){
-                    delete paramsAll[x]
+            for(let i=0;i<params.param39.length;i++){
+                if(params.param39[0]>params.param39[1]){
+                    this.$message({
+                        message: '最小值不能大于最大值',
+                        type: 'warning'
+                    });
+                    verOff = false
+                }
+                if(params.param39[i]==''){
+                    params.param39 = []
+                }
+            }
+            for(let i=0;i<params.param74.length;i++){
+                if(params.param74[0]>params.param74[1]){
+                    this.$message({
+                        message: '最小值不能大于最大值',
+                        type: 'warning'
+                    });
+                    verOff = false
+                }
+                if(params.param74[i]==''){
+                    params.param74 = []
+                }
+            }
+            for(let i=0;i<params.param99.length;i++){
+                if(params.param99[0]>params.param99[1]){
+                    this.$message({
+                        message: '最小值不能大于最大值',
+                        type: 'warning'
+                    });
+                    verOff = false
+                }
+                if(params.param99[i]==''){
+                    params.param99 = []
+                }
+            }
+            if(!verOff){
+                return false
+            }
+            console.log(params)
+            if(params.param30.length!=2&&params.param30.length>0){
+                this.$message({
+                    message: '范围查询时两个数为必填项',
+                    type: 'warning'
+                });
+                return false;
+            }else if(params.param39.length!=2&&params.param39.length>0){
+                this.$message({
+                    message: '范围查询时两个数为必填项',
+                    type: 'warning'
+                });
+                return false;
+            }else if(params.param74.length!=2&&params.param74.length>0){
+                this.$message({
+                    message: '范围查询时两个数为必填项',
+                    type: 'warning'
+                });
+                return false;
+            }else if(params.param99.length!=2&&params.param99.length>0){
+                this.$message({
+                    message: '范围查询时两个数为必填项',
+                    type: 'warning'
+                });
+                return false;
+            }
+            params.param30 = params.param30.join('-')
+            params.param39 = params.param39.join('-')
+            params.param74 = params.param74.join('-')
+            params.param99 = params.param99.join('-')
+             Object.keys(params).forEach(x=>{
+                if(!params[x]){
+                    delete params[x]
                 }
             })
-            this.$api.dataManage(paramsAll).then(res=>{
+            this.$api.dataManage(params).then(res=>{
+                if(res.data.code==0){
                     this.tableData = res.data.page
                     let dataList = this.tableData.list 
                     for(var i=0;i<dataList.length;i++){
@@ -299,7 +474,8 @@ export default {
                         }
                     }
                     console.log(this.tableData.list)
-                })
+                }
+            })
         },
         updata(){
             this.$router.push({path:'/data-cen/dataManage/updata'})

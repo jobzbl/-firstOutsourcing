@@ -263,7 +263,10 @@ export default {
         height: 100%;
         width: 100%;
         background:rgba(0,0,0,.8);
-
+        z-index:9999
+    }
+    .mask i{
+        z-index:9999999
     }
     .zhucechenggong{
         position: fixed;
@@ -276,6 +279,7 @@ export default {
         border-radius:5px;
         text-align:center;
         padding-top:70px;
+        z-index:99999
     }
     .zhucechenggong i{
         font-size:90px;

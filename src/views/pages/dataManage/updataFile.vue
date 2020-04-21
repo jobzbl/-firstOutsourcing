@@ -79,7 +79,13 @@
                         </el-select>
                     </el-col>
                     <el-col :span="11" v-if="item.dataKey!=80&&item.dataKey!=12&&subArr[index].dataType!=3&&subArr[index].dataType!=4" style="text-align:right;">
-                        <el-input v-model.trim="item.dataValue " style="width:100"></el-input>
+                        <el-input v-model.trim="item.dataValue " style="width:100" :placeholder="placeholder[item.dataKey]||'请输入数据值'"></el-input>
+                    </el-col>
+                    <el-col :span="24" v-if="item.dataKey==31||item.dataKey==32" class="tipdiv">
+                        刚度矩阵/柔度矩阵对应21个数，按c11, c12, c13, c14, c15, c16, c22, c23, c24, c25, c26, c33, c34, c35, c36, c44, c45, c46, c55, c56, c66排列，数值之间用逗号隔开。
+                    </el-col>
+                    <el-col :span="24" v-if="item.dataKey==89||item.dataKey==90||item.dataKey==91||item.dataKey==92||item.dataKey==93||item.dataKey==94||item.dataKey==7||item.dataKey==8" class="tipdiv">
+                        请填写所有的元素，包含掺杂元素或微量的杂质元素。元素之间逗号隔开，如“B, N, Si”。含量用比值代表，用分号隔开，如“1：1：0.1”。如果没有xps, AES和EELS等化学分析结果，只填写不带分析方法的名义值。如果有相应的分析结果，填写到对应的xps, AES, EELS行。名义含量填写最可信的分析值。所有类型的元素个数保持一致，元素含量可以为0
                     </el-col>
                     <el-col :span="11" v-if="subArr[index].dataType==4||subArr[index].dataType==3"  style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex">
                         <div class="inputBoxDiv" style="width:88%">
@@ -140,6 +146,13 @@ export default {
             dataTypeArr:{}, // 数据类型
             keywordArr:[], // 关键词
             dataSourceObj:[], // 来源
+            placeholder:{
+                27:'请输入数据值，例如：5,5,10, 对应 a=5,b=5,c=10',
+                28:'请输入数据值，例如：5,5,10, 对应 α=5,β=5,γ=10',
+                14:'请写明纤维的产品型号和出产厂家',
+                9:'建议使用合成方法的英文简写，如PIP，CVD, LPCVD等',
+                79:'建议使用合成方法的英文简写，如PIP，RMI, CVD等',
+            },
             rules:{
                 dataSource: [
                     { required: true, message: '请输入数据来源', trigger: 'blur' },
@@ -293,18 +306,30 @@ export default {
         },
         saveUpdata(formName){
             let dataSource = this.formInline.dataSource
-            this.$refs[formName].validate((valid) => {
-                if (!valid) {
-                    return false;
-                }
-            });
+            if(this.formInline.dataContail==''||!this.formInline.dataContail){
+                this.$message({
+                    message: '请选择界面相主成分',
+                    type: 'warning'
+                });
+                return false
+            }else if(this.formInline.dataSource==''||!this.formInline.dataSource){
+                this.$message({
+                    message: '请选择数据来源',
+                    type: 'warning'
+                });
+                return false
+            }
+            // this.$refs[formName].validate((valid) => {
+            //     if (!valid) {
+            //         return false;
+            //     }
+            // });
             for(let i=0;i<this.formInline.itemList.length;i++){
                 if(this.formInline.itemList[i].dataFile&&this.formInline.itemList[i].dataFile.length){
                     this.formInline.itemList[i].dataValue = this.formInline.itemList[i].dataFile.toString()
                 }
                 delete this.formInline.itemList[i].dataFile
             }
-            // console.log(this.formInline)
             let _itemList = this.formInline.itemList.filter(x=>x.dataKey=='')||[]
             if(_itemList.length>0){
                 this.$message({
@@ -313,15 +338,60 @@ export default {
                 });
                 return false
             }
+
+            let _itemList2 = this.formInline.itemList.filter(x=>x.dataKey=='27'||x.dataKey=='28')||[]
+            // console.log()
+            if(_itemList2.length>0){
+                let nowData = _itemList2[0].dataValue.split(',')
+                if(nowData.length!=3){
+                    this.$message({
+                        message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
+                        type: 'warning'
+                    });
+                    return false
+                }
+                for(let i=0;i<nowData.length;i++){
+                    if(typeof(nowData[i])!='number'){
+                        this.$message({
+                            message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
+                            type: 'warning'
+                        });
+                        return false 
+                    }
+                }
+            }
+
+            let _itemList3 = this.formInline.itemList.filter(x=>x.dataKey=='31'||x.dataKey=='32')||[]
+            // console.log()
+            if(_itemList3.length>0){
+                let nowData = _itemList3[0].dataValue.split(',')
+                if(nowData.length!=21){
+                    this.$message({
+                        message: '刚度矩阵/柔度矩阵数据输入错误',
+                        type: 'warning'
+                    });
+                    return false
+                }
+                for(let i=0;i<nowData.length;i++){
+                    if(typeof(nowData[i])!='number'){
+                        this.$message({
+                            message: '刚度矩阵/柔度矩阵数据输入错误',
+                            type: 'warning'
+                        });
+                        return false 
+                    }
+                }
+            }
+            
+
+
+
             this.formInline.itemList.unshift({
                 dataKey:2,
                 dataValue:dataSource.toString(),
                 dataTips:''
             })
             delete this.formInline.dataSource
-            // this.formInline.itemList = this.formInline.itemList.toString()
-            // console.log(this.formInline)
-            // console.log(this.subArr)
             this.$api.upData(this.formInline).then(res=>{
                 if(res.data.code==0){
                     this.$message({
@@ -445,6 +515,11 @@ export default {
         color: #999;
         margin-left: 20px;
         margin-top: 6px;
+    }
+    .tipdiv{
+        font-size: 14px;
+        color: #999;
+        margin: 5px 0
     }
     .inputBoxDiv{
         border:1px solid #DCDFE6;

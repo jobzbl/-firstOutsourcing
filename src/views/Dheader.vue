@@ -65,9 +65,9 @@ export default {
         if(res.data.page.list.length){
           // 'content':data.dataContent,'element':data.dataElement
           this.$router.push('/result?id='+res.data.page.list[0].dataContail
-          +'&source='+res.data.page.list[0].dataSource
-          +'&content='+JSON.stringify(res.data.page.list[0].dataContent)
-          +'&element='+JSON.stringify(res.data.page.list[0].dataElement)
+          +'&dataTips='+JSON.stringify(res.data.page.list[0].dataTips)
+          +'&dataPid='+JSON.stringify(res.data.page.list[0].dataPid)
+          +'&dataValue='+JSON.stringify(res.data.page.list[0].dataValue)
           )
         }else{
           this.$router.push('/result?id=0')

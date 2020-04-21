@@ -36,8 +36,8 @@
                 </el-table-column>
                 <el-table-column label="数据值" width="344">
                     <template slot-scope="scope">
-                        <div style="padding:0" v-if="scope.row.typeName=='图片'||scope.row.typeName=='文件'" @dblclick="editSpan1C(scope.row)">
-                            <img :src="scope.row.dataValue" alt="" style="max-height:100px;max-width:100%;">
+                        <div style="padding:0" v-if="scope.row.typeName=='图片'" @dblclick="editSpan1C(scope.row)">
+                            <img :src="base.sq+scope.row.dataValue" alt="" style="max-height:100px;max-width:100%;">
                             <el-upload
                             :style="scope.row.status?'display:none':'display:block'"
                             class="upload-demo upDataBox"
@@ -46,14 +46,19 @@
                             :file-list="fileList2">
                             <el-button @click="shangchuanB()" size="small" type="primary">替换{{scope.row.typeName}}</el-button>
                             </el-upload>
-                            <!-- style="visibility: hidden;" -->
-
-                            <!-- <span :style="scope.row.status?'display:block':'display:none'" class="editSpan" @dblclick="editSpan1C(scope.row)">{{scope.row.dataValue}}</span> -->
-                            <!-- <input :style="scope.row.status?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataValue"> -->
-                            <!-- <i @click="clearCon(scope.row,'status')" class="iconfont iconguanbi" :style="scope.row.status?'display:none':'display:block'"></i>
-                            <i @click="saveData(scope.row)" class="iconfont icondui1" :style="scope.row.status?'display:none':'display:block'"></i> -->
                         </div>
-                        <div style="padding:0" v-if="scope.row.typeName!='图片'">
+                        <div style="padding:0" v-if="scope.row.typeName=='文件'" @dblclick="editSpan1C(scope.row)">
+                            <span>{{scope.row.dataValue}}</span>
+                            <el-upload
+                            :style="scope.row.status?'display:none':'display:block'"
+                            class="upload-demo upDataBox"
+                            action="0"
+                            :before-upload="beforeUpload2"
+                            :file-list="fileList2">
+                            <el-button @click="shangchuanB()" size="small" type="primary">替换{{scope.row.typeName}}</el-button>
+                            </el-upload>
+                        </div>
+                        <div style="padding:0" v-if="scope.row.typeName!='图片'&&scope.row.typeName!='文件'">
                             <span :style="scope.row.status?'display:block':'display:none'" class="editSpan" @dblclick="editSpan1C(scope.row)">{{scope.row.dataValue}}</span>
                             <input :style="scope.row.status?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataValue">
                             <i @click="clearCon(scope.row,'status')" class="iconfont iconguanbi" :style="scope.row.status?'display:none':'display:block'"></i>
@@ -97,6 +102,7 @@ export default {
     name:'dataEdit',
     data(){
         return {
+            base:base,
             fileList2:[],
             fileList: [],
             tableData:{
@@ -123,12 +129,48 @@ export default {
             fd.append('file',file);//传文件
             this.$api.fileUpData(fd).then(res=>{
                 this.fileList2.push(fd)
-                this.nowRowData.dataValue = base.sq+res.data.url
+                this.nowRowData.dataValue = res.data.url
                 console.log(this.nowRowData)
                 this.saveData(this.nowRowData,'status')
             })
             return false
         },
+        // beforeUpload(file){
+        //     let fd = new FormData();
+        //     fd.append('file',file);//传文件
+        //     this.$api.bulkImport(fd).then(res=>{
+        //         if(res.data.code==-1){
+        //             this.$message({
+        //                 message: res.data.msg,
+        //                 type: 'warning'
+        //             });
+        //         }else{
+        //             this.formInline.dataContail = res.data.data.dataContail
+        //             this.formInline.dataDescription = res.data.data.dataDescription
+        //             this.formInline.dataSource = res.data.data.list[0].dataKey*1
+        //             this.formInline.itemList = []
+        //             this.subArr = []
+        //             for(var i=1;i<res.data.data.list.length;i++){
+        //                 console.log(res.data.data.list)
+        //                 this.dataSel(res.data.data.list[i].dataTips,i-1,res.data.data.list[i].dataKey)
+        //                 this.subArr.push({
+        //                     classify2:parseInt(res.data.data.list[i].dataClass),
+        //                     dataType:parseInt(res.data.data.list[i].dataKey),
+        //                     dataFile:[],
+        //                     keywordArr:[]  
+        //                 })
+        //                 this.formInline.itemList.push({
+        //                     dataKey :parseInt(res.data.data.list[i].dataKey)||'',
+        //                     dataValue : res.data.data.list[i].dataValue||'',
+        //                     dataTips : res.data.data.list[i].dataTips||'',
+        //                     dataFile : res.data.data.list[i].dataFile||[],
+        //                 })
+        //             }
+        //         }
+        //         console.log(this.formInline)
+        //     })
+        //     return false
+        // }
         beforeUpload(file){
             let fd = new FormData();
             fd.append('file',file);//传文件

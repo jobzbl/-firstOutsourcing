@@ -179,7 +179,7 @@ const article = {
     },
     // 获取原子位置坐标
     atomSeat(params){
-        return axios.get(`${base.sq}/sys/sysData/transt`,{params})
+        return axios.get(`${base.sq}/sys/sysData/trans?${params}`)
     },
 }
 export default article;

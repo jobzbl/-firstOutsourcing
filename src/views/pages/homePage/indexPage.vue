@@ -149,6 +149,14 @@ export default {
 		this.$api.stairList().then( res => {
 			this.stairListArr = res.data.data
 			this.getSecondList(res.data.data[0].id)
+		})
+		this.$api.getDataSource().then(res=>{ // 数据来源
+            var _dataSourceObj = {}
+            res.data.data.map(x=>{
+                Object.assign(_dataSourceObj,{[x.id]: x.paramValue})
+            })
+			this.dataSourceObj = _dataSourceObj;
+          	localStorage.setItem("dataSourceObj", JSON.stringify( _dataSourceObj ))
         })
 	},
 	// 获取一级列表数据
