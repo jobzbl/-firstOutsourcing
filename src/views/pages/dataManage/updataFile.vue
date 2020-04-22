@@ -61,7 +61,7 @@
                     </el-col>
                     <!-- item.dataKey -->
                     <el-col :span="11" v-if="item.dataKey==12" style="text-align:right;">
-                        <el-select v-model="formInline.dataValue" style="width:100%" placeholder="请选择数据值">
+                        <el-select v-model="item.dataValue" style="width:100%" placeholder="请选择数据值">
                             <el-option label="model-composite" value="model-composite"></el-option>
                             <el-option label="mini-composite" value="mini-composite"></el-option>
                             <el-option label="1D" value="1D"></el-option>
@@ -72,7 +72,7 @@
                         </el-select>
                     </el-col>
                     <el-col :span="11" v-if="item.dataKey==80" style="text-align:right;">
-                        <el-select v-model="formInline.dataValue" style="width:100%" placeholder="请选择数据值">
+                        <el-select v-model="item.dataValue" style="width:100%" placeholder="请选择数据值">
                             <el-option label="单层" value="单层"></el-option>
                             <el-option label="多层" value="多层"></el-option>
                             <el-option label="其他" value="其他"></el-option>
@@ -114,7 +114,7 @@
             <i class="iconfont iconjiahao"></i>
         </div>
         <div style="margin-top:55px;text-align:center;margin-bottom:90px;">
-            <el-button class="saveUpdata" type="primary" @click="saveUpdata('updataTab')">保存</el-button>
+            <el-button class="saveUpdata" type="primary" @click="saveUpdata()">保存</el-button>
         </div>
     </div>
 </template>
@@ -266,24 +266,28 @@ export default {
                 }else{
                     this.formInline.dataContail = res.data.data.dataContail
                     this.formInline.dataDescription = res.data.data.dataDescription
-                    this.formInline.dataSource = res.data.data.list[0].dataKey*1
                     this.formInline.itemList = []
                     this.subArr = []
-                    for(var i=1;i<res.data.data.list.length;i++){
-                        console.log(res.data.data.list)
-                        this.dataSel(res.data.data.list[i].dataTips,i-1,res.data.data.list[i].dataKey)
-                        this.subArr.push({
-                            classify2:parseInt(res.data.data.list[i].dataClass),
-                            dataType:parseInt(res.data.data.list[i].dataKey),
-                            dataFile:[],
-                            keywordArr:[]  
-                        })
-                        this.formInline.itemList.push({
-                            dataKey :parseInt(res.data.data.list[i].dataKey)||'',
-                            dataValue : res.data.data.list[i].dataValue||'',
-                            dataTips : res.data.data.list[i].dataTips||'',
-                            dataFile : res.data.data.list[i].dataFile||[],
-                        })
+                    for(var i=0;i<res.data.data.list.length;i++){
+                        if(res.data.data.list[i].dataKey==2){
+                            this.formInline.dataSource = res.data.data.list[i].dataValue*1
+                        }
+                        if(res.data.data.list[i].dataKey!=2){
+                            this.subArr.push({
+                                classify2:parseInt(res.data.data.list[i].dataClass),
+                                dataType:parseInt(res.data.data.list[i].dataKey),
+                                dataFile:[],
+                                keywordArr:[]  
+                            })
+                            this.dataSel(res.data.data.list[i].dataTips,i-1,res.data.data.list[i].dataKey)
+                            this.formInline.itemList.push({
+                                dataKey :parseInt(res.data.data.list[i].dataKey)||'',
+                                dataValue : res.data.data.list[i].dataValue||'',
+                                dataTips : res.data.data.list[i].dataTips||'',
+                                dataFile : res.data.data.list[i].dataFile||[],
+                            })
+                        }
+
                     }
                 }
                 console.log(this.formInline)
@@ -304,7 +308,7 @@ export default {
             })
             this.subArr.push({classify2:null,dataType:'',dataFile:[],keywordArr:[]})
         },
-        saveUpdata(formName){
+        saveUpdata(){
             let dataSource = this.formInline.dataSource
             if(this.formInline.dataContail==''||!this.formInline.dataContail){
                 this.$message({
@@ -330,7 +334,10 @@ export default {
                 }
                 delete this.formInline.itemList[i].dataFile
             }
-            let _itemList = this.formInline.itemList.filter(x=>x.dataKey=='')||[]
+            console.log( this.formInline.itemList)
+            let _itemList = this.formInline.itemList.filter(x=>x.dataKey==''||!x.dataKey)||[]
+            // let _itemValue = this.formInline.itemList.filter(x=>x.dataValue==''||!x.dataValue)||[]
+            console.log(_itemList)
             if(_itemList.length>0){
                 this.$message({
                     message: '请选择关键词',
@@ -338,6 +345,13 @@ export default {
                 });
                 return false
             }
+            // if(_itemValue.length>0){
+            //     this.$message({
+            //         message: '请输入数据值',
+            //         type: 'warning'
+            //     });
+            //     return false
+            // }
 
             let _itemList2 = this.formInline.itemList.filter(x=>x.dataKey=='27'||x.dataKey=='28')||[]
             // console.log()
@@ -351,7 +365,7 @@ export default {
                     return false
                 }
                 for(let i=0;i<nowData.length;i++){
-                    if(typeof(nowData[i])!='number'){
+                    if(typeof(nowData[i]*1)!='number'){
                         this.$message({
                             message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
                             type: 'warning'
@@ -382,9 +396,23 @@ export default {
                     }
                 }
             }
-            
-
-
+            let _itemList4 = this.formInline.itemList.filter( x=>x.dataKey=='7'||x.dataKey=='8'||
+                x.dataKey=='89'||x.dataKey=='90'
+                ||x.dataKey=='91'||x.dataKey=='92'
+                ||x.dataKey=='93'||x.dataKey=='94'
+                )
+            // console.log()
+            if(_itemList4.length>0){
+                for(let i=0;i<_itemList4.length;i++){
+                    if(_itemList4[i].dataValue.indexOf('，')>0||_itemList4[i].dataValue.indexOf('：')>0){
+                        this.$message({
+                            message: '复合材料结构和成分数据输入错误',
+                            type: 'warning'
+                        });
+                        return false 
+                    }
+                }
+            }
 
             this.formInline.itemList.unshift({
                 dataKey:2,
@@ -425,8 +453,13 @@ export default {
             })
         },
         dataSel(data2,index,dataKey){
-            this.subArr[index].keywordArr = []
-            this.formInline.itemList[index].dataKey=""
+            console.log(data2)
+            console.log(index)
+            console.log(dataKey)
+            if(dataKey==''){
+                this.subArr[index].keywordArr = []
+                this.formInline.itemList[index].dataKey=""
+            }
             this.$api.getKeyword({paramType:data2}).then(res=>{
                 this.subArr[index].keywordArr = res.data.data
                 if(dataKey){

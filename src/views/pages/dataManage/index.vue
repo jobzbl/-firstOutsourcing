@@ -14,11 +14,11 @@
                 </el-col>
                 <el-col :span="8">
                     <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel">界面主相成分</div></el-col>
+                        <el-col :span="8"><div class="formLabel">界面相主成分</div></el-col>
                         <el-col :span="16">
                             <!-- dataClassifyObj 为数据分类的数据 -->
                             <!-- dataTypeObj 数据类型 -->
-                            <el-select clearable v-model ="formInline.dataContail" style="width:100%" placeholder="请选择界面主相成分">
+                            <el-select clearable v-model ="formInline.dataContail" style="width:100%" placeholder="请选择界面相主成分">
                                 <el-option label="BN" value="BN"></el-option>
                                 <el-option label="C" value="C"></el-option>
                                 <el-option label="RE2SiO5" value="RE2SiO5"></el-option>
@@ -116,7 +116,7 @@
             <el-row :gutter="20" style="margin-top:20px">
                 <el-col :span="8">
                     <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel" style="line-height:16px">热膨胀系数<br/>（10 <sup>6</sup>k<sup>1</sup>）</div></el-col>
+                        <el-col :span="8"><div class="formLabel" style="line-height:16px">热膨胀系数<br/>（10 <sup>-6</sup>k<sup>-1</sup>）</div></el-col>
                         <el-col :span="16">
                             <el-input v-model="formInline.param74[0]" style="width:45%" placeholder="最小值"></el-input>
                             -
@@ -145,6 +145,7 @@
             <el-button v-if="quanxian.indexOf(2)!=-1" @click="updata()"> <i class="iconfont iconshangchuan"></i> 上传数据</el-button>
             <el-button v-if="quanxian.indexOf(4)!=-1" @click="delect('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
             <el-button @click="onDown()"> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
+            <el-button @click="downModel()"> <i class="iconfont iconxiazai"></i> 下载模版</el-button>
         </div>
         <div class="tableBox">
             <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
@@ -163,7 +164,7 @@
                 <!-- <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column> -->
                 <el-table-column prop="param39" label="界面相材料杨氏模量 Ev(GPa)" width="110">    </el-table-column>
                 <el-table-column prop="param79" label="复合材料合成方法" width="90">    </el-table-column>
-                <el-table-column prop="param74" label="热膨胀系数(10¯⁶K¯¹" width="90">    </el-table-column>
+                <el-table-column prop="param74" label="热膨胀系数(10¯⁶K¯¹)" width="90">    </el-table-column>
                 <el-table-column prop="param99" label="弯曲强度（MPa)" width="90">    </el-table-column>
                 <el-table-column prop="param12" label="复合材料类型" width="90">    </el-table-column>
                 <el-table-column prop="param2" label="数据来源" width="106">
@@ -207,6 +208,7 @@
 </template>
 
 <script>
+import base from '../../../request/base'; // 导入接口域名列表
 import removeComponent from '../component/remove.vue' // 将子组件引入父组件中
 export default {
     data() {
@@ -324,6 +326,9 @@ export default {
                     window.location.href = objectUrl; 
                 })
             }
+        },
+        downModel(){
+            window.location.href = base.downDemo; 
         },
         getSelectObj(){
             this.$api.dataTypelist().then(res=>{ // 数据类型

@@ -36,6 +36,7 @@
                 </el-table-column>
                 <el-table-column label="数据值" width="344">
                     <template slot-scope="scope">
+                        <!-- <div></div> -->
                         <div style="padding:0" v-if="scope.row.typeName=='图片'" @dblclick="editSpan1C(scope.row)">
                             <img :src="base.sq+scope.row.dataValue" alt="" style="max-height:100px;max-width:100%;">
                             <el-upload
@@ -59,8 +60,21 @@
                             </el-upload>
                         </div>
                         <div style="padding:0" v-if="scope.row.typeName!='图片'&&scope.row.typeName!='文件'">
-                            <span :style="scope.row.status?'display:block':'display:none'" class="editSpan" @dblclick="editSpan1C(scope.row)">{{scope.row.dataValue}}</span>
-                            <input :style="scope.row.status?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataValue">
+                            <span v-if="scope.row.status" class="editSpan" @dblclick="editSpan1C(scope.row)">{{scope.row.dataKey!=2?scope.row.dataValue:dataSourceObj[scope.row.dataValue+'']}}</span>
+                            <input v-if="scope.row.dataKey!=2&&scope.row.dataKey!=1&&!scope.row.status" class="editInput" type="text" v-model="scope.row.dataValue">
+                            <el-select v-if="scope.row.dataKey==2&&!scope.row.status" clearable v-model="scope.row.dataValue" style="width:80%;padding-left:10px;padding-top:25px" placeholder="请选择界面相类型">
+                                <el-option v-for="item in dataSourceObjArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
+                            </el-select>
+                            <el-select v-if="scope.row.dataKey==1&&!scope.row.status" clearable v-model="scope.row.dataValue" style="width:80%;padding-left:10px;padding-top:25px" placeholder="请选择界面相类型">
+                                <el-option label="BN" value="BN"></el-option>
+                                <el-option label="C" value="C"></el-option>
+                                <el-option label="RE2SiO5" value="RE2SiO5"></el-option>
+                                <el-option label="RE2Si2O7" value="RE2Si2O7"></el-option>
+                                <el-option label="BN/SiC" value="BN/SiC"></el-option>
+                                <el-option label="BN/C" value="BN/C"></el-option>
+                                <el-option label="C/SiC" value="C/SiC"></el-option>
+                                <el-option label="其他" value="其他"></el-option>
+                            </el-select>
                             <i @click="clearCon(scope.row,'status')" class="iconfont iconguanbi" :style="scope.row.status?'display:none':'display:block'"></i>
                             <i @click="saveData(scope.row,'status')" class="iconfont icondui1" :style="scope.row.status?'display:none':'display:block'"></i>
                         </div>
@@ -69,10 +83,10 @@
                 <el-table-column label="数据摘要">
                     <template slot-scope="scope">
                         <div style="padding:0">
-                            <span :style="scope.row.dataContent?'display:block':'display:none'" class="editSpan" @dblclick="editSpan2C(scope.row)">{{scope.row.dataTips}}</span>
-                            <input :style="scope.row.dataContent?'display:none':'display:block'" class="editInput" type="text" v-model="scope.row.dataTips">
-                            <i @click="clearCon(scope.row,'dataContent')" class="iconfont iconguanbi" :style="scope.row.dataContent?'display:none':'display:block'"></i>
-                            <i @click="saveData(scope.row,'dataContent')" class="iconfont icondui1" :style="scope.row.dataContent?'display:none':'display:block'"></i>
+                            <span v-if="scope.row.params" class="editSpan" @dblclick="editSpan2C(scope.row)">{{scope.row.dataTips}}</span>
+                            <input v-if="!scope.row.params" class="editInput" type="text" v-model="scope.row.dataTips">
+                            <i @click="clearCon(scope.row,'params')" class="iconfont iconguanbi" :style="scope.row.params?'display:none':'display:block'"></i>
+                            <i @click="saveData(scope.row,'params')" class="iconfont icondui1" :style="scope.row.params?'display:none':'display:block'"></i>
                         </div>
                     </template>
                 </el-table-column>
@@ -102,6 +116,8 @@ export default {
     name:'dataEdit',
     data(){
         return {
+            dataSourceObj:localStorage.getItem('dataSourceObj')||{},
+            dataSourceObjArr:[],
             base:base,
             fileList2:[],
             fileList: [],
@@ -135,52 +151,87 @@ export default {
             })
             return false
         },
-        // beforeUpload(file){
-        //     let fd = new FormData();
-        //     fd.append('file',file);//传文件
-        //     this.$api.bulkImport(fd).then(res=>{
-        //         if(res.data.code==-1){
-        //             this.$message({
-        //                 message: res.data.msg,
-        //                 type: 'warning'
-        //             });
-        //         }else{
-        //             this.formInline.dataContail = res.data.data.dataContail
-        //             this.formInline.dataDescription = res.data.data.dataDescription
-        //             this.formInline.dataSource = res.data.data.list[0].dataKey*1
-        //             this.formInline.itemList = []
-        //             this.subArr = []
-        //             for(var i=1;i<res.data.data.list.length;i++){
-        //                 console.log(res.data.data.list)
-        //                 this.dataSel(res.data.data.list[i].dataTips,i-1,res.data.data.list[i].dataKey)
-        //                 this.subArr.push({
-        //                     classify2:parseInt(res.data.data.list[i].dataClass),
-        //                     dataType:parseInt(res.data.data.list[i].dataKey),
-        //                     dataFile:[],
-        //                     keywordArr:[]  
-        //                 })
-        //                 this.formInline.itemList.push({
-        //                     dataKey :parseInt(res.data.data.list[i].dataKey)||'',
-        //                     dataValue : res.data.data.list[i].dataValue||'',
-        //                     dataTips : res.data.data.list[i].dataTips||'',
-        //                     dataFile : res.data.data.list[i].dataFile||[],
-        //                 })
-        //             }
-        //         }
-        //         console.log(this.formInline)
-        //     })
-        //     return false
-        // }
+        getListdata(){
+            this.$api.getDataSource().then(res=>{ // 数据来源
+                this.dataSourceObjArr = res.data.data
+                var _dataSourceObj = {}
+                res.data.data.map(x=>{
+                    Object.assign(_dataSourceObj,{[x.id.toString()]: x.paramValue})
+                })
+                this.dataSourceObj = _dataSourceObj
+            })
+            this.$api.getDataOne(this.$route.query.id,{page:this.tableData.currPage,limit:this.tableData.pageSize,}).then(res=>{ // 数据来源
+                this.tableData = res.data.page
+                for(let i=0;i<this.tableData.list.length;i++){
+                    if(this.tableData.list[i].dataKey==2){
+                        this.tableData.list[i].dataValue = this.tableData.list[i].dataValue*1
+                    }
+                    this.tableData.list[i].status = true
+                    this.tableData.list[i].params = true
+                }
+                console.log(res.data.page.list)
+            })
+        },
         beforeUpload(file){
             let fd = new FormData();
             fd.append('file',file);//传文件
-            this.$api.upFile(fd).then(res=>{
+            this.$api.bulkImport(fd).then(res=>{
+                if(res.data.code==-1){
+                    this.$message({
+                        message: res.data.msg,
+                        type: 'warning'
+                    });
+                }else{
+                    let resData = res.data.data
+                    this.tableData.pageSize = 200
+                    this.tableData.list = []
+                    for(let i=0;i<resData.list.length;i++){
+                        if(resData.list[i].dataClass==''){
+                            this.tableData[i].dataKey = '2';
+                            this.tableData[i].dataValue = resData.list[i].dataKey
+                        }
+                        this.tableData[i].dataKey = resData.list[i].dataKey
+                        this.tableData[i].dataKey = resData.list[i].dataKey
+
+                    }
+                }
+                //     this.formInline.dataContail = res.data.data.dataContail
+                //     this.formInline.dataDescription = res.data.data.dataDescription
+                //     this.formInline.dataSource = res.data.data.list[0].dataKey*1
+                //     this.formInline.itemList = []
+                //     this.subArr = []
+                //     for(var i=1;i<res.data.data.list.length;i++){
+                //         console.log(res.data.data.list)
+                //         this.dataSel(res.data.data.list[i].dataTips,i-1,res.data.data.list[i].dataKey)
+                //         this.subArr.push({
+                //             classify2:parseInt(res.data.data.list[i].dataClass),
+                //             dataType:parseInt(res.data.data.list[i].dataKey),
+                //             dataFile:[],
+                //             keywordArr:[]  
+                //         })
+                //         this.formInline.itemList.push({
+                //             dataKey :parseInt(res.data.data.list[i].dataKey)||'',
+                //             dataValue : res.data.data.list[i].dataValue||'',
+                //             dataTips : res.data.data.list[i].dataTips||'',
+                //             dataFile : res.data.data.list[i].dataFile||[],
+                //         })
+                //     }
+                // }
+                console.log(this.formInline)
                 console.log(res)
-                // this.formInline.itemList[this.nowIndex].dataFile.push(res.data.url)
-                // this.sub[this.nowIndex].dataFile.push(fd)
             })
-            return false  //屏蔽了action的默认上传
+            return false
         },
+        // beforeUpload(file){
+        //     let fd = new FormData();
+        //     fd.append('file',file);//传文件
+        //     this.$api.upFile(fd).then(res=>{
+        //         console.log(res)
+        //         // this.formInline.itemList[this.nowIndex].dataFile.push(res.data.url)
+        //         // this.sub[this.nowIndex].dataFile.push(fd)
+        //     })
+        //     return false  //屏蔽了action的默认上传
+        // },
         shangchuanB(){
 
         },
@@ -220,34 +271,23 @@ export default {
             if(val == 'status'){
                 data.status = true
             }else{
-                data.dataContent = true
+                data.params = true
             }
             for(let i=0;i<this.saveArr.itemList.length;i++){
-                if(this.saveArr.itemList[i].dataId == data.dataId){
+                if(this.saveArr.itemList[i].dataKey == data.dataKey){
                     this.saveArr.itemList.splice(i,1)
                 }
             }
             setTimeout(() => {
                 this.saveArr.itemList.push({
-                    dataId: data.dataId,
+                    dataKey: data.dataKey,
                     dataValue: data.dataValue,
                     dataTips: data.dataTips
                 })
             console.log(this.saveArr)
             });
         },
-        getListdata(){
-            console.log(this.type)
-            console.log(this.$route.query.id)
-            this.$api.getDataOne(this.$route.query.id,{page:this.tableData.currPage,limit:this.tableData.pageSize,}).then(res=>{ // 数据来源
-                this.tableData = res.data.page
-                for(let i=0;i<this.tableData.list.length;i++){
-                    this.tableData.list[i].status = true
-                    this.tableData.list[i].dataContent = true
-                }
-                console.log(res)
-            })
-        },
+        
         editSpan1C(data){
             if(this.type=='edit'){
                 data.status = false
@@ -259,8 +299,9 @@ export default {
             }
         },
         editSpan2C(data){
+            console.log(data)
             if(this.type=='edit'){
-                data.dataContent = false
+                data.params = false
             }
         },
         // 

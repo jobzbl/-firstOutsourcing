@@ -154,9 +154,9 @@ export default {
             var _dataSourceObj = {}
             res.data.data.map(x=>{
                 Object.assign(_dataSourceObj,{[x.id]: x.paramValue})
-            })
+			})
+			localStorage.setItem('dataSourceObj', JSON.stringify( _dataSourceObj ))
 			this.dataSourceObj = _dataSourceObj;
-          	localStorage.setItem("dataSourceObj", JSON.stringify( _dataSourceObj ))
         })
 	},
 	// 获取一级列表数据
