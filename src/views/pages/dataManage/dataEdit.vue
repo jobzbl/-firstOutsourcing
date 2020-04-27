@@ -61,9 +61,23 @@
                         </div>
                         <div style="padding:0" v-if="scope.row.typeName!='图片'&&scope.row.typeName!='文件'">
                             <span v-if="scope.row.status" class="editSpan" @dblclick="editSpan1C(scope.row)">{{scope.row.dataKey!=2?scope.row.dataValue:dataSourceObj[scope.row.dataValue+'']}}</span>
-                            <input v-if="scope.row.dataKey!=2&&scope.row.dataKey!=1&&!scope.row.status" class="editInput" type="text" v-model="scope.row.dataValue">
+                            <input v-if="scope.row.dataKey!=80&&scope.row.dataKey!=12&&scope.row.dataKey!=2&&scope.row.dataKey!=1&&!scope.row.status" class="editInput" type="text" v-model="scope.row.dataValue">
                             <el-select v-if="scope.row.dataKey==2&&!scope.row.status" clearable v-model="scope.row.dataValue" style="width:80%;padding-left:10px;padding-top:25px" placeholder="请选择界面相类型">
                                 <el-option v-for="item in dataSourceObjArr" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
+                            </el-select>
+                            <el-select v-if="scope.row.dataKey==12&&!scope.row.status" clearable v-model="scope.row.dataValue" style="width:80%;padding-left:10px;padding-top:25px" placeholder="请选择界面相类型">
+                                <el-option label="model-composite" value="model-composite"></el-option>
+                                <el-option label="mini-composite" value="mini-composite"></el-option>
+                                <el-option label="1D" value="1D"></el-option>
+                                <el-option label="2D" value="2D"></el-option>
+                                <el-option label="2.5D" value="2.5D"></el-option>
+                                <el-option label="3D" value="3D"></el-option>
+                                <el-option label="其他" value="其他"></el-option>
+                            </el-select>
+                            <el-select v-if="scope.row.dataKey==80&&!scope.row.status" clearable v-model="scope.row.dataValue" style="width:80%;padding-left:10px;padding-top:25px" placeholder="请选择界面相类型">
+                                <el-option label="单层" value="单层"></el-option>
+                                <el-option label="多层" value="多层"></el-option>
+                                <el-option label="其他" value="其他"></el-option>
                             </el-select>
                             <el-select v-if="scope.row.dataKey==1&&!scope.row.status" clearable v-model="scope.row.dataValue" style="width:80%;padding-left:10px;padding-top:25px" placeholder="请选择界面相类型">
                                 <el-option label="BN" value="BN"></el-option>

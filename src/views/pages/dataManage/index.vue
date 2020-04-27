@@ -3,8 +3,8 @@
         <div class="haederBox" v-if="quanxian.indexOf(1)!=-1">
             <el-row :gutter="20">
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel">数据编号</div></el-col>
+                    <el-row>
+                        <el-col :span="8"><div class="formLabel" style="padding-right:10px">数据编号</div></el-col>
                         <el-col :span="16">
                             <el-input v-model="formInline.beginNum" style="width:45%" placeholder="最小值"></el-input>
                             -
@@ -13,9 +13,9 @@
                     </el-row>
                 </el-col>
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel">界面相主成分</div></el-col>
-                        <el-col :span="16">
+                    <el-row>
+                        <el-col :span="9"><div class="formLabel" style="padding-right:10px">界面相主成分</div></el-col>
+                        <el-col :span="15">
                             <!-- dataClassifyObj 为数据分类的数据 -->
                             <!-- dataTypeObj 数据类型 -->
                             <el-select clearable v-model ="formInline.dataContail" style="width:100%" placeholder="请选择界面相主成分">
@@ -32,8 +32,8 @@
                     </el-row>
                 </el-col>
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel">界面相类型</div></el-col>
+                    <el-row>
+                        <el-col :span="8"><div class="formLabel" style="padding-right:10px">界面相类型</div></el-col>
                         <el-col :span="16">
                             <el-select clearable v-model ="formInline.param80" style="width:100%" placeholder="请选择界面相类型">
                                 <el-option label="多层" value="多层"></el-option>
@@ -47,8 +47,8 @@
 
             <el-row :gutter="20" style="margin-top:20px">
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel">数据来源</div></el-col>
+                    <el-row >
+                        <el-col :span="8"><div class="formLabel" style="padding-right:10px">数据来源</div></el-col>
                         <el-col :span="16">
                             <el-select clearable v-model ="formInline.param2" style="width:100%" placeholder="请选择数据来源">
                                 <el-option v-for="item in dataSourceObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
@@ -57,16 +57,16 @@
                     </el-row>
                 </el-col>
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel">界面相掺杂元素</div></el-col>
-                        <el-col :span="16">
+                    <el-row>
+                        <el-col :span="9"><div class="formLabel" style="padding-right:10px">界面相掺杂元素</div></el-col>
+                        <el-col :span="15">
                             <el-input v-model="formInline.param7" style="width:100%" placeholder="请输入界面相掺杂元素"></el-input>
                         </el-col>
                     </el-row>
                 </el-col>
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel" style="line-height:16px">界面相材料密度 （g/cm<sup>3</sup>)</div></el-col>
+                    <el-row>
+                        <el-col :span="8"><div class="formLabel" style="line-height:16px;padding-right:10px">界面相材料密度 （g/cm<sup>3</sup>)</div></el-col>
                         <el-col :span="16">
                             <el-input v-model="formInline.param30[0]" style="width:45%" placeholder="最小值"></el-input>
                             -
@@ -78,8 +78,8 @@
 
             <el-row :gutter="20" style="margin-top:20px">
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel" style="line-height:16px">界面相材料杨氏模量 Ev(GPa)</div></el-col>
+                    <el-row>
+                        <el-col :span="8"><div class="formLabel" style="line-height:16px;padding-right:10px">界面相材料杨氏模量 Ev(GPa)</div></el-col>
                         <el-col :span="16">
                             <el-input v-model="formInline.param39[0]" style="width:45%" placeholder="最小值"></el-input>
                             -
@@ -88,16 +88,16 @@
                     </el-row>
                 </el-col>
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel" style="line-height:16px">复合材料合成方法</div></el-col>
-                        <el-col :span="16">
+                    <el-row >
+                        <el-col :span="9"><div class="formLabel" style="padding-right:10px">复合材料合成方法</div></el-col>
+                        <el-col :span="15">
                             <el-input v-model="formInline.param79" style="width:100%" placeholder="请输入复合材料合成方法"></el-input>
                         </el-col>
                     </el-row>
                 </el-col>
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel">复合材料类型</div></el-col>
+                    <el-row>
+                        <el-col :span="8"><div class="formLabel" style="padding-right:10px">复合材料类型</div></el-col>
                         <el-col :span="16">
                             <el-select clearable v-model ="formInline.param12" style="width:100%" placeholder="请选择复合材料类型">
                                 <el-option label="model-composite" value="model-composite"></el-option>
@@ -115,8 +115,8 @@
 
             <el-row :gutter="20" style="margin-top:20px">
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel" style="line-height:16px">热膨胀系数<br/>（10 <sup>-6</sup>k<sup>-1</sup>）</div></el-col>
+                    <el-row>
+                        <el-col :span="8"><div class="formLabel" style="line-height:16px;padding-right:10px">热膨胀系数<br/>（10 <sup>-6</sup>k<sup>-1</sup>）</div></el-col>
                         <el-col :span="16">
                             <el-input v-model="formInline.param74[0]" style="width:45%" placeholder="最小值"></el-input>
                             -
@@ -125,9 +125,9 @@
                     </el-row>
                 </el-col>
                 <el-col :span="8">
-                    <el-row :gutter="20">
-                        <el-col :span="8"><div class="formLabel" style="line-height:16px">弯曲强度 （MPa)</div></el-col>
-                        <el-col :span="16">
+                    <el-row>
+                        <el-col :span="9"><div class="formLabel" style="padding-right:10px">弯曲强度 （MPa)</div></el-col>
+                        <el-col :span="15">
                             <el-input v-model="formInline.param99[0]" style="width:45%" placeholder="最小值"></el-input>
                             -
                             <el-input v-model="formInline.param99[1]" style="width:45%" placeholder="最大值"></el-input>
@@ -142,32 +142,36 @@
             </div>
         </div>
         <div class="buttonRow">
-            <el-button v-if="quanxian.indexOf(2)!=-1" @click="updata()"> <i class="iconfont iconshangchuan"></i> 上传数据</el-button>
+            <!-- <router-link :to="{path:'/data-cen/dataManage/updata',query:{'id':scope.row.dataId,'type':'edit'}}">编辑</router-link> -->
+
+            <el-button v-if="quanxian.indexOf(2)!=-1"> <i class="iconfont iconshangchuan"></i> 
+            <router-link :to="{path:'/data-cen/dataManage/updata',query:{'id':'','type':'add'}}">上传数据</router-link>
+            </el-button>
             <el-button v-if="quanxian.indexOf(4)!=-1" @click="delect('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
             <el-button @click="onDown()"> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
             <el-button @click="downModel()"> <i class="iconfont iconxiazai"></i> 下载模版</el-button>
         </div>
-        <div class="tableBox">
+        <div class="tableBox dataManage">
             <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
                 <el-table-column type="selection" width="40"></el-table-column>
                 <el-table-column prop="dataNum" label="数据编号" width="90"></el-table-column>
-                <el-table-column prop="dataContail" label="界面相主成分" width="90">
+                <el-table-column prop="dataContail" label="界面相主成分" width="110">
                     <!-- <template slot-scope="scope">
                         <span v-for="(item,index) in scope.row.dataElement" :key='index'>{{item}}<sub style="font-size:10px">{{scope.row.dataContent[index]>1?scope.row.dataContent[index]:''}}</sub>
                         </span>
                     </template> -->
                 </el-table-column>
-                <el-table-column prop="param7" label="界面相掺杂元素" width="90"></el-table-column>
-                <el-table-column prop="param80" label="界面相类型" width="90"></el-table-column>
-                <el-table-column prop="param30" label="界面相材料密度 （g/cm³)" width="110"></el-table-column>
+                <el-table-column prop="param7" label="界面相掺杂元素" width="130"></el-table-column>
+                <el-table-column prop="param80" label="界面相类型" width="110"></el-table-column>
+                <el-table-column prop="param30" label="界面相材料密度 （g/cm³)" width="200"></el-table-column>
                 <!-- <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column> -->
-                <el-table-column prop="param39" label="界面相材料杨氏模量 Ev(GPa)" width="110">    </el-table-column>
-                <el-table-column prop="param79" label="复合材料合成方法" width="90">    </el-table-column>
-                <el-table-column prop="param74" label="热膨胀系数(10¯⁶K¯¹)" width="90">    </el-table-column>
-                <el-table-column prop="param99" label="弯曲强度（MPa)" width="90">    </el-table-column>
-                <el-table-column prop="param12" label="复合材料类型" width="90">    </el-table-column>
-                <el-table-column prop="param2" label="数据来源" width="106">
+                <el-table-column prop="param39" label="界面相材料杨氏模量 Ev(GPa)" width="220">    </el-table-column>
+                <el-table-column prop="param79" label="复合材料合成方法" width="150">    </el-table-column>
+                <el-table-column prop="param74" label="热膨胀系数(10¯⁶K¯¹)" width="170">    </el-table-column>
+                <el-table-column prop="param99" label="弯曲强度（MPa)" width="140">    </el-table-column>
+                <el-table-column prop="param12" label="复合材料类型" width="130">    </el-table-column>
+                <el-table-column prop="param2" label="数据来源" width="90">
                     <template slot-scope="scope">
                         <span>
                             {{dataSourceArr[scope.row.param2]}}
@@ -178,13 +182,15 @@
                     <template slot-scope="scope">
                         <div class="caozuoBox" style="text-align:center">
                             <el-button v-if="quanxian.indexOf(3)!=-1" type="text" style="color:#33B0B5;">
-                                <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{'id':scope.row.dataId,'type':'edit'}}">编辑</router-link>
+                                <!-- <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{'id':scope.row.dataId,'type':'edit'}}">编辑</router-link> -->
+                                <router-link :to="{path:'/data-cen/dataManage/updata',query:{'id':scope.row.dataId,'type':'edit'}}">编辑</router-link>
                             </el-button>
                             <el-button  v-if="quanxian.indexOf(4)!=-1" @click="delect(scope.row.dataId)" type="text" style="color:#EF992A;">
                                 删除
                             </el-button>
                             <el-button v-if="quanxian.indexOf(1)!=-1" type="text" style="color:#248AD1;">
-                                <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{'id':scope.row.dataId,'type':'check'}}">查看</router-link>
+                                <router-link :to="{path:'/data-cen/dataManage/updata',query:{'id':scope.row.dataId,'type':'check'}}">查看</router-link>
+                                <!-- <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{'id':scope.row.dataId,'type':'check'}}">查看</router-link> -->
                             </el-button>
                         </div>
                     </template>
@@ -208,6 +214,7 @@
 </template>
 
 <script>
+import axios from '../../../request/http'; // 导入http中创建的axios实例
 import base from '../../../request/base'; // 导入接口域名列表
 import removeComponent from '../component/remove.vue' // 将子组件引入父组件中
 export default {
@@ -320,10 +327,30 @@ export default {
                 return
             }else{
                 let parmas = this.nowCheckedArr.map(x=>{return x.dataId})
-                this.$api.onFile(parmas).then(res=>{
-                    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});  // res就是接口返回的文件流了
-                    let objectUrl = URL.createObjectURL(blob); 
-                    window.location.href = objectUrl; 
+                // this.$api.onFile(parmas).then(res=>{
+                //     // let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});  // res就是接口返回的文件流了
+                //     // let objectUrl = URL.createObjectURL(blob); 
+                //     // window.location.href = objectUrl; 
+                //     const link = document.createElement('a')
+                //     const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+                //     link.style.display = 'none'
+                //     link.href = URL.createObjectURL(blob)
+                //     link.setAttribute('download', name+'.xlsx')
+                //     document.body.appendChild(link)
+                //     link.click()
+                //     document.body.removeChild(link)
+                // })
+                axios.post(`${base.sq}/sys/sysData/export`,parmas,{responseType: 'blob'}).then(res=>{
+                    const link = document.createElement('a')
+                    const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+                    link.style.display = 'none'
+                    link.href = URL.createObjectURL(blob)
+                    console.log(name)
+                    console.log('asdasdasdasd')
+                    link.setAttribute('download', 'data.xls')
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link)
                 })
             }
         },
@@ -467,24 +494,26 @@ export default {
             this.$api.dataManage(params).then(res=>{
                 if(res.data.code==0){
                     this.tableData = res.data.page
-                    let dataList = this.tableData.list 
-                    for(var i=0;i<dataList.length;i++){
-                        // 将字符串转为数组 后面五个关键词的数组
-                        let dataKeyArr = dataList[i].params.split('~')
-                        this.tableData.list[i].params = {}
-                        for(let r=0;r<dataKeyArr.length;r++){
-                            Object.assign(this.tableData.list[i].params,{
-                                [dataKeyArr[r].split('-')[0]]:dataKeyArr[r].split('-')[1]
-                            });
-                        }
-                    }
+                    // let dataList = this.tableData.list 
+                    // for(var i=0;i<dataList.length;i++){
+                    //     // 将字符串转为数组 后面五个关键词的数组
+                    //     if(dataList[i].params){
+                    //     let dataKeyArr = dataList[i].params.split('~')
+                    //     }
+                    //     this.tableData.list[i].params = {}
+                    //     for(let r=0;r<dataKeyArr.length;r++){
+                    //         Object.assign(this.tableData.list[i].params,{
+                    //             [dataKeyArr[r].split('-')[0]]:dataKeyArr[r].split('-')[1]
+                    //         });
+                    //     }
+                    // }
                     console.log(this.tableData.list)
                 }
             })
         },
-        updata(){
-            this.$router.push({path:'/data-cen/dataManage/updata'})
-        },
+        updata(){ 
+            this.$router.push({path:'/data-cen/dataManage/updata',params:{id:'',type:'add'}})
+        }, 
         changeShow(val){
             this.isBoxShow = val;
         },
@@ -615,10 +644,10 @@ export default {
         height: 70px;
         line-height:70px;
     }
-    .tableHeader th{
+    .dataManage .tableHeader th{
         padding: 0!important;
         background: #E2FCF9!important;
-        font-size: 16px!important;
+        font-size: 14px!important;
         color: #4D4D4D!important;
         text-align: center!important
     }

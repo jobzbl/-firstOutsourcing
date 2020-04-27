@@ -33,11 +33,11 @@
 							<div class="ul">
 								<div style="overflow:hidden;width:582px">
 									<span
-										@click="threeLeveCli(item.id,item.content)"
-										:style="[{'font-size':(item.content.length>1?'20px':'24px')},
-										{'backgroundColor':(selectList.nowElement==item.id?'#EF992A':'#33B0B5')}]"
-										v-for="(item,index) in threeLeveArr" :key="index"
-										:data-id="item.id">{{item.content}}</span>
+										v-for="(item2,index) in threeLeveArr" :key="index+'asd'"
+										@click="threeLeveCli(item2.id,item2.content,item2,index)"
+										:style="[{'font-size':(item2.content.length>1?'20px':'24px')},
+										{'backgroundColor':(spanIndex.indexOf(item2.content)>-1?'#EF992A':'#33B0B5')}]"
+										:data-id="item2.id">{{item2.content}}</span>
 								</div>
 							</div>
 						</div>
@@ -58,7 +58,7 @@
 					<div class="searchConBoxOver">
 						<div v-for="(data, index) in searchData.list" :key="index">
 							<router-link :to="{path:'/result',query:{'id':data.dataContail,'dataTips':data.dataTips,'dataPid':data.dataPid,'dataValue':data.dataValue}}">
-							{{data.dataContail}}
+							{{data.dataContail}}-{{data.param106}}-{{data.param107}}-{{data.param108}}
 							</router-link>
 						</div>
 					</div>
@@ -138,7 +138,8 @@ export default {
 		selectDataKey:{
 			first:'',
 			second:'',
-		}
+		},
+		spanIndex:[]
     }
   },
   created() {
@@ -172,6 +173,7 @@ export default {
 		this.selectList.isElementList = '' // 每次选择先清空二级列表的选项
 		this.$api.secondList(id).then( res => {
 			this.secondListArr = res.data.data
+
         })
 	},
 	selectItemCli(id){ // 获取三级列表
@@ -181,11 +183,15 @@ export default {
 		this.selectList.isElementList = id
 		this.$api.threeLeve(id).then( res => {
 			this.threeLeveArr = res.data.data
+			for(let i=0;i<this.threeLeveArr.length;i++){
+				this.threeLeveArr[i].status=1
+			}
+			
         })
 	},
 	search() { // 单机搜索
 		console.log(this.selectList)
-		this.$api.getSysDataList({page:this.searchData.currPage,limit:this.searchData.pageSize,dataContail:this.selectList.threeLeveArr}).then( res => {
+		this.$api.getSysDataList({page:this.searchData.currPage,limit:this.searchData.pageSize,dataContail:this.spanIndex.toString()}).then( res => {
 			console.log(res.data.page)
 			this.searchData = res.data.page
             // for(var i=0; i<this.searchData.list.length; i++){
@@ -204,8 +210,15 @@ export default {
 			
         })
 	},
-	threeLeveCli(id,value){
-		console.log(value)
+	threeLeveCli(id,value,data,index){
+		console.log(data)
+		console.log(index)
+		let arrIndex = this.spanIndex.indexOf(value);
+        if(arrIndex>-1){
+            this.spanIndex.splice(arrIndex,1);
+        }else{
+            this.spanIndex.push(value);
+        }
 		this.selectList.nowElement = id
 		this.selectList.threeLeveArr = value
 	},
@@ -227,7 +240,7 @@ export default {
     handleCurrentChange(val) {
 	console.log(`当前页: ${val}`)
 	console.log(this.searchData)
-	this.threeLeveCli(this.selectList.nowElement,this.selectList.threeLeveArr)
+	this.threeLeveCli(this.selectList.nowElement,this.selectList.threeLeveArr,this.selectList)
     },
     init() {
     }
@@ -408,7 +421,7 @@ export default {
 		cursor: pointer;
 		height: 40px;
 		border: 1px solid rgba(221,221,221,1);
-		width: 190px;
+		width: 228px;
 		text-align: center;
 		line-height: 40px;
 		color: #33B0B5;

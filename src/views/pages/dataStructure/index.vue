@@ -271,7 +271,7 @@ export default {
                 limit:this.tableData.pageSize,
                 stKey:this.formInline.stKey,
                 stType:this.formInline.stType,
-                classification:this.formInline.stClassification,
+                stClassification :this.formInline.stClassification,
                 }).then(res=>{
                 this.tableData = res.data.page
             })

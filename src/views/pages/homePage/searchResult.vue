@@ -1,5 +1,6 @@
 <template>
     <div style="padding-bottom:60px;">
+        <a id="top" class="topA"></a>
     <div class="wrap">
         <div style="margin-top:12px;">
             <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -38,15 +39,15 @@
         </div>
         <div style="overflow:hidden" >
             <div class="fl crystalImg">
-                <img @click="iframeBig()" class="fangda" src="../../../assets/images/fangdafff.png" alt="">
-                <iframe id="iframe" class="iframeStyle" :src='base.abbr+"?dataParam="+cifNameString'></iframe>
-                <img class="xiazai" src="../../../assets/images/downicon.png" alt="" @click="downCif()">
+                <img v-if="cifNameString" @click="iframeBig()" class="fangda" src="../../../assets/images/fangdafff.png" alt="">
+                <iframe v-if="cifNameString" id="iframe" class="iframeStyle" :src='base.abbr+"?dataParam="+cifNameString'></iframe>
+                <img v-if="cifNameString" class="xiazai" src="../../../assets/images/downicon.png" alt="" @click="downCif()">
             </div>
             <div class="fl crystalParameter">
-                <div class="parameterTit">品格参数</div>
+                <div class="parameterTit">晶格参数</div>
                 <div class="tableBorer">
                     <el-row type="flex" class="row-bg">
-                        <el-col :span="24">
+                        <el-col :span="24" v-if="pageDataJson[7][27]">
                             <el-row>
                                 <el-col :span="12" class="parameterBox bgColor">a(Å)</el-col>
                                 <el-col :span="12" class="parameterBox">
@@ -66,7 +67,7 @@
                                 </el-col>
                             </el-row>
                         </el-col>
-                        <el-col :span="24">
+                        <el-col :span="24" v-if="pageDataJson[7][28]">
                             <el-row>
                                 <el-col :span="12" class="parameterBox bgColor">α (°)</el-col>
                                 <el-col :span="12" class="parameterBox">
@@ -116,7 +117,7 @@
             </div>
         </div>
     </div>
-    <template v-for="(data2,index3) in pageData">
+    <!-- <template v-for="(data2,index3) in pageData">
         <template v-if="data2.classId==29">
             <div class="wrap" :key="index3+'h'">
                 <div class="subfield" style="margin-top:42px">
@@ -125,21 +126,16 @@
                 </div>
                 <div class="erpTit" v-if="data2.keyParentList.length">
                     <div v-for="(item,index4) in data2.keyParentList" :key="index4+'i'" class="fl parameterTit" :style="index4==0?'border-right:1px solid #fff':''">{{item.dataKeyName}}</div>
-                    <!-- <div class="fl parameterTit">电子能态密度</div> -->
                 </div>
                 <div class="erpBigBox" v-if="data2.keyParentList.length">
                     <div class="fl" v-for="(item,index5) in data2.keyParentList" :key="index5+'j'" :style="index5==0?'border-right:1px solid #ddd;width:50%':'width:50%'">
                         <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                         <img style="width:80%;height:90%" class="spareImg" :src="item.dataValue?base.sq+item.dataValue:'../../../assets/images/take.png'" alt="">
                     </div>
-                    <!-- <div class="fl" style="width:50%">
-                        <img class="fangda" src="../../../assets/images/fangda000.png" alt="">
-                        <img src="../../../assets/images/nomore.png" alt="">
-                    </div> -->
                 </div>
             </div>
         </template>
-    </template>
+    </template> -->
 
 
    
@@ -200,7 +196,7 @@
         <div class="hechengBigBox borderTL" :style="pageDataJson[10].length>10?'height: auto;':''">
             <div v-if="pageDataJson[10].length>3" @click="classId12=!classId12" class="downIcon"><img :style="!classId12?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
             <div v-for="(item, indexz) in pageDataJson[10]" :key="indexz+'y'">
-                <div class="hechengRowBox" v-if="(classId12?indexz<3:true)&&item.id!=6">
+                <div class="hechengRowBox" v-if="(classId12?indexz<3:true)&&item.id!=103&&item.id!=104">
                     <span>{{item.stKey}}</span>
                     <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.value}}</div>
                 </div>
@@ -234,7 +230,7 @@
         </div>
     </div>
 
-    <template v-for="(data5,index9) in pageData">
+    <!-- <template v-for="(data5,index9) in pageData">
         <template v-if="data5.classId==9">
             <div class="wrap" :key="index9+'p'">
                 <div class="subfield" style="margin-top:42px">
@@ -259,12 +255,6 @@
                             </div>
                     </template>
                 </template>
-
-                <!-- <div class="erpTit">
-                    <div class="fl parameterTit" style="border-right:1px solid #fff;width:33%">XRD图谱</div>
-                    <div class="fl parameterTit" style="border-right:1px solid #fff;width:33%">拉曼吸收峰</div>
-                    <div class="fl parameterTit" style="width:33%">红外吸收峰</div>
-                </div> -->
                 <div class="erpBigBox" style="height:auto">
                     <div class="erpBigBoxFlex">
                         <template v-for="item in data5.keyParentList">
@@ -297,7 +287,6 @@
                                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.dateTips}}</div>
                                         </li>
                                         <li v-for="(itm, indexr) in 5-item.dataValue.length" :key="indexr+'w1'">
-                                            <!-- <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt=""> -->
                                             <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                                         </li>
                                     </ul>
@@ -308,7 +297,7 @@
                 </template>
             </div>
         </template>
-    </template>
+    </template> -->
 
     
     <div class="wrap" v-if="pageDataJson[9]">
@@ -450,7 +439,7 @@
             <div v-if="pageDataJson[14].length>3" @click="classId14=!classId14" class="downIcon"><img :style="!classId14?'transform: rotate(180deg);':''" src="../../../assets/images/downPull.png" alt=""></div>
             <div v-for="(item, indexz) in pageDataJson[14]" :key="indexz+'y'">
                 <div class="hechengRowBox" v-if="item.id!==23&&(classId14?indexz<3:true)">
-                    <span>{{item.stKey}}</span>
+                    <span v-html="item.stKey">{{item.stKey}}</span>
                     <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.value}}</div>
                 </div>
             </div>
@@ -522,6 +511,9 @@
                 <iframe class="iframeStyle2" id="iframe" :src='base.abbr+"?dataParam="+cifNameString'></iframe>
             </div>
         </el-dialog>
+        <a href="#top" class="goTop">
+            <img src="../../../assets/images/top.png" style="height:100%;width:auto;" alt="">
+        </a>
     </div>
 </template>
 
@@ -599,9 +591,9 @@ export default {
                {id:42,stKey:"泊松比V<sub>v</sub>",value:'',tips:''},
                {id:43,stKey:"泊松比V<sub>R</sub>",value:'',tips:''},
                {id:44,stKey:"泊松比V<sub>v</sub>",value:'',tips:''},
-               {id:45,stKey:"各向异性A<sub>u</sub>",value:'',tips:''},
-               {id:46,stKey:"各向异性A<sub>b</sub>",value:'',tips:''},
-               {id:47,stKey:"各向异性A<sub>g</sub>",value:'',tips:''},
+               {id:45,stKey:"各向异性A<sub>U</sub>",value:'',tips:''},
+               {id:46,stKey:"各向异性A<sub>B</sub>",value:'',tips:''},
+               {id:47,stKey:"各向异性A<sub>G</sub>",value:'',tips:''},
                {id:74,stKey:"热膨胀系数(10<sup>-6</sup>K<sup>-1</sup>)",value:'',tips:''},
                {id:85,stKey:"热导率(Wm<sup>-1</sup>K<sup>-1</sup>)",value:'',tips:''},
                {id:86,stKey:"德拜温度(K)",value:''}
@@ -619,7 +611,7 @@ export default {
                 {isShow:true,id: 59, stKey: "复合材料致密度(%)", value:'',tips:''},
                 {isShow:true,id: 60, stKey: "复合材料孔隙率(%)", value:'',tips:''},
                 {isShow:true,id: 80, stKey: "界面相类型", value:'',tips:''},
-                {isShow:true,id: 88, stKey: "复合材料密度（g/cm3）", value:'',tips:''},
+                {isShow:true,id: 88, stKey: "复合材料密度（g/cm³)", value:'',tips:''},
                 {isShow:true,id: 89, stKey: "界面相成分-元素-xps", value:'',tips:''},
                 {isShow:true,id: 90, stKey: "界面相成分-含量-xps", value:'',tips:''},
                 {isShow:true,id: 91, stKey: "界面相成分-元素-AES", value:'',tips:''},
@@ -645,7 +637,7 @@ export default {
                 {id: 99,stKey: "弯曲强度（MPa）", value:'',tips:''},
                 {id: 100,stKey: "拉伸强度（MPa）", value:'',tips:''},
                 {id: 101,stKey: "剪切强度（MPa）", value:'',tips:''},
-                {id: 102,stKey: "断裂韧性（MPam1/2）", value:'',tips:''},
+                {id: 102,stKey: "断裂韧性（MPam<sup>½</sup>）", value:'',tips:''},
             ],
             yanghua:[
                 {id: 24,stKey: "氧化处理温度（K）",value: ''},
@@ -676,12 +668,24 @@ export default {
         this.init()
     },
     methods: {
+        goTop(){
+            console.log('asdasd')
+            const that = this
+            let timer = setInterval(() => {
+            let ispeed = Math.floor(-that.scrollTop / 5)
+            document.documentElement.scrollTop = document.body.scrollTop = that.scrollTop + ispeed
+            if (that.scrollTop === 0) {
+                clearInterval(timer)
+            }
+            }, 16)
+        },
         iframeBig(){
             this.bigIframeBox = true
             
         },
         downCif(){
-            window.location.href = this.cifFile; 
+            console.log(this.cifFile)
+            window.location.href = this.base.sq+this.cifFile; 
         },
         reS(data){
             return data.split("").reverse().join("")
@@ -762,7 +766,9 @@ export default {
                     })
                     Object.assign(_pageData,{[x.classId]:_pageDataObj})
                 })
-                if(_pageData[7]){
+                console.log(_pageData)
+                if(Object.keys(_pageData[7]).length){
+                    console.log(_pageData[7])
                     if(_pageData[7][27]){ // 长度
                         _pageData[7][27].dataValue = _pageData[7][27].dataValue.split(',')
                     }
@@ -795,7 +801,9 @@ export default {
                         })
                     }
                 }
-                if(_pageData[8]){ // 刚柔矩阵
+                if(Object.keys(_pageData[8]).length){ // 刚柔矩阵
+                console.log(8)
+                    console.log(Object.keys(_pageData[8]).length)
                     let pageData8 = Object.values(_pageData[8])
                     for(let i=0;i<this.wulixingenng.length;i++){
                         this.wulixingenng[i].value = pageData8.filter(x=>x.dataKey==this.wulixingenng[i].id)[0].dataValue
@@ -807,12 +815,12 @@ export default {
                         
                     _pageData[8] = this.wulixingenng
                 }
-                // 
-                if(_pageData[9]){ // 复合材料结构成分
+                if(Object.keys(_pageData[9]).length){ // 复合材料结构成分
                     let pageData9 = Object.values(_pageData[9])
                     for(let i=0;i<this.fuhecailiao.length;i++){
                         let _value = pageData9.filter(x=>x.dataKey==this.fuhecailiao[i].id)
                         let _tips = pageData9.filter(x=>x.dataKey==this.fuhecailiao[i].id)
+                        console.log(_value)
                         if(_value.length){
                             this.fuhecailiao[i].value = _value[0].dataValue
                             if(this.fuhecailiao[i].id==6){
@@ -838,7 +846,7 @@ export default {
                     _pageData[9] = this.fuhecailiao
                     console.log(this.fuhecailiao)
                 }
-                if(_pageData[10]){ // 复合材料结构成分
+                if(Object.keys(_pageData[10]).length){ // 复合材料结构成分
                     let pageData9 = Object.values(_pageData[10])
                     for(let i=0;i<this.fuhecailaiozhibei.length;i++){
                         let _value = pageData9.filter(x=>x.dataKey==this.fuhecailaiozhibei[i].id)
@@ -851,8 +859,9 @@ export default {
                         }
                     }
                     _pageData[10] = this.fuhecailaiozhibei
+                    console.log(this.fuhecailaiozhibei)
                 }
-                if(_pageData[13]){ // 界面力学性能
+                if(Object.keys(_pageData[13]).length){ // 界面力学性能
                     let pageData13 = Object.values(_pageData[13])
                     for(let i=0;i<this.jiemianlixue.length;i++){
                         this.jiemianlixue[i].value = pageData13.filter(x=>x.dataKey==this.jiemianlixue[i].id)[0].dataValue
@@ -863,7 +872,7 @@ export default {
                     }
                     _pageData[13] = this.jiemianlixue
                 }
-                if(_pageData[14]){
+                if(Object.keys(_pageData[14]).length){
                     let pageData14 = Object.values(_pageData[14])
                     for(let i=0;i<this.fuhecailiaolixuexingneng.length;i++){
                         let _value = pageData14.filter(x=>x.dataKey==this.fuhecailiaolixuexingneng[i].id)
@@ -880,7 +889,7 @@ export default {
                     }
                     _pageData[14] = this.fuhecailiaolixuexingneng
                 }
-                if(_pageData[15]){
+                if(Object.keys(_pageData[15]).length){
                     let pageData15 = Object.values(_pageData[15])
                     for(let i=0;i<this.yanghua.length;i++){
                         let _value = pageData15.filter(x=>x.dataKey==this.yanghua[i].id)
@@ -897,10 +906,7 @@ export default {
                     }
                     _pageData[15] = this.yanghua
                 }
-                
                 this.pageDataJson = _pageData
-                console.log(_pageData)
-                console.log(this.pageDataJson)
             })
         },
         // processingData(data){
@@ -948,6 +954,17 @@ export default {
     }
 </style>
 <style scoped>
+    .goTop{
+        position: fixed;
+        right: 50px;
+        bottom: 50px;
+        height: 50px;
+        width: 50px
+    }
+    .topA{
+        color: #fff
+        /* position: absolute; */
+    }
     .atomSiteBox{
         height: 450px;
         overflow-y: auto;
@@ -1157,7 +1174,7 @@ export default {
     }
     .hechengBigBox span{
         display: inline-block;
-        width: 168px;
+        width: 225px;
         padding-left: 15px;
         background: #E2FCF9;
         margin-right: 14px;

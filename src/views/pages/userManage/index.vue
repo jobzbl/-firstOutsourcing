@@ -52,26 +52,28 @@
             <el-button v-if="quanxian.indexOf('4')!='-1'" @click="removeData('')"> <i class="iconfont iconshanchu"></i> 批量删除</el-button>
             <el-button @click="onDown()"> <i class="iconfont iconxiazai"></i> 批量下载</el-button>
         </div>
-        <div class="tableBox">
-            <el-table ref="multipleTable" header-row-class-name="tableHeader" :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
+        <div class="tableBox userMange">
+            <el-table ref="multipleTable"
+                header-row-class-name="tableHeader"
+                :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="username" sortable label="用户名" width="100"></el-table-column>
                 <el-table-column prop="name" sortable label="姓名" width="77"></el-table-column>
-                <el-table-column prop="company" label="单位" width="153"></el-table-column>
+                <el-table-column prop="company" sortable label="单位" width="153"></el-table-column>
                 <el-table-column prop="department" label="部门" width="84"></el-table-column>
                 <el-table-column prop="email" label="邮箱" width="177"></el-table-column>
-                <el-table-column prop="role" label="用户类型" width="111">
+                <el-table-column prop="role" sortable label="用户类型" width="111">
                     <!-- <template slot-scope="scope">
                         <span v-for="item in scope.row.role" :key="item.roleId">{{userRoleArr[item]}}</span>
                     </template> -->
                 </el-table-column>
-                <el-table-column prop="menu" label="权限" width="187">
+                <el-table-column prop="menu" sortable label="权限" width="187">
                     <!-- <template slot-scope="scope">
                         <span v-for="item in scope.row.menu" :key="item.menuId">{{userRoleArr[item]}}</span>
                     </template> -->
                 </el-table-column>
-                <el-table-column label="是否可用" width="153">
+                <el-table-column label="是否可用" prop="status" sortable width="153">
                     <template slot-scope="scope">
                         <el-switch
                             @change="statusChange(scope.row,$event)"
@@ -143,6 +145,8 @@
 </template>
 
 <script>
+import axios from '../../../request/http'; // 导入http中创建的axios实例
+import base from '../../../request/base'; // 导入接口域名列表
 import removeComponent from '../component/remove.vue' // 将子组件引入父组件中
 export default {
     data() {
@@ -224,20 +228,26 @@ export default {
                 });
                 return
             }else{
+
                 let parmas = this.nowCheckedArr.map(x=>{return x.userId})
-                this.$api.onDown(parmas).then(res=>{
-                    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});  // res就是接口返回的文件流了
-                    let objectUrl = URL.createObjectURL(blob); 
-                    window.location.href = objectUrl; 
-                    // const link = document.createElement('a')
-                    // const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
-                    // link.style.display = 'none'
-                    // link.href = URL.createObjectURL(blob)
-                    // link.setAttribute('download', `${name}.xlsx`)
-                    // document.body.appendChild(link)
-                    // link.click()
-                    // document.body.removeChild(link)
+                axios.post(`${base.sq}/sys/user/export`,parmas,{responseType: 'blob'}).then(res=>{
+                    // let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});  // res就是接口返回的文件流了
+                    // let objectUrl = URL.createObjectURL(blob); 
+                    // window.location.href = objectUrl; 
+                    const link = document.createElement('a')
+                    const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+                    link.style.display = 'none'
+                    link.href = URL.createObjectURL(blob)
+                    link.setAttribute('download', 'user.xls')
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link)
                 })
+                // this.$api.onDown(parmas,{responseType: 'arraybuffer'}).then(res=>{
+                //     let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});  // res就是接口返回的文件流了
+                //     let objectUrl = URL.createObjectURL(blob); 
+                //     window.location.href = objectUrl; 
+                // })
             }
             
         },

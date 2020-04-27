@@ -3,22 +3,22 @@
         <div style="margin-top:12px;">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item class="elsePage" :to="{ path: '/dataManage' }"> <i style="color:#33B0B5" class="iconfont iconiconfontzhizuobiaozhun023101"></i> 数据管理</el-breadcrumb-item>
-                <el-breadcrumb-item class="nowPage">上传文件</el-breadcrumb-item>
+                <el-breadcrumb-item class="nowPage">{{type=='edit'?'数据编辑':type=='add'?'上传文件':'数据查看'}}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="buttonRow ">
+        <div class="buttonRow " v-if="type!='check'">
             <el-upload
             class="upload-demo buttonRowUpDataBox"
             action="0"
             :before-upload="updata"
             :file-list="fileList">
-            <el-button @click="shangchuanB()" type="primary"><i class="iconfont iconshangchuan"></i> 批量上传</el-button>
+            <el-button @click="shangchuanB()" type="primary"><i class="iconfont iconshangchuan"></i>{{type=='edit'?'上传更新数据':'批量上传'}}</el-button>
             </el-upload>
             <!-- <el-button @click="updata()"> <i class="iconfont iconshangchuan"></i> 批量上传</el-button> -->
         </div>
         <el-form style="margin-top:20px;" ref="updataTab" :rules="rules" :inline="true" :model="formInline" class="demo-form-inline" label-position="right" label-width="auto">
             <el-row>
-                <el-col :span="9">
+                <el-col :span="8">
                     <el-form-item label="界面相主成分" prop="dataContail">
                         <el-select v-model="formInline.dataContail" style="width:100%" placeholder="请选择界面相主成分">
                             <el-option label="BN" value="BN"></el-option>
@@ -32,7 +32,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="7">
                     <el-form-item label="数据来源" class="marginZero" prop="dataSource">
                         <el-select v-model="formInline.dataSource" style="width:100%" placeholder="请选择数据来源">
                             <el-option v-for="item in dataSourceObj" :key="item.id" :label="item.paramValue" :value="item.id"></el-option>
@@ -41,6 +41,34 @@
                 </el-col>
                 <el-col :span="9">
                     <el-input v-model.trim="formInline.dataDescription " style="width:100%" placeholder="请填写数据描述"></el-input>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="数据获得方法" prop="dataContail">
+                        <el-select v-model="formInline[106]" style="width:100%" placeholder="请选择数据获得方法">
+                            <el-option label="计算" value="计算"></el-option>
+                            <el-option label="实验" value="实验"></el-option>
+                            <el-option label="计算和实验" value="计算和实验"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="数据主要内容" class="marginZero" prop="dataSource">
+                        <el-select v-model="formInline[107]" style="width:100%" placeholder="请选择数据主要内容">
+                            <el-option label="结构" value="结构"></el-option>
+                            <el-option label="物理性能" value="物理性能"></el-option>
+                            <el-option label="力学性能" value="力学性能"></el-option>
+                            <el-option label="抗腐蚀性能" value="抗腐蚀性能"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="数据来源时间" class="marginZero" prop="dataSource">
+                        <el-select v-model="formInline[108]" style="width:100%" placeholder="请选择数据主要内容">
+                            <el-option v-for="(item,index) in 23" :key="index" :label="1997+item" :value="1997+item"></el-option>
+                        </el-select>
+                    </el-form-item>
                 </el-col>
             </el-row>
         </el-form>
@@ -85,7 +113,7 @@
                         刚度矩阵/柔度矩阵对应21个数，按c11, c12, c13, c14, c15, c16, c22, c23, c24, c25, c26, c33, c34, c35, c36, c44, c45, c46, c55, c56, c66排列，数值之间用逗号隔开。
                     </el-col>
                     <el-col :span="24" v-if="item.dataKey==89||item.dataKey==90||item.dataKey==91||item.dataKey==92||item.dataKey==93||item.dataKey==94||item.dataKey==7||item.dataKey==8" class="tipdiv">
-                        请填写所有的元素，包含掺杂元素或微量的杂质元素。元素之间逗号隔开，如“B, N, Si”。含量用比值代表，用分号隔开，如“1：1：0.1”。如果没有xps, AES和EELS等化学分析结果，只填写不带分析方法的名义值。如果有相应的分析结果，填写到对应的xps, AES, EELS行。名义含量填写最可信的分析值。所有类型的元素个数保持一致，元素含量可以为0
+                        请填写所有的元素，包含掺杂元素或微量的杂质元素。元素之间逗号隔开，如“B,N,Si”。含量用比值代表，用分号隔开，如“1:1:0.1”。如果没有xps, AES和EELS等化学分析结果，只填写不带分析方法的名义值。如果有相应的分析结果，填写到对应的xps, AES, EELS行。名义含量填写最可信的分析值。所有类型的元素个数保持一致，元素含量可以为0
                     </el-col>
                     <el-col :span="11" v-if="subArr[index].dataType==4||subArr[index].dataType==3"  style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex">
                         <div class="inputBoxDiv" style="width:88%">
@@ -110,10 +138,10 @@
                     </el-col>
                 </el-row>
         </div>
-        <div class="pushButton" @click="pushArr()">
+        <div class="pushButton" @click="pushArr()" v-if="type!='check'">
             <i class="iconfont iconjiahao"></i>
         </div>
-        <div style="margin-top:55px;text-align:center;margin-bottom:90px;">
+        <div style="margin-top:55px;text-align:center;margin-bottom:90px;" v-if="type!='check'">
             <el-button class="saveUpdata" type="primary" @click="saveUpdata()">保存</el-button>
         </div>
     </div>
@@ -130,6 +158,9 @@ export default {
                 dataContail:'',
                 dataSource:'',
                 dataDescription:'',
+                106:'',
+                107:'',
+                108:'',
                 itemList:[
                     {
                         dataKey:'',
@@ -139,8 +170,10 @@ export default {
                     },
                 ],
             },
+            dataContailId:'',
+            dataSourceId:'',
             subArr:[
-                {classify2:null, dataType:'',dataFile:[],keywordArr:[]}
+                {classify2:null, dataType:'',dataFile:[],keywordArr:[],dataId:''}
             ],
             dataClassifyArr:[], // 数据分类
             dataTypeArr:{}, // 数据类型
@@ -162,21 +195,185 @@ export default {
                 ],
             },
             nowIndex:0,
-            // elementArr:[]
+            type:this.$route.query.type,
+            nowId:this.$route.query.id||''
         }
     },
     created(){
         this.getSelectArr()
+        this.init()
     },
     methods:{
+        init(){
+            console.log(this.type)
+            console.log(this.nowId)
+            if(this.type=='edit'||this.type=='check'){
+                this.getListdata()
+            }
+        },
+        getListdata(){
+            this.$api.getDataOne(this.nowId).then(res=>{ 
+                this.formInline.dataContail = res.data.data.dataContail
+                    this.formInline.dataDescription = res.data.data.dataDescription
+                    this.formInline.itemList = []
+                    this.subArr = []
+                    for(var i=0;i<res.data.data.list.length;i++){
+                        if(res.data.data.list[i].dataKey==2){
+                            this.formInline.dataSource = res.data.data.list[i].dataValue*1
+                        }
+                        if(res.data.data.list[i].dataKey==106){
+                            this.formInline[106] = res.data.data.list[i].dataValue
+                        }
+                        if(res.data.data.list[i].dataKey==107){
+                            this.formInline[107] = res.data.data.list[i].dataValue
+                        }
+                        if(res.data.data.list[i].dataKey==108){
+                            this.formInline[108] = res.data.data.list[i].dataValue
+                        }
+                        if(res.data.data.list[i].dataKey!=2&&res.data.data.list[i].dataKey!=1
+                        &&res.data.data.list[i].dataKey!=108&&res.data.data.list[i].dataKey!=107
+                        &&res.data.data.list[i].dataKey!=106){
+                            this.subArr.push({
+                                classify2:parseInt(res.data.data.list[i].dataClass),
+                                dataType:parseInt(res.data.data.list[i].dataKey),
+                                dataFile:[],
+                                keywordArr:[]
+                            })
+                            console.log(this.subArr)
+                            this.dataSel(res.data.data.list[i].dataClass,this.subArr.length-1,res.data.data.list[i].dataKey)
+                            this.formInline.itemList.push({
+                                dataKey :parseInt(res.data.data.list[i].dataKey)||'',
+                                dataValue : res.data.data.list[i].dataValue||'',
+                                dataTips : res.data.data.list[i].dataTips||'',
+                                dataFile : res.data.data.list[i].dataFile||[],
+                            })
+                        }
+
+                    }
+            })
+        },
+        editFun(){
+            let dataSource = this.formInline.dataSource
+            this.formInline.dataId = this.nowId
+            if(this.formInline.dataContail==''||!this.formInline.dataContail){
+                this.$message({
+                    message: '请选择界面相主成分',
+                    type: 'warning'
+                });
+                return false
+            }else if(this.formInline.dataSource==''||!this.formInline.dataSource){
+                this.$message({
+                    message: '请选择数据来源',
+                    type: 'warning'
+                });
+                return false
+            }else if(this.formInline[106]==''||!this.formInline[106]){
+                this.$message({
+                    message: '请选择数据获得方法',
+                    type: 'warning'
+                });
+                return false
+            }else if(this.formInline[107]==''||!this.formInline[107]){
+                this.$message({
+                    message: '请选择数据主要内容',
+                    type: 'warning'
+                });
+                return false
+            }else if(this.formInline[108]==''||!this.formInline[108]){
+                this.$message({
+                    message: '请选择数据来源时间',
+                    type: 'warning'
+                });
+                return false
+            }
+            let _itemList3 = this.formInline.itemList.filter(x=>x.dataKey=='31'||x.dataKey=='32')||[]
+            console.log(_itemList3[0].dataValue)
+            if(_itemList3.length>0){
+                let nowData = _itemList3[0].dataValue.split(',')
+                if(nowData.length!=21){
+                    this.$message({
+                        message: '刚度矩阵/柔度矩阵数据输入错误',
+                        type: 'warning'
+                    });
+                    return false
+                }
+                for(let i=0;i<nowData.length;i++){
+                    if(typeof(nowData[i])!='number'){
+                        this.$message({
+                            message: '刚度矩阵/柔度矩阵数据输入错误',
+                            type: 'warning'
+                        });
+                        return false 
+                    }
+                }
+            }
+            let _itemList4 = this.formInline.itemList.filter( x=>x.dataKey=='7'||x.dataKey=='8'||
+                x.dataKey=='89'||x.dataKey=='90'
+                ||x.dataKey=='91'||x.dataKey=='92'
+                ||x.dataKey=='93'||x.dataKey=='94'
+                )
+            // console.log()
+            if(_itemList4.length>0){
+                for(let i=0;i<_itemList4.length;i++){
+                    if(_itemList4[i].dataValue.indexOf('，')>0||_itemList4[i].dataValue.indexOf('：')>0){
+                        this.$message({
+                            message: '复合材料结构和成分数据输入错误',
+                            type: 'warning'
+                        });
+                        return false 
+                    }
+                }
+            }
+
+            let formInline = JSON.parse(JSON.stringify(this.formInline));
+            formInline.itemList.unshift({
+                dataKey:2,
+                dataValue:dataSource.toString(),
+                dataTips:''
+            })
+            formInline.itemList.unshift({
+                dataKey:106,
+                dataValue:this.formInline[106],
+                dataTips:''
+            })
+            formInline.itemList.unshift({
+                dataKey:107,
+                dataValue:this.formInline[107],
+                dataTips:''
+            })
+            formInline.itemList.unshift({
+                dataKey:108,
+                dataValue:this.formInline[108],
+                dataTips:''
+            })
+            delete formInline.dataSource
+            delete formInline[106]
+            delete formInline[107]
+            delete formInline[108]
+            this.$api.eidtSave(formInline).then(res=>{ // 数据来源
+                if(res.data.code==0){
+                    this.$message({
+                        message: '保存成功',
+                        type: 'success'
+                    });
+                    // if(type=='back'){
+                    //     setTimeout(() => {
+                    //             this.$router.push('/dataManage')
+                    //     }, 1000);
+                    // } 
+                    // this.getListdata()
+                }else{
+                    this.$message({
+                        message: res.data.msg,
+                        type: 'warning'
+                    });
+                }
+            })
+        },
         dataElementArr(){
-            // this.elementArr = this.formInline.dataElement.split(',')
         },
         removeFile(index,i){
-            // this.$api.fileDelete(this.subArr[index].dataFile[i]).then(res=>{
-            //     console.log(res)
-                this.formInline.itemList[index].dataFile.splice(i,1)
-            // })
+           this.formInline.itemList[index].dataFile.splice(i,1)
         },
         beforeUpload(file){
             // 61 96
@@ -272,14 +469,25 @@ export default {
                         if(res.data.data.list[i].dataKey==2){
                             this.formInline.dataSource = res.data.data.list[i].dataValue*1
                         }
-                        if(res.data.data.list[i].dataKey!=2){
+                        if(res.data.data.list[i].dataKey==106){
+                            this.formInline[106] = res.data.data.list[i].dataValue
+                        }
+                        if(res.data.data.list[i].dataKey==107){
+                            this.formInline[107] = res.data.data.list[i].dataValue
+                        }
+                        if(res.data.data.list[i].dataKey==108){
+                            this.formInline[108] = res.data.data.list[i].dataValue
+                        }
+                        if(res.data.data.list[i].dataKey!=1&&res.data.data.list[i].dataKey!=2&&res.data.data.list[i].dataKey!=108
+                        &&res.data.data.list[i].dataKey!=107
+                        &&res.data.data.list[i].dataKey!=106){
                             this.subArr.push({
                                 classify2:parseInt(res.data.data.list[i].dataClass),
                                 dataType:parseInt(res.data.data.list[i].dataKey),
                                 dataFile:[],
-                                keywordArr:[]  
+                                keywordArr:[]
                             })
-                            this.dataSel(res.data.data.list[i].dataTips,i-1,res.data.data.list[i].dataKey)
+                            this.dataSel(res.data.data.list[i].dataClass,this.subArr.length-1,res.data.data.list[i].dataKey)
                             this.formInline.itemList.push({
                                 dataKey :parseInt(res.data.data.list[i].dataKey)||'',
                                 dataValue : res.data.data.list[i].dataValue||'',
@@ -309,6 +517,10 @@ export default {
             this.subArr.push({classify2:null,dataType:'',dataFile:[],keywordArr:[]})
         },
         saveUpdata(){
+            if(this.type=='edit'){
+                this.editFun()
+                return
+            }
             let dataSource = this.formInline.dataSource
             if(this.formInline.dataContail==''||!this.formInline.dataContail){
                 this.$message({
@@ -322,80 +534,76 @@ export default {
                     type: 'warning'
                 });
                 return false
+            }else if(this.formInline[106]==''||!this.formInline[106]){
+                this.$message({
+                    message: '请选择数据获得方法',
+                    type: 'warning'
+                });
+                return false
+            }else if(this.formInline[107]==''||!this.formInline[107]){
+                this.$message({
+                    message: '请选择数据主要内容',
+                    type: 'warning'
+                });
+                return false
+            }else if(this.formInline[108]==''||!this.formInline[108]){
+                this.$message({
+                    message: '请选择数据来源时间',
+                    type: 'warning'
+                });
+                return false
             }
-            // this.$refs[formName].validate((valid) => {
-            //     if (!valid) {
-            //         return false;
-            //     }
-            // });
             for(let i=0;i<this.formInline.itemList.length;i++){
                 if(this.formInline.itemList[i].dataFile&&this.formInline.itemList[i].dataFile.length){
                     this.formInline.itemList[i].dataValue = this.formInline.itemList[i].dataFile.toString()
                 }
                 delete this.formInline.itemList[i].dataFile
             }
-            console.log( this.formInline.itemList)
-            let _itemList = this.formInline.itemList.filter(x=>x.dataKey==''||!x.dataKey)||[]
-            // let _itemValue = this.formInline.itemList.filter(x=>x.dataValue==''||!x.dataValue)||[]
-            console.log(_itemList)
-            if(_itemList.length>0){
-                this.$message({
-                    message: '请选择关键词',
-                    type: 'warning'
-                });
-                return false
-            }
-            // if(_itemValue.length>0){
-            //     this.$message({
-            //         message: '请输入数据值',
-            //         type: 'warning'
-            //     });
-            //     return false
-            // }
-
+            this.formInline.itemList = this.formInline.itemList.filter(x=>x.dataKey!='')
+            console.log(this.formInline.itemList)
             let _itemList2 = this.formInline.itemList.filter(x=>x.dataKey=='27'||x.dataKey=='28')||[]
             // console.log()
-            if(_itemList2.length>0){
-                let nowData = _itemList2[0].dataValue.split(',')
-                if(nowData.length!=3){
-                    this.$message({
-                        message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
-                        type: 'warning'
-                    });
-                    return false
-                }
-                for(let i=0;i<nowData.length;i++){
-                    if(typeof(nowData[i]*1)!='number'){
+                if(_itemList2.length>0&&_itemList2[0].dataValue!=''){
+                    let nowData = _itemList2[0].dataValue.split(',')
+                    if(nowData.length!=3){
                         this.$message({
                             message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
                             type: 'warning'
                         });
-                        return false 
+                        return false
+                    }
+                    for(let i=0;i<nowData.length;i++){
+                        if(typeof(nowData[i]*1)!='number'){
+                            this.$message({
+                                message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
+                                type: 'warning'
+                            });
+                            return false 
+                        }
                     }
                 }
-            }
+
 
             let _itemList3 = this.formInline.itemList.filter(x=>x.dataKey=='31'||x.dataKey=='32')||[]
-            // console.log()
-            if(_itemList3.length>0){
-                let nowData = _itemList3[0].dataValue.split(',')
-                if(nowData.length!=21){
-                    this.$message({
-                        message: '刚度矩阵/柔度矩阵数据输入错误',
-                        type: 'warning'
-                    });
-                    return false
-                }
-                for(let i=0;i<nowData.length;i++){
-                    if(typeof(nowData[i])!='number'){
+                if(_itemList3.length>0&&_itemList3[0].dataValue!=''){
+                    let nowData = _itemList3[0].dataValue.split(',')
+                    if(nowData.length!=21){
                         this.$message({
                             message: '刚度矩阵/柔度矩阵数据输入错误',
                             type: 'warning'
                         });
-                        return false 
+                        return false
+                    }
+                    for(let i=0;i<nowData.length;i++){
+                        if(typeof(nowData[i])!='number'){
+                            this.$message({
+                                message: '刚度矩阵/柔度矩阵数据输入错误',
+                                type: 'warning'
+                            });
+                            return false 
+                        }
                     }
                 }
-            }
             let _itemList4 = this.formInline.itemList.filter( x=>x.dataKey=='7'||x.dataKey=='8'||
                 x.dataKey=='89'||x.dataKey=='90'
                 ||x.dataKey=='91'||x.dataKey=='92'
@@ -413,14 +621,32 @@ export default {
                     }
                 }
             }
-
-            this.formInline.itemList.unshift({
+            let formInline = JSON.parse(JSON.stringify(this.formInline));
+            formInline.itemList.unshift({
                 dataKey:2,
                 dataValue:dataSource.toString(),
                 dataTips:''
             })
-            delete this.formInline.dataSource
-            this.$api.upData(this.formInline).then(res=>{
+            formInline.itemList.unshift({
+                dataKey:106,
+                dataValue:this.formInline[106],
+                dataTips:''
+            })
+            formInline.itemList.unshift({
+                dataKey:107,
+                dataValue:this.formInline[107],
+                dataTips:''
+            })
+            formInline.itemList.unshift({
+                dataKey:108,
+                dataValue:this.formInline[108],
+                dataTips:''
+            })
+            delete formInline.dataSource
+            delete formInline[106]
+            delete formInline[107]
+            delete formInline[108]
+            this.$api.upData(formInline).then(res=>{
                 if(res.data.code==0){
                     this.$message({
                         message: '保存成功',
@@ -453,9 +679,9 @@ export default {
             })
         },
         dataSel(data2,index,dataKey){
-            console.log(data2)
-            console.log(index)
-            console.log(dataKey)
+            console.log('data2----',data2)
+            console.log('index----',index)
+            console.log('dataKey----',dataKey)
             if(dataKey==''){
                 this.subArr[index].keywordArr = []
                 this.formInline.itemList[index].dataKey=""
