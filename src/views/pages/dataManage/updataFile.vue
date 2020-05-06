@@ -64,10 +64,16 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="数据来源时间" class="marginZero" prop="dataSource">
-                        <el-select v-model="formInline[108]" style="width:100%" placeholder="请选择数据主要内容">
+                    <el-form-item label="数据来源时间" class="marginZero bitian">
+                        <el-date-picker
+                        v-model="formInline[108]"
+                        type="year"
+                        value-format='yyyy'
+                        placeholder="请选择数据来源时间">
+                        </el-date-picker>
+                        <!-- <el-select v-model="formInline[108]" style="width:100%" placeholder="请选择数据主要内容">
                             <el-option v-for="(item,index) in 23" :key="index" :label="1997+item" :value="1997+item"></el-option>
-                        </el-select>
+                        </el-select> -->
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -84,11 +90,14 @@
                             <el-option v-for="item in subArr[index].keywordArr" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                         </el-select>
                     </el-col>
-                    <el-col :span="3">
+                    <el-col :span="dataUnit[item.dataKey]?3:0">
+                        <div class="dataTypeClass" v-html='dataUnit[item.dataKey]' v-if="dataUnit[item.dataKey]" style="border:1px solid #e1e1e1">{{dataUnit[item.dataKey]}}</div>
+                    </el-col>
+                    <el-col :span="dataUnit[item.dataKey]?2:3">
                         <div class="dataTypeClass" style="border:1px solid #e1e1e1">{{dataTypeArr[subArr[index].dataType]||'数据类型'}}</div>
                     </el-col>
                     <!-- item.dataKey -->
-                    <el-col :span="11" v-if="item.dataKey==12" style="text-align:right;">
+                    <el-col :span="dataUnit[item.dataKey]?9:11" v-if="item.dataKey==12" style="text-align:right;">
                         <el-select v-model="item.dataValue" style="width:100%" placeholder="请选择数据值">
                             <el-option label="model-composite" value="model-composite"></el-option>
                             <el-option label="mini-composite" value="mini-composite"></el-option>
@@ -99,14 +108,14 @@
                             <el-option label="其他" value="其他"></el-option>
                         </el-select>
                     </el-col>
-                    <el-col :span="11" v-if="item.dataKey==80" style="text-align:right;">
+                    <el-col :span="dataUnit[item.dataKey]?9:11" v-if="item.dataKey==80" style="text-align:right;">
                         <el-select v-model="item.dataValue" style="width:100%" placeholder="请选择数据值">
                             <el-option label="单层" value="单层"></el-option>
                             <el-option label="多层" value="多层"></el-option>
                             <el-option label="其他" value="其他"></el-option>
                         </el-select>
                     </el-col>
-                    <el-col :span="11" v-if="item.dataKey!=80&&item.dataKey!=12&&subArr[index].dataType!=3&&subArr[index].dataType!=4" style="text-align:right;">
+                    <el-col :span="dataUnit[item.dataKey]?9:11" v-if="item.dataKey!=80&&item.dataKey!=12&&subArr[index].dataType!=3&&subArr[index].dataType!=4" style="text-align:right;">
                         <el-input v-model.trim="item.dataValue " style="width:100" :placeholder="placeholder[item.dataKey]||'请输入数据值'"></el-input>
                     </el-col>
                     <el-col :span="24" v-if="item.dataKey==31||item.dataKey==32" class="tipdiv">
@@ -115,7 +124,7 @@
                     <el-col :span="24" v-if="item.dataKey==89||item.dataKey==90||item.dataKey==91||item.dataKey==92||item.dataKey==93||item.dataKey==94||item.dataKey==7||item.dataKey==8" class="tipdiv">
                         请填写所有的元素，包含掺杂元素或微量的杂质元素。元素之间逗号隔开，如“B,N,Si”。含量用比值代表，用分号隔开，如“1:1:0.1”。如果没有xps, AES和EELS等化学分析结果，只填写不带分析方法的名义值。如果有相应的分析结果，填写到对应的xps, AES, EELS行。名义含量填写最可信的分析值。所有类型的元素个数保持一致，元素含量可以为0
                     </el-col>
-                    <el-col :span="11" v-if="subArr[index].dataType==4||subArr[index].dataType==3"  style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex">
+                    <el-col :span="dataUnit[item.dataKey]?9:11" v-if="subArr[index].dataType==4||subArr[index].dataType==3"  style="text-align:right;display:flex;margin-left:-12px;margin-bottom:20px;display:flex">
                         <div class="inputBoxDiv" style="width:88%">
                             <span v-if="!item.dataFile.length" class="updataTip">{{subArr[index].dataType==4?'(请上传cif格式的结构文件)':'(请上传png/jpg/jpeg格式的图片)'}}</span>
                             <span class="fangkuai" v-for="(item,i) in item.dataFile" :key="i">{{item}} <i @click="removeFile(index,i)" class="iconfont iconcuowu"></i> </span>
@@ -147,11 +156,81 @@
     </div>
 </template>
 <script>
-import base from '../../../request/base'; // 导入接口域名列表
 export default {
     name:'updata',
     data(){
         return {
+            dataUnit:{
+                31:"",
+                32:"",
+                33:"(GPa)",
+                34:"(GPa)",
+                35:"(GPa)",
+                36:"(GPa)",
+                37:"(GPa)",
+                38:"(GPa)",
+                39:"(GPa)",
+                40:"(GPa)",
+                41:"(GPa)",
+                42:"",
+                43:"",
+                44:"",
+                45:"",
+                46:"",
+                47:"",
+                74:"(10<sup>-6</sup>K<sup>-1</sup>)",
+                85:"(Wm<sup>-1</sup>K<sup>-1</sup>)",
+                86:"(K)",
+                4:"(μm)", 
+                5:"", value:'',
+                6:"", 
+                7:"", 
+                8:"", 
+                12:"", 
+                13:"", 
+                14:"", 
+                15:"", 
+                59:"(%)", 
+                60:"(%)", 
+                80:"", 
+                88:"(g/cm³)", 
+                89:"", 
+                90:"", 
+                91:"", 
+                92:"", 
+                93:"",  
+                94:"",
+                18: "(MPa)",
+                61: "",
+                95: "(N)",
+                96: "",
+                97: "(MPa)",
+                98: "(MPa)",
+                19: " (%)",
+                20: "(N)",
+                21: "(%)",
+                22: "(N)",
+                23: "",
+                82: "(MPa)",
+                99: "(MPa)",
+                100: "(MPa)",
+                101: "(MPa)",
+                102: "(MPam<sup>½</sup>)",
+                24: "(K)",
+                25: "(min)",
+                26: "(MPa)",
+                49: "",
+                63: "",
+                9: "",
+                10: "(K)",
+                11: "",
+                53: "(h)",
+                54: "(KPa)",
+                79: "",
+                87: "(K)",
+                103: "",
+                104: "",
+            },
             nowStType:'',
             fileList: [],
             formInline:{
@@ -286,27 +365,89 @@ export default {
                 });
                 return false
             }
-            let _itemList3 = this.formInline.itemList.filter(x=>x.dataKey=='31'||x.dataKey=='32')||[]
-            console.log(_itemList3[0].dataValue)
-            if(_itemList3.length>0){
-                let nowData = _itemList3[0].dataValue.split(',')
-                if(nowData.length!=21){
-                    this.$message({
-                        message: '刚度矩阵/柔度矩阵数据输入错误',
-                        type: 'warning'
-                    });
-                    return false
+            this.formInline.itemList = this.formInline.itemList.filter(x=>x.dataKey!='')
+            let _itemList2 = this.formInline.itemList.filter(x=>x.dataKey=='27'||x.dataKey=='28')||[]
+            console.log(_itemList2)
+                if(_itemList2.length>0&&_itemList2[0].dataValue!=''){
+                    let nowData1 = _itemList2[0].dataValue.split(',')
+                    if(nowData1.length!=3){
+                        this.$message({
+                            message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
+                            type: 'warning'
+                        });
+                        return false
+                    }
+                    for(let i=0;i<nowData1.length;i++){
+                        if(typeof(nowData1[i]*1)!='number'){
+                            this.$message({
+                                message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
+                                type: 'warning'
+                            });
+                            return false 
+                        }
+                    }
                 }
-                for(let i=0;i<nowData.length;i++){
-                    if(typeof(nowData[i])!='number'){
+                if(_itemList2.length>0&&_itemList2[1].dataValue!=''){
+                    let nowData2 = _itemList2[1].dataValue.split(',')
+                    if(nowData2.length!=3){
+                        this.$message({
+                            message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
+                            type: 'warning'
+                        });
+                        return false
+                    }
+                    for(let i=0;i<nowData2.length;i++){
+                        if(typeof(nowData2[i]*1)!='number'){
+                            this.$message({
+                                message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
+                                type: 'warning'
+                            });
+                            return false 
+                        }
+                    }
+                }
+
+
+            let _itemList3 = this.formInline.itemList.filter(x=>x.dataKey=='31'||x.dataKey=='32')||[]
+            console.log(_itemList3)
+                if(_itemList3.length>0&&_itemList3[0].dataValue!=''){
+                    let nowData3 = _itemList3[0].dataValue.split(',')
+                    if(nowData3.length!=21){
                         this.$message({
                             message: '刚度矩阵/柔度矩阵数据输入错误',
                             type: 'warning'
                         });
-                        return false 
+                        return false
+                    }
+                    for(let i=0;i<nowData3.length;i++){
+                        if(typeof(nowData3[i]*1)!='number'){
+                            this.$message({
+                                message: '刚度矩阵/柔度矩阵数据输入错误',
+                                type: 'warning'
+                            });
+                            return false 
+                        }
                     }
                 }
-            }
+                if(_itemList3.length>0&&_itemList3[1].dataValue!=''){
+                    let nowData4 = _itemList3[1].dataValue.split(',')
+                    if(nowData4.length!=21){
+                        this.$message({
+                            message: '刚度矩阵/柔度矩阵数据输入错误',
+                            type: 'warning'
+                        });
+                        return false
+                    }
+                    for(let i=0;i<nowData4.length;i++){
+                        if(typeof(nowData4[i]*1)!='number'){
+                            this.$message({
+                                message: '刚度矩阵/柔度矩阵数据输入错误',
+                                type: 'warning'
+                            });
+                            return false 
+                        }
+                    }
+                }
             let _itemList4 = this.formInline.itemList.filter( x=>x.dataKey=='7'||x.dataKey=='8'||
                 x.dataKey=='89'||x.dataKey=='90'
                 ||x.dataKey=='91'||x.dataKey=='92'
@@ -324,7 +465,12 @@ export default {
                     }
                 }
             }
-
+            for(let i=0;i<this.formInline.itemList.length;i++){
+                if(this.formInline.itemList[i].dataFile&&this.formInline.itemList[i].dataFile.length){
+                    this.formInline.itemList[i].dataValue = this.formInline.itemList[i].dataFile.toString()
+                }
+                delete this.formInline.itemList[i].dataFile
+            }
             let formInline = JSON.parse(JSON.stringify(this.formInline));
             formInline.itemList.unshift({
                 dataKey:2,
@@ -407,7 +553,7 @@ export default {
                     fd.append('file',file);//传文件
                     this.$api.fileUpData(fd).then(res=>{
                         if(res.data.code==0){
-                            this.formInline.itemList[this.nowIndex].dataFile.push(base.sq+res.data.url)
+                            this.formInline.itemList[this.nowIndex].dataFile.push(res.data.url)
                             this.subArr[this.nowIndex].dataFile.push(fd)
                             console.log(this.formInline)
                         }else{
@@ -430,7 +576,7 @@ export default {
                     fd.append('file',file);//传文件
                     this.$api.fileUpData(fd).then(res=>{
                         if(res.data.code==0){
-                            this.formInline.itemList[this.nowIndex].dataFile.push(base.sq+res.data.url)
+                            this.formInline.itemList[this.nowIndex].dataFile.push(res.data.url)
                             this.subArr[this.nowIndex].dataFile.push(fd)
                             console.log(this.formInline)
                         }else{
@@ -517,6 +663,7 @@ export default {
             this.subArr.push({classify2:null,dataType:'',dataFile:[],keywordArr:[]})
         },
         saveUpdata(){
+            console.log(this.formInline)
             if(this.type=='edit'){
                 this.editFun()
                 return
@@ -560,20 +707,38 @@ export default {
                 delete this.formInline.itemList[i].dataFile
             }
             this.formInline.itemList = this.formInline.itemList.filter(x=>x.dataKey!='')
-            console.log(this.formInline.itemList)
             let _itemList2 = this.formInline.itemList.filter(x=>x.dataKey=='27'||x.dataKey=='28')||[]
-            // console.log()
+            console.log(_itemList2)
                 if(_itemList2.length>0&&_itemList2[0].dataValue!=''){
-                    let nowData = _itemList2[0].dataValue.split(',')
-                    if(nowData.length!=3){
+                    let nowData1 = _itemList2[0].dataValue.split(',')
+                    if(nowData1.length!=3){
                         this.$message({
                             message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
                             type: 'warning'
                         });
                         return false
                     }
-                    for(let i=0;i<nowData.length;i++){
-                        if(typeof(nowData[i]*1)!='number'){
+                    for(let i=0;i<nowData1.length;i++){
+                        if(typeof(nowData1[i]*1)!='number'){
+                            this.$message({
+                                message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
+                                type: 'warning'
+                            });
+                            return false 
+                        }
+                    }
+                }
+                if(_itemList2.length>0&&_itemList2[1].dataValue!=''){
+                    let nowData2 = _itemList2[1].dataValue.split(',')
+                    if(nowData2.length!=3){
+                        this.$message({
+                            message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
+                            type: 'warning'
+                        });
+                        return false
+                    }
+                    for(let i=0;i<nowData2.length;i++){
+                        if(typeof(nowData2[i]*1)!='number'){
                             this.$message({
                                 message: '晶格参数长度(Å)/晶格参数角度（°）数据输入错误',
                                 type: 'warning'
@@ -585,17 +750,37 @@ export default {
 
 
             let _itemList3 = this.formInline.itemList.filter(x=>x.dataKey=='31'||x.dataKey=='32')||[]
+            console.log(_itemList3)
                 if(_itemList3.length>0&&_itemList3[0].dataValue!=''){
-                    let nowData = _itemList3[0].dataValue.split(',')
-                    if(nowData.length!=21){
+                    let nowData3 = _itemList3[0].dataValue.split(',')
+                    if(nowData3.length!=21){
                         this.$message({
                             message: '刚度矩阵/柔度矩阵数据输入错误',
                             type: 'warning'
                         });
                         return false
                     }
-                    for(let i=0;i<nowData.length;i++){
-                        if(typeof(nowData[i])!='number'){
+                    for(let i=0;i<nowData3.length;i++){
+                        if(typeof(nowData3[i]*1)!='number'){
+                            this.$message({
+                                message: '刚度矩阵/柔度矩阵数据输入错误',
+                                type: 'warning'
+                            });
+                            return false 
+                        }
+                    }
+                }
+                if(_itemList3.length>0&&_itemList3[1].dataValue!=''){
+                    let nowData4 = _itemList3[1].dataValue.split(',')
+                    if(nowData4.length!=21){
+                        this.$message({
+                            message: '刚度矩阵/柔度矩阵数据输入错误',
+                            type: 'warning'
+                        });
+                        return false
+                    }
+                    for(let i=0;i<nowData4.length;i++){
+                        if(typeof(nowData4[i]*1)!='number'){
                             this.$message({
                                 message: '刚度矩阵/柔度矩阵数据输入错误',
                                 type: 'warning'
@@ -761,6 +946,13 @@ export default {
     .marginZero{
         .el-form-item__label-wrap{
             margin-left: 0!important;
+        }
+    }
+    .bitian {
+        .el-form-item__label::before{
+            content: '*';
+            color: #F56C6C;
+            margin-right: 4px;
         }
     }
 </style>

@@ -294,9 +294,10 @@ export default {
         handleSelectionChange(){},
         onSubmit(){},
         handleCurrentChange() {
-            this.formInline.stKey=''
-            this.formInline.stType=''
-            this.formInline.stClassification=''
+            // this.formInline.stKey=''
+            // this.formInline.stType=''
+            // this.formInline.stClassification=''
+            console.log(this.formInline)
             this.getListdata()
         },
         saveKey(formName){

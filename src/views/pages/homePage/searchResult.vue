@@ -18,6 +18,8 @@
             </div>
             <div class="fl" style="margin-left:5px" v-if="searchKeyWord!=0">
                 <span>数据来源：</span>
+                <!-- <span>{{dataSourceObj}}，</span>
+                <span>{{dataValue}}，</span> -->
                 <span>{{dataSourceObj[dataValue]}}，</span>
             </div>
             <div v-if="searchKeyWord==0">
@@ -559,6 +561,7 @@ export default {
             ],
             searchKeyWord:this.$route.query.id,
             dataPid:this.$route.query.dataPid,
+            nowPagetype:this.$route.query.type,
             paramLenght:{dataChildList:[]},
             paramAngle:{dataChildList:[]},
             paramPositionBArr:[],
@@ -570,7 +573,7 @@ export default {
             dataValue:this.$route.query.dataValue,
             content:'',
             element:'',
-            dataSourceObj:localStorage.getItem('dataSourceObj')||{},
+            dataSourceObj:JSON.parse(localStorage.getItem('dataSourceObj')),
             threrDObj:{},
             threrDArr:[],
             threrDArrString:'',
@@ -599,7 +602,7 @@ export default {
                {id:86,stKey:"德拜温度(K)",value:''}
             ],
             fuhecailiao:[ // 复合材料
-                {isShow:true,id: 4, stKey: "界面相厚度（μm）", value:''},
+                {isShow:true,id: 4, stKey: "界面相厚度(μm)", value:''},
                 {isShow:true,id: 5, stKey: "界面相形貌", value:'',tips:''},
                 {isShow:true,id: 6, stKey: "界面相形貌图", value:'',tips:''},
                 {isShow:true,id: 7, stKey: "界面相成分-元素", value:'',tips:''},
@@ -611,7 +614,7 @@ export default {
                 {isShow:true,id: 59, stKey: "复合材料致密度(%)", value:'',tips:''},
                 {isShow:true,id: 60, stKey: "复合材料孔隙率(%)", value:'',tips:''},
                 {isShow:true,id: 80, stKey: "界面相类型", value:'',tips:''},
-                {isShow:true,id: 88, stKey: "复合材料密度（g/cm³)", value:'',tips:''},
+                {isShow:true,id: 88, stKey: "复合材料密度(g/cm³)", value:'',tips:''},
                 {isShow:true,id: 89, stKey: "界面相成分-元素-xps", value:'',tips:''},
                 {isShow:true,id: 90, stKey: "界面相成分-含量-xps", value:'',tips:''},
                 {isShow:true,id: 91, stKey: "界面相成分-元素-AES", value:'',tips:''},
@@ -622,38 +625,38 @@ export default {
             jiemianlixue:[ // 界面力学
                 {id: 18, stKey: "界面剪切应力(MPa)", value:'',tips:''},
                 {id: 61, stKey: "纤维顶出应力-应变曲线", value:'',tips:''},
-                {id: 95, stKey: "纤维顶出最大加载应力（N）", value:'',tips:''},
+                {id: 95, stKey: "纤维顶出最大加载应力(N)", value:'',tips:''},
                 {id: 96, stKey: "纤维推回应力-应变曲线", value:'',tips:''},
-                {id: 97, stKey: "界面剪切强度（MPa）", value:'',tips:''},
-                {id: 98, stKey: "界面摩擦应力（MPa）", value:'',tips:''},
+                {id: 97, stKey: "界面剪切强度(MPa)", value:'',tips:''},
+                {id: 98, stKey: "界面摩擦应力(MPa)", value:'',tips:''},
             ],
             fuhecailiaolixuexingneng:[ // 复合材料力学性能
                 {id: 19,stKey: "拉伸失效应变 (%)", value:'',tips:''},
-                {id: 20,stKey: "拉伸失效力（N）", value:'',tips:''},
+                {id: 20,stKey: "拉伸失效力(N)", value:'',tips:''},
                 {id: 21,stKey: "线性极限(%)", value:'',tips:''},
-                {id: 22,stKey: "线性极限力（N）", value:'',tips:''},
+                {id: 22,stKey: "线性极限力(N)", value:'',tips:''},
                 {id: 23,stKey: "应力应变曲线", value:'',tips:''},
                 {id: 82,stKey: "纤维拉伸强度(MPa)", value:'',tips:''},
-                {id: 99,stKey: "弯曲强度（MPa）", value:'',tips:''},
-                {id: 100,stKey: "拉伸强度（MPa）", value:'',tips:''},
-                {id: 101,stKey: "剪切强度（MPa）", value:'',tips:''},
-                {id: 102,stKey: "断裂韧性（MPam<sup>½</sup>）", value:'',tips:''},
+                {id: 99,stKey: "弯曲强度(MPa)", value:'',tips:''},
+                {id: 100,stKey: "拉伸强度(MPa)", value:'',tips:''},
+                {id: 101,stKey: "剪切强度(MPa)", value:'',tips:''},
+                {id: 102,stKey: "断裂韧性(MPam<sup>½</sup>)", value:'',tips:''},
             ],
             yanghua:[
-                {id: 24,stKey: "氧化处理温度（K）",value: ''},
-                {id: 25,stKey: "氧化处理时间（min）",value: ''},
-                {id: 26,stKey: "氧化后残余弯曲强度（MPa）",value:''},
+                {id: 24,stKey: "氧化处理温度(K)",value: ''},
+                {id: 25,stKey: "氧化处理时间(min)",value: ''},
+                {id: 26,stKey: "氧化后残余弯曲强度(MPa)",value:''},
                 {id: 49,stKey: "氧化处理气氛",value:''},
                 {id: 63,stKey: "氧化增重变化曲线",value:''},
             ],
             fuhecailaiozhibei:[
                 {id: 9,stKey: "界面相合成方法",value: ''},
-                {id: 10,stKey: "界面相合成热处理温度（K）",value: ''},
+                {id: 10,stKey: "界面相合成热处理温度(K)",value: ''},
                 {id: 11,stKey: "界面相合成原料",value:''},
-                {id: 53,stKey: "界面相沉积时间（h）",value:''},
-                {id: 54,stKey: "界面相沉积压强（KPa）",value:''},
+                {id: 53,stKey: "界面相沉积时间(h)",value:''},
+                {id: 54,stKey: "界面相沉积压强(KPa)",value:''},
                 {id: 79,stKey: "复合材料合成方法",value:''},
-                {id: 87,stKey: "复合材料合成温度（K）",value:''},
+                {id: 87,stKey: "复合材料合成温度(K)",value:''},
                 {id: 103,stKey: "界面相制备流程图",value:''},
                 {id: 104,stKey: "复合材料制备流程图",value:''},
             ],
@@ -749,6 +752,12 @@ export default {
             }
         },
         init(){
+            let canshu = {}
+            if(this.nowPagetype=='check'){
+                canshu = {dataPid:this.dataPid}
+            }else{
+                canshu = {dataContail:this.searchKeyWord,dataPid:this.dataPid}
+            }
             this.$api.getDataSource().then(res=>{ // 数据来源
                 var _dataSourceObj = {}
                 res.data.data.map(x=>{
@@ -756,9 +765,10 @@ export default {
                 })
                 this.dataSourceObj = _dataSourceObj
             })
-            this.$api.searchResult({dataContail:this.searchKeyWord,dataPid:this.dataPid}).then(res=>{
-                let resData = res.data.data
+            this.$api.searchResult(canshu).then(res=>{
+                let resData = res.data.data.keyParentList
                 let _pageData = {}
+                this.dataTips = res.data.data.description
                 resData.map(x=>{
                     let _pageDataObj = {}   
                     x.keyParentList.map(v=>{

@@ -162,7 +162,7 @@
                         </span>
                     </template> -->
                 </el-table-column>
-                <el-table-column prop="param7" label="界面相掺杂元素" width="130"></el-table-column>
+                <el-table-column prop="param7" label="界面相成分-元素" width="130"></el-table-column>
                 <el-table-column prop="param80" label="界面相类型" width="110"></el-table-column>
                 <el-table-column prop="param30" label="界面相材料密度 （g/cm³)" width="200"></el-table-column>
                 <!-- <el-table-column prop="classificationName" label="数据分类" width="320"></el-table-column> -->
@@ -178,7 +178,7 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column fixed="right" label="操作">
                     <template slot-scope="scope">
                         <div class="caozuoBox" style="text-align:center">
                             <el-button v-if="quanxian.indexOf(3)!=-1" type="text" style="color:#33B0B5;">
@@ -189,7 +189,7 @@
                                 删除
                             </el-button>
                             <el-button v-if="quanxian.indexOf(1)!=-1" type="text" style="color:#248AD1;">
-                                <router-link :to="{path:'/data-cen/dataManage/updata',query:{'id':scope.row.dataId,'type':'check'}}">查看</router-link>
+                                <router-link :to="{path:'/result',query:{'dataPid':scope.row.dataId,'dataValue':scope.row.param2,'type':'check','id':scope.row.ataElement?scope.row.ataElement:scope.row.dataContail}}">查看</router-link>
                                 <!-- <router-link :to="{path:'/data-cen/dataManage/dataEdit',query:{'id':scope.row.dataId,'type':'check'}}">查看</router-link> -->
                             </el-button>
                         </div>

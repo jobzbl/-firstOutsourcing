@@ -19,13 +19,13 @@
 					<div class="selectItemBigBox" :class="animationSwitch?'unfold':'close'">
 						<div class="fl stairItem itemBox">
 							<div v-for="(item, index) in stairListArr"
-							:key="index" @click="stairItemCli(item.id)"
+							:key="index" @click="stairItemCli(item.id,item.pid)"
 							:style="selectList.stairItemIsCli==item.id?'color:#33B0B5':'color:#4D4D4D'"
 							:data-type="item.id">{{item.content}}</div>
 						</div>
 						<div class="fl itemBox secondLevelBox" v-if="secondListArr&&secondListArr.length>0">
 							<div v-for="(item, index) in secondListArr" :key='index'
-								@click="selectItemCli(item.id)"
+								@click="selectItemCli(item.id,item.pid)"
 								:style="selectList.isElementList==item.id?'color:#33B0B5':'color:#4D4D4D'"
 								>{{item.content}}</div>
 						</div>
@@ -34,7 +34,7 @@
 								<div style="overflow:hidden;width:582px">
 									<span
 										v-for="(item2,index) in threeLeveArr" :key="index+'asd'"
-										@click="threeLeveCli(item2.id,item2.content,item2,index)"
+										@click="threeLeveCli(item2.id,item2.content,item2,index,item2.id,item2.pid)"
 										:style="[{'font-size':(item2.content.length>1?'20px':'24px')},
 										{'backgroundColor':(spanIndex.indexOf(item2.content)>-1?'#EF992A':'#33B0B5')}]"
 										:data-id="item2.id">{{item2.content}}</span>
@@ -43,8 +43,10 @@
 						</div>
 					</div>
 				</el-col>
-				<el-col :span="2">
-					<div @click="search()" style="cursor: pointer;width:40px;height:36px;background:#33B0B5;border-radius:4px;text-align:center;line-height:36px;">
+					<!-- v-if="selectList.dataId!=1&&selectList.dataId!=2&&selectList.dataId!=3&&selectList.dataId!=5&&selectList.dataId!=7&&selectList.dataId!=9" -->
+				<el-col :span="2" style="position:relative">
+					<div @click="search()"
+					style="position:absolute;top:0;z-index:99;cursor: pointer;width:40px;height:36px;background:#33B0B5;border-radius:4px;text-align:center;line-height:36px;">
 						<i class="iconfont iconsousuo" style="font-size:20px;color:#fff;"></i>
 					</div>
 				</el-col>
@@ -57,7 +59,7 @@
 				<div class="searchConBox">
 					<div class="searchConBoxOver">
 						<div v-for="(data, index) in searchData.list" :key="index">
-							<router-link :to="{path:'/result',query:{'id':data.dataContail,'dataTips':data.dataTips,'dataPid':data.dataPid,'dataValue':data.dataValue}}">
+							<router-link :to="{path:'/result',query:{'id':data.dataContail,'dataTips':data.dataDescription,'dataPid':data.dataPid,'dataValue':data.param2}}">
 							{{data.dataContail}}-{{data.param106}}-{{data.param107}}-{{data.param108}}
 							</router-link>
 						</div>
@@ -113,12 +115,16 @@ export default {
   name: 'layOut',
   data() {
     return {
+		beiyongid:'',
+		beiyongpid:'',
 		animationSwitch:false,
 		selectList:{
 			stairItemIsCli:'1', // 下拉框第一级点击
 			isElementList:'', // 下拉二级菜单点击
 			nowElement:'',
-			threeContent:''
+			threeContent:'',
+			dataId:1,
+			dataPid:0
 		},
 		currentPage: 1,
 		// 一级菜单
@@ -130,9 +136,9 @@ export default {
 		// 分类查询结果
 		searchData:{
 			totalCount:0,
-			pageSize:100,
+			pageSize:1,
 			totalPage:0,
-			currPage:1,
+			currPage:60,
 			list:[]
 		},
 		selectDataKey:{
@@ -149,6 +155,9 @@ export default {
 	getSelect(){
 		this.$api.stairList().then( res => {
 			this.stairListArr = res.data.data
+			this.selectList.dataId = this.stairListArr[0].id
+			this.selectList.dataPid = this.stairListArr[0].pid
+			this.spanIndex = []
 			this.getSecondList(res.data.data[0].id)
 		})
 		this.$api.getDataSource().then(res=>{ // 数据来源
@@ -161,10 +170,13 @@ export default {
         })
 	},
 	// 获取一级列表数据
-	stairItemCli(e){
+	stairItemCli(e,dataPid){
 		let newData = this.stairListArr.filter(x=>x.id == e)
 		this.selectDataKey.first = newData[0].content
 		this.secondListArr = []
+		this.selectList.dataId = e
+		this.spanIndex = []
+		this.selectList.dataPid = dataPid
 		this.getSecondList(e)
 		this.selectList.stairItemIsCli = e;
 	},
@@ -173,14 +185,18 @@ export default {
 		this.selectList.isElementList = '' // 每次选择先清空二级列表的选项
 		this.$api.secondList(id).then( res => {
 			this.secondListArr = res.data.data
-
         })
 	},
-	selectItemCli(id){ // 获取三级列表
+	selectItemCli(id,dataPid){ // 获取三级列表
 		let newData = this.secondListArr.filter(x=>x.id == id)
 		this.selectDataKey.second = newData[0].content
 		this.selectList.nowElement = ''  // 每次选择先清空三级列表的选项
 		this.selectList.isElementList = id
+		this.selectList.dataId = id
+		this.spanIndex = []
+		this.selectList.dataPid = dataPid
+		this.beiyongid = id
+		this.beiyongpid = dataPid
 		this.$api.threeLeve(id).then( res => {
 			this.threeLeveArr = res.data.data
 			for(let i=0;i<this.threeLeveArr.length;i++){
@@ -190,35 +206,42 @@ export default {
         })
 	},
 	search() { // 单机搜索
-		console.log(this.selectList)
-		this.$api.getSysDataList({page:this.searchData.currPage,limit:this.searchData.pageSize,dataContail:this.spanIndex.toString()}).then( res => {
-			console.log(res.data.page)
-			this.searchData = res.data.page
-            // for(var i=0; i<this.searchData.list.length; i++){
-			// 	if( this.searchData.list[i].dataElement ) {
-            //     this.searchData.list[i].dataElement = this.searchData.list[i].dataElement.split(',')
-			// 	}else{
-			// 		this.searchData.list[i].dataElement = []
-			// 	}
-
-			// 	if(this.searchData.list[i].dataContent) {
-			// 		this.searchData.list[i].dataContent = this.searchData.list[i].dataContent.split(':')
-			// 	}else{
-			// 		this.searchData.list[i].dataContent = []
-			// 	}
-			// }
-			
+		var params = {
+			page:this.searchData.pageSize,
+			limit:this.searchData.currPage,
+			dataContail:this.spanIndex.toString()||'',
+			dataId:this.selectList.dataId,
+			dataPid:this.selectList.dataPid
+		}
+		console.log(params)
+		if(params.dataContail==''){
+          delete params.dataContail
+		}
+		this.$api.getSysDataList(params).then( res => {
+			console.log(res)
+			if(res.data.code==500){
+				this.searchData.list=[]
+			}else{
+				this.searchData = res.data.page
+			}
         })
 	},
-	threeLeveCli(id,value,data,index){
+	threeLeveCli(id,value,data,index,dataId,dataPid){
+		console.log(dataId)
+		console.log(dataPid)
 		console.log(data)
-		console.log(index)
 		let arrIndex = this.spanIndex.indexOf(value);
         if(arrIndex>-1){
             this.spanIndex.splice(arrIndex,1);
         }else{
             this.spanIndex.push(value);
-        }
+		}
+		this.selectList.dataId = dataId
+		this.selectList.dataPid = dataPid
+		if(this.spanIndex.length==0){
+			this.selectList.dataId = this.beiyongid
+			this.selectList.dataPid = this.beiyongpid
+		}
 		this.selectList.nowElement = id
 		this.selectList.threeLeveArr = value
 	},
@@ -240,7 +263,8 @@ export default {
     handleCurrentChange(val) {
 	console.log(`当前页: ${val}`)
 	console.log(this.searchData)
-	this.threeLeveCli(this.selectList.nowElement,this.selectList.threeLeveArr,this.selectList)
+	// this.threeLeveCli(this.selectList.nowElement,this.selectList.threeLeveArr,this.selectList)
+	this.search()
     },
     init() {
     }

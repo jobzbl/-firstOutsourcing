@@ -330,6 +330,7 @@ export default {
                     });
                     this.getListData()
                 }else{
+                    this.getListData()
                     this.$message({
                         message: res.data.msg,
                         type: 'warning'
