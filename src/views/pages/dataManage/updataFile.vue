@@ -879,6 +879,7 @@ export default {
             })
         },
         dataKeyChange(e,index){
+            this.formInline.itemList[index].dataValue=''
             let _keywordArr = this.subArr[index].keywordArr.filter(x=>x.structureId==e)
             if(_keywordArr.length>0){
                 this.subArr[index].dataType = _keywordArr[0].stType
