@@ -42,7 +42,7 @@
         <div style="overflow:hidden" >
             <div class="fl crystalImg">
                 <img v-if="cifNameString" @click="iframeBig()" class="fangda" src="../../../assets/images/fangdafff.png" alt="">
-                <iframe v-if="cifNameString" id="iframe" class="iframeStyle" :src='base.abbr+"?dataParam="+cifNameString'></iframe>
+                <iframe v-if="cifNameString" id="iframe" ref="iframe" class="iframeStyle" :src='base.abbr+"?dataParam="+cifNameString'></iframe>
                 <img v-if="cifNameString" class="xiazai" src="../../../assets/images/downicon.png" alt="" @click="downCif()">
             </div>
             <div class="fl crystalParameter">
@@ -509,7 +509,7 @@
             </div>
         </el-dialog>
         <el-dialog title="" :visible.sync="bigIframeBox" :destroy-on-close='true' :show-close='false'>
-            <div style="height:700px;position:relative;overflow:hidden">
+            <div class="iframeBox">
                 <iframe class="iframeStyle2" id="iframe" :src='base.abbr+"?dataParam="+cifNameString'></iframe>
             </div>
         </el-dialog>
@@ -668,11 +668,24 @@ export default {
      }
     },
     created() {
+        console.log(this.$('#iframe').contents().find("#appdiv"))
+        // this.$refs.iframe.style.width=500+'px'
         this.init()
+        this.initDom()
     },
     methods: {
+
+        initDom(){
+            
+        window.onload = function(){
+            // var _iframe = window.document.getElementById('iframe')
+            // .contentWindow.document.getElementById('jmolApplet0_appletinfotablediv')   //get iframe下的id
+            // _iframe.style.display= "none";  //修改样式
+            // _iframe.style.width='480px'
+            // var _iframe = this.$refs.iframe
+        }
+        },
         goTop(){
-            console.log('asdasd')
             const that = this
             let timer = setInterval(() => {
             let ispeed = Math.floor(-that.scrollTop / 5)
@@ -687,7 +700,6 @@ export default {
             
         },
         downCif(){
-            console.log(this.cifFile)
             window.location.href = this.base.sq+this.cifFile; 
         },
         reS(data){
@@ -730,7 +742,6 @@ export default {
                 c51,c52,c53,c54,c55,c56
                 c61,c62,c63,c64,c65,c66
                 */
-                console.log(_gangdu)
                 matrixData[0] = _gangduValue.splice(0,6)
 
                 matrixData[1] = [this.reS(_gangdu.c12)]
@@ -748,7 +759,6 @@ export default {
                 matrixData[5] = [this.reS(_gangdu.c16),this.reS(_gangdu.c26),this.reS(_gangdu.c36),this.reS(_gangdu.c46),this.reS(_gangdu.c56)]
                 matrixData[5] = matrixData[5].concat(_gangduValue.splice(0,1))
                 return matrixData
-                // console.log('this.matrixData------',this.matrixData)
             }
         },
         init(){
@@ -778,7 +788,6 @@ export default {
                 })
                 console.log(_pageData)
                 if(Object.keys(_pageData[7]).length){
-                    console.log(_pageData[7])
                     if(_pageData[7][27]){ // 长度
                         _pageData[7][27].dataValue = _pageData[7][27].dataValue.split(',')
                     }
@@ -812,8 +821,6 @@ export default {
                     }
                 }
                 if(Object.keys(_pageData[8]).length){ // 刚柔矩阵
-                console.log(8)
-                    console.log(Object.keys(_pageData[8]).length)
                     let pageData8 = Object.values(_pageData[8])
                     for(let i=0;i<this.wulixingenng.length;i++){
                         this.wulixingenng[i].value = pageData8.filter(x=>x.dataKey==this.wulixingenng[i].id)[0].dataValue
@@ -830,7 +837,6 @@ export default {
                     for(let i=0;i<this.fuhecailiao.length;i++){
                         let _value = pageData9.filter(x=>x.dataKey==this.fuhecailiao[i].id)
                         let _tips = pageData9.filter(x=>x.dataKey==this.fuhecailiao[i].id)
-                        console.log(_value)
                         if(_value.length){
                             this.fuhecailiao[i].value = _value[0].dataValue
                             if(this.fuhecailiao[i].id==6){
@@ -997,12 +1003,21 @@ export default {
         left: -44px;
         top: -36px;
     }
+    .iframeBox{
+        height:700px;
+        position:relative;
+        overflow:hidden;
+        width:547px;
+        left: 50%;
+        margin-left: -273px;
+        margin-top:-30px
+    }
     .iframeStyle2{
         position: absolute;
-        height: 150%;
-        width: 150%;
-        left: -50px;
-        top: -150px;
+        height: 714px;
+        width: 547px;
+        left: -43px;
+        top: -30px;
     }
     .spareImg:after { 
     content: url('../../../assets/images/nomore.png');
