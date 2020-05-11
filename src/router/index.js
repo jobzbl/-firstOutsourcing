@@ -13,6 +13,7 @@ import upData from '../views/pages/dataManage/updataFile.vue'
 import userManage from '../views/pages/userManage/index.vue'
 import dataStructure from '../views/pages/dataStructure/index.vue'
 import personalCenter from '../views/pages/personalCenter/index.vue'
+import explain from '../views/pages/explain/explain.vue'
 
 
 
@@ -36,6 +37,11 @@ const routes = [
     path: '/forgetPas',
     name: 'forgetPas',
     component: forgetPassword,
+  },
+  {
+    path: '/explain',
+    name: 'explain',
+    component: explain,
   },
   {
     path: '/data-cen',

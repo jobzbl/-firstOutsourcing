@@ -5,7 +5,17 @@
 				<img src="../../../assets/images/sql.png" alt=""><span>数据库介绍</span>
 			</div>
 			<div class="sqlText">
-				SiCf/SiC陶瓷基复合材料典型界面相数据库，学术期刊设计所需的高达1000种材料的晶体结构、电子结构、X-射线衍射谱/拉曼/红外、弹性性能、合成方法、力学性能、复合材料类型、复合材料性能、数据等。
+				<p>
+					本数据库主要涵盖SiCf/SiC陶瓷基复合材料中BN基、PyC基典型界面相和新型稀土硅酸盐抗氧化界面相材料晶体结构、<router-link :to="{path:'/explain',query:{'id':'1'}}">力学性能</router-link>、热学性能数据及其相关<router-link :to="{path:'/explain',query:{'id':'0'}}">复合材料制备方法</router-link>、力学性能和抗氧化腐蚀性能等。数据库总结了国内外SiCf/SiC陶瓷基复合材料的制备、组织结构和宏观性能等研究成果，重点突出界
+				面相的成分、微观结构和性能对复合材料的重要影响，涵盖典型界面相和新型抗氧化界面相的基础物性和显微结构等信息，可用于指导陶瓷基复合材
+				料界面的组分与结构优化并实现高效调控，是基于材料基因工程方法加速陶瓷基复合材料研发周期的重要数据基础和支撑平台。
+				</p>
+				<p>
+					本数据库项目属于国家重点研发计划“陶瓷基复合材料的高通量模拟计算、制备研发及示范应用”(2017YFB0703200)项目中“陶瓷基复合材料界面设计与高通量计算” (2017Y
+				FB0703201)课题的成果。项目由工业和信息化部资助、中国科学院上海硅酸盐研究所牵头，课题由中国科学院金属研究所、沈阳材料科学国家研究中
+				心的陶瓷及复合材料研究部承担。
+				</p>
+				
 			</div>
 		</div>
 		<div style="margin-top:40px;">
@@ -77,7 +87,20 @@
 				</div>
 			</div>
 		</div>
-		<div class="flootBigBox wrap">
+		<div class="sqlBox">
+			<div class="sqlTit">
+				<img src="../../../assets/images/user.png" alt=""><span>数据库介绍</span>
+			</div>
+			<div class="sqlText" style="text-align:center;margin-top:28px">
+				<p>
+				管理员邮箱：jieminwang@imr.ac.cn
+				</p>
+				<p>
+				中国科学院金属研究所-沈阳材料科学国家研究中心-陶瓷及复合材料研究部 版权所有 xxxxx号
+				</p>
+			</div>
+		</div>
+		<!-- <div class="flootBigBox wrap">
 			<el-row :gutter="20">
 				<el-col :span="8">
 					<div class="flootBoxTit">
@@ -107,7 +130,7 @@
 					</div>
 				</el-col>
 			</el-row>
-		</div>
+		</div> -->
   </div>
 </template>
 <script>
@@ -485,10 +508,18 @@ export default {
 		border-radius:10px;
 		padding: 20px 25px
 	}
-	.sqlText{
+	.sqlText p{
 		color: #333333;
 		font-size: 14px;
 		padding-top: 20px;
+		text-indent: 2em;
+		line-height: 24px;
+		padding: 0;
+	}
+	.sqlText a{
+		color: #33B0B5;
+		text-decoration: underline;
+		cursor: pointer;
 	}
 	.sqlTit img{
 		margin-right: 6px;
@@ -507,11 +538,10 @@ export default {
 		padding-bottom: 10px;
 	}
 	.sqlBox{
-		height:137px;
 		background:rgba(243,251,251,1);
 		border:1px solid rgba(169,223,220,1);
 		border-radius:10px;
 		margin-top: 40px;
-		padding: 24px 20px;
+		padding: 24px 20px 15px;
 	}
 </style>
