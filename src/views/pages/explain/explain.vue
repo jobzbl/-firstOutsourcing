@@ -29,10 +29,10 @@
             <div class="imgBox"><img height="150px" src="../../../assets/images/5.png" alt=""></div>
 
             <div class="h3">弹性性能各向异性参数：</div>
-            <div class="plainText">Voigt和Reuss近似下体模量和剪切模量的偏差（A_B，A_G）可以度量弹性各向异性的大小， 0%，表示理想的各向同性，100%是各向异性的极限值：</div>
+            <div class="plainText">Voigt和Reuss近似下体模量和剪切模量的偏差（A_<sub>B</sub>，A_<sub>G</sub>）可以度量弹性各向异性的大小， 0%，表示理想的各向同性，100%是各向异性的极限值：</div>
             <div class="imgBox"><img height="65px" src="../../../assets/images/6.png" alt=""></div>
 
-            <div class="plainText">另外一个全局性的各向异性指数A_U，值为0时表示各向同性，值越大各向异性越强。</div>
+            <div class="plainText">另外一个全局性的各向异性指数A_<sub>U</sub>，值为0时表示各向同性，值越大各向异性越强。</div>
             <div class="imgBox"><img height="65px" src="../../../assets/images/7.png" alt=""></div>
         </div>
         <div v-if="id==0">

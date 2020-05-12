@@ -6,7 +6,7 @@
 			</div>
 			<div class="sqlText">
 				<p>
-					本数据库主要涵盖SiCf/SiC陶瓷基复合材料中BN基、PyC基典型界面相和新型稀土硅酸盐抗氧化界面相材料晶体结构、<router-link :to="{path:'/explain',query:{'id':'1'}}">力学性能</router-link>、热学性能数据及其相关<router-link :to="{path:'/explain',query:{'id':'0'}}">复合材料制备方法</router-link>、力学性能和抗氧化腐蚀性能等。数据库总结了国内外SiCf/SiC陶瓷基复合材料的制备、组织结构和宏观性能等研究成果，重点突出界
+					本数据库主要涵盖SiC<sub>f</sub>/SiC陶瓷基复合材料中BN基、PyC基典型界面相和新型稀土硅酸盐抗氧化界面相材料晶体结构、<router-link :to="{path:'/explain',query:{'id':'1'}}">力学性能</router-link>、热学性能数据及其相关<router-link :to="{path:'/explain',query:{'id':'0'}}">复合材料制备方法</router-link>、力学性能和抗氧化腐蚀性能等。数据库总结了国内外SiC<sub>f</sub>/SiC陶瓷基复合材料的制备、组织结构和宏观性能等研究成果，重点突出界
 				面相的成分、微观结构和性能对复合材料的重要影响，涵盖典型界面相和新型抗氧化界面相的基础物性和显微结构等信息，可用于指导陶瓷基复合材
 				料界面的组分与结构优化并实现高效调控，是基于材料基因工程方法加速陶瓷基复合材料研发周期的重要数据基础和支撑平台。
 				</p>
@@ -89,7 +89,7 @@
 		</div>
 		<div class="sqlBox">
 			<div class="sqlTit">
-				<img src="../../../assets/images/user.png" alt=""><span>数据库介绍</span>
+				<img src="../../../assets/images/user.png" alt=""><span>联系我们</span>
 			</div>
 			<div class="sqlText" style="text-align:center;margin-top:28px">
 				<p>
