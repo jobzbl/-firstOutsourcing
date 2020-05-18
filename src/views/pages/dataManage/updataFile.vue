@@ -86,7 +86,7 @@
                         </el-select>
                     </el-col>
                     <el-col :span="5">
-                        <el-select v-model ="item.dataKey" style="width:100%" @change="dataKeyChange($event,index)" placeholder="请选择关键词">
+                        <el-select v-model ="item.dataKey" style="width:100%" @change="dataKeyChange($event,index,false)" placeholder="请选择关键词">
                             <el-option v-for="item in subArr[index].keywordArr" :key="item.structureId" :label="item.stKey" :value="item.structureId"></el-option>
                         </el-select>
                     </el-col>
@@ -319,6 +319,7 @@ export default {
                                 keywordArr:[]
                             })
                             console.log(this.subArr)
+                            console.log(res.data.data.list[i])
                             this.dataSel(res.data.data.list[i].dataClass,this.subArr.length-1,res.data.data.list[i].dataKey)
                             this.formInline.itemList.push({
                                 dataKey :parseInt(res.data.data.list[i].dataKey)||'',
@@ -326,9 +327,11 @@ export default {
                                 dataTips : res.data.data.list[i].dataTips||'',
                                 dataFile : res.data.data.list[i].dataFile||[],
                             })
+                            console.log(this.formInline.itemList)
                         }
 
                     }
+            console.log(this.formInline)
             })
         },
         editFun(){
@@ -864,9 +867,6 @@ export default {
             })
         },
         dataSel(data2,index,dataKey){
-            console.log('data2----',data2)
-            console.log('index----',index)
-            console.log('dataKey----',dataKey)
             if(dataKey==''){
                 this.subArr[index].keywordArr = []
                 this.formInline.itemList[index].dataKey=""
@@ -874,12 +874,14 @@ export default {
             this.$api.getKeyword({paramType:data2}).then(res=>{
                 this.subArr[index].keywordArr = res.data.data
                 if(dataKey){
-                    this.dataKeyChange(dataKey,index)
+                    this.dataKeyChange(dataKey,index,true)
                 }
             })
         },
-        dataKeyChange(e,index){
-            this.formInline.itemList[index].dataValue=''
+        dataKeyChange(e,index,judeg){
+            if(!judeg){
+                this.formInline.itemList[index].dataValue=''
+            }
             let _keywordArr = this.subArr[index].keywordArr.filter(x=>x.structureId==e)
             if(_keywordArr.length>0){
                 this.subArr[index].dataType = _keywordArr[0].stType
