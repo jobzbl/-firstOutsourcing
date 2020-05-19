@@ -878,10 +878,14 @@ export default {
                     console.log(this.fuhecailaiozhibei)
                 }
                 if(Object.keys(_pageData[13]).length){ // 界面力学性能
+                console.log(Object.keys(_pageData[13]))
                     let pageData13 = Object.values(_pageData[13])
                     for(let i=0;i<this.jiemianlixue.length;i++){
-                        this.jiemianlixue[i].value = pageData13.filter(x=>x.dataKey==this.jiemianlixue[i].id)[0].dataValue
-                        this.jiemianlixue[i].tips = pageData13.filter(x=>x.dataKey==this.jiemianlixue[i].id)[0].dataTips
+                        var _nowData = pageData13.filter(x=>x.dataKey==this.jiemianlixue[i].id)
+                        if(_nowData.length>0){
+                            this.jiemianlixue[i].value = _nowData[0].dataValue
+                            this.jiemianlixue[i].value = _nowData[0].dataTips
+                        }
                         // if(this.jiemianlixue[i].id==61||this.jiemianlixue[i].id==96){
                         //     this.jiemianlixue[i].value = pageData13.filter(x=>x.dataKey==this.jiemianlixue[i].id)[0].dataValue.split(',')
                         // }
