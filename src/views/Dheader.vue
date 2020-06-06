@@ -9,9 +9,19 @@
           </div>
           <div class="searchBox">
             <div style="width:380px" class="inputBox">
-              <el-input placeholder="输入关键字搜索" v-model="input3" class="input-with-select">
+              <el-input placeholder="输入关键字搜索" v-model="input3" @blur="searchBlur" class="input-with-select">
                 <el-button slot="append" @click="searchBut()" class="searchBut" icon="el-icon-search"></el-button>
               </el-input>
+              <ul class="sousuokuang" v-if="sousuojieguo.length">
+                <li v-for="data in sousuojieguo" :key="data.dataId+'m'" @click="dianjili()">
+                  <router-link :to="{path:'/result',query:{'id':data.dataContail,'dataTips':data.dataDescription,'dataPid':data.dataPid,'dataValue':data.param2,'dataMain':data.dataMain}}">
+                  {{data.dataContail}}-{{data.param106}}-{{data.param107}}-{{data.param108}}
+                  </router-link>
+                </li>
+              </ul>
+              <!-- <ul class="sousuokuang" v-if="sousuojieguo.length">
+                <li>无内容</li>
+              </ul> -->
             </div>
             <div class="userButton">
                <!-- :style="quanxian.indexOf('3')>0?'cursor:not-allowed;color:#d1d1d1;pointer-events: none':''" -->
@@ -47,12 +57,19 @@ export default {
       userName:'',
       roleIdList:'',
       quanxian:localStorage.getItem('roleIdList'),
+      sousuojieguo:[]
     }
   },
   created() {
       this.init()
   },
   methods: {
+    dianjili(){
+      this.$router.go(0)
+    },
+    searchBlur(){
+       this.sousuojieguo =[]
+    },
     searchBut(){
       if(this.input3==''){
         this.$message({
@@ -62,16 +79,18 @@ export default {
         return
       }
       this.$api.getSysDataList({page:1,limit:10,dataContail:this.input3}).then( res => {
-        if(res.data.page.list.length){
-          // 'content':data.dataContent,'element':data.dataElement
-          this.$router.push('/result?id='+res.data.page.list[0].dataContail
-          +'&dataTips='+JSON.stringify(res.data.page.list[0].dataDescription)
-          +'&dataPid='+JSON.stringify(res.data.page.list[0].dataPid)
-          +'&dataValue='+JSON.stringify(res.data.page.list[0].param2)
-          )
-        }else{
-          this.$router.push('/result?id=0')
-        }
+        this.sousuojieguo = res.data.page.list
+        console.log(this.sousuojieguo)
+        // if(res.data.page.list.length){
+        //   // 'content':data.dataContent,'element':data.dataElement
+        //   this.$router.push('/result?id='+res.data.page.list[0].dataContail
+        //   +'&dataTips='+JSON.stringify(res.data.page.list[0].dataDescription)
+        //   +'&dataPid='+JSON.stringify(res.data.page.list[0].dataPid)
+        //   +'&dataValue='+JSON.stringify(res.data.page.list[0].param2)
+        //   )
+        // }else{
+        //   this.$router.push('/result?id=0')
+        // }
       })
     },
     out(){
@@ -92,6 +111,21 @@ export default {
 </script>
 
 <style>
+  .sousuokuang{
+    position: absolute;
+    background: #fff;
+    width: 380px;
+    border: 1px solid #e1e1e1;
+    z-index: 99999;
+  }
+  .sousuokuang li{
+    padding: 15px;
+  }
+  .sousuokuang li:hover{
+    background: #33B0B5;
+    color: #fff;
+    cursor: pointer;
+  }
   .bigScroll2{
     height: calc(100vh - 60px);
     overflow-y:auto;

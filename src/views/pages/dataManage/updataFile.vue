@@ -370,8 +370,7 @@ export default {
             }
             this.formInline.itemList = this.formInline.itemList.filter(x=>x.dataKey!='')
             let _itemList2 = this.formInline.itemList.filter(x=>x.dataKey=='27'||x.dataKey=='28')||[]
-            console.log(_itemList2)
-                if(_itemList2.length>0&&_itemList2[0].dataValue!=''){
+               if(_itemList2.length>0&&_itemList2[0].dataValue!=''){
                     let nowData1 = _itemList2[0].dataValue.split(',')
                     if(nowData1.length!=3){
                         this.$message({
@@ -390,7 +389,7 @@ export default {
                         }
                     }
                 }
-                if(_itemList2.length>0&&_itemList2[1].dataValue!=''){
+                if(_itemList2.length>1&&_itemList2[1].dataValue!=''){
                     let nowData2 = _itemList2[1].dataValue.split(',')
                     if(nowData2.length!=3){
                         this.$message({
@@ -408,7 +407,9 @@ export default {
                             return false 
                         }
                     }
-                }
+                } 
+           
+                
 
 
             let _itemList3 = this.formInline.itemList.filter(x=>x.dataKey=='31'||x.dataKey=='32')||[]
@@ -731,7 +732,7 @@ export default {
                         }
                     }
                 }
-                if(_itemList2.length>0&&_itemList2[1].dataValue!=''){
+                if(_itemList2.length>1&&_itemList2[1].dataValue!=''){
                     let nowData2 = _itemList2[1].dataValue.split(',')
                     if(nowData2.length!=3){
                         this.$message({

@@ -21,8 +21,8 @@
                             <el-select clearable v-model ="formInline.dataContail" style="width:100%" placeholder="请选择界面相主成分">
                                 <el-option label="BN" value="BN"></el-option>
                                 <el-option label="C" value="C"></el-option>
-                                <el-option label="RE2SiO5" value="RE2SiO5"></el-option>
-                                <el-option label="RE2Si2O7" value="RE2Si2O7"></el-option>
+                                <el-option label="RE2SiO5" value="RE2SiO5">RE<sub>2</sub>SiO<sub>5</sub></el-option>
+                                <el-option label="RE2Si2O7" value="RE2Si2O7">RE<sub>2</sub>Si<sub>2</sub>O<sub>7</sub></el-option>
                                 <el-option label="BN/SiC" value="BN/SiC"></el-option>
                                 <el-option label="BN/C" value="BN/C"></el-option>
                                 <el-option label="C/SiC" value="C/SiC"></el-option>
@@ -58,9 +58,9 @@
                 </el-col>
                 <el-col :span="8">
                     <el-row>
-                        <el-col :span="9"><div class="formLabel" style="padding-right:10px">界面相掺杂元素</div></el-col>
+                        <el-col :span="9"><div class="formLabel" style="padding-right:10px">界面相成分－元素</div></el-col>
                         <el-col :span="15">
-                            <el-input v-model="formInline.param7" style="width:100%" placeholder="请输入界面相掺杂元素"></el-input>
+                            <el-input v-model="formInline.param7" style="width:100%" placeholder="请输入界面相成分－元素"></el-input>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -157,10 +157,19 @@
                 <el-table-column type="selection" width="40"></el-table-column>
                 <el-table-column prop="dataNum" label="数据编号" width="90"></el-table-column>
                 <el-table-column prop="dataContail" label="界面相主成分" width="110">
-                    <!-- <template slot-scope="scope">
-                        <span v-for="(item,index) in scope.row.dataElement" :key='index'>{{item}}<sub style="font-size:10px">{{scope.row.dataContent[index]>1?scope.row.dataContent[index]:''}}</sub>
+                    <template slot-scope="scope">
+                        <!-- <span>{{item}}<sub style="font-size:10px">{{scope.row.dataContent[index]>1?scope.row.dataContent[index]:''}}</sub>
+                        </span> -->
+                        <span v-if="scope.row.dataContail=='RE2SiO5'">
+                            RE<sub>2</sub>SiO<sub>5</sub>
                         </span>
-                    </template> -->
+                        <span v-else-if="scope.row.dataContail=='RE2Si2O7'">
+                            RE<sub>2</sub>Si<sub>2</sub>O<sub>7</sub>
+                        </span>
+                        <span v-else>
+                            {{scope.row.dataContail}}
+                        </span>
+                    </template>
                 </el-table-column>
                 <el-table-column prop="param7" label="界面相成分-元素" width="130"></el-table-column>
                 <el-table-column prop="param80" label="界面相类型" width="110"></el-table-column>
@@ -222,7 +231,7 @@ export default {
         return {
         queryCondition:[
             {beiyong:[],dataKey:'80',dataValue:''}, // 界面相类型
-            {beiyong:[],dataKey:'7',dataValue:''}, // 界面相掺杂元素
+            {beiyong:[],dataKey:'7',dataValue:''}, // 界面相成分－元素
             {beiyong:[],dataKey:'30',dataValue:''}, // 界面相材料密度 （g/cm
             {beiyong:[],dataKey:'39',dataValue:''}, // 界面相材料杨氏模量 Ev(GPa)
             {beiyong:[],dataKey:'79',dataValue:''}, // 复合材料合成方法

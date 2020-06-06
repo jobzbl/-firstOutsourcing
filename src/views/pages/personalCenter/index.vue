@@ -159,6 +159,9 @@ export default {
         this.getUserInfo()
     },
     methods:{
+        resetForm(){
+        this.getUserInfo()
+        },
         pasFocus1Cl(){
             this.pasFocus1 = true
             console.log('asd')

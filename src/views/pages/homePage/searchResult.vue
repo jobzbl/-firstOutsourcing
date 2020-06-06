@@ -17,9 +17,13 @@
 				</span>
             </div>
             <div class="fl" style="margin-left:5px" v-if="searchKeyWord!=0">
+                <span>界面相主成分：</span>
+                <span style="color:#33B0B5" v-if="searchKeyWord!=0">
+                    <span>{{searchKeyWord}}，</span>
+				</span>
+            </div>
+            <div class="fl" style="margin-left:5px" v-if="searchKeyWord!=0">
                 <span>数据来源：</span>
-                <!-- <span>{{dataSourceObj}}，</span>
-                <span>{{dataValue}}，</span> -->
                 <span>{{dataSourceObj[dataValue]}}，</span>
             </div>
             <div v-if="searchKeyWord==0">
@@ -119,14 +123,24 @@
             </div>
         </div>
     </div>
-    <!-- <template v-for="(data2,index3) in pageData">
-        <template v-if="data2.classId==29">
-            <div class="wrap" :key="index3+'h'">
+            <div class="wrap">
                 <div class="subfield" style="margin-top:42px">
                     <i></i>
                     界面相材料电子结构：
                 </div>
-                <div class="erpTit" v-if="data2.keyParentList.length">
+                <div class="erpTit">
+                    <div class="fl parameterTit" style="border-right:1px solid #fff">能带结构</div>
+                    <div class="fl parameterTit">电子能态密度</div>
+                </div>
+                <div class="erpBigBox" style="width:100%;height:380px">
+                    <div class="fl" style="border-right:1px solid #ddd;width:50%">
+                        <img class="nonePosition" src="../../../assets/images/nomore.png" style="margin-top:110px" alt="">
+                    </div>
+                    <div class="fl" style="border-right:1px solid #ddd;width:50%">
+                        <img class="nonePosition" src="../../../assets/images/nomore.png" style="margin-top:110px" alt="">
+                    </div>
+                </div>
+                <!-- <div class="erpTit" v-if="data2.keyParentList.length">
                     <div v-for="(item,index4) in data2.keyParentList" :key="index4+'i'" class="fl parameterTit" :style="index4==0?'border-right:1px solid #fff':''">{{item.dataKeyName}}</div>
                 </div>
                 <div class="erpBigBox" v-if="data2.keyParentList.length">
@@ -134,10 +148,9 @@
                         <img @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                         <img style="width:80%;height:90%" class="spareImg" :src="item.dataValue?base.sq+item.dataValue:'../../../assets/images/take.png'" alt="">
                     </div>
-                </div>
+                </div> -->
+                <!-- <img class="nonePosition" :src="item.value!=null?base.sq+item.value:'../../../assets/images/nomore.png'" :style="item.value?'width:80%;':'width:25%;'" alt=""> -->
             </div>
-        </template>
-    </template> -->
 
 
    
@@ -200,7 +213,7 @@
             <div v-for="(item, indexz) in pageDataJson[10]" :key="indexz+'y'">
                 <div class="hechengRowBox" v-if="(classId12?indexz<3:true)&&item.id!=103&&item.id!=104">
                     <span>{{item.stKey}}</span>
-                    <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.value}}</div>
+                    <div class="hechengRowBoxRow" style="width:1030px;overflow-y:auto">{{item.value}}</div>
                 </div>
             </div>
         </div>
@@ -276,7 +289,7 @@
                                 <div v-for="(item, indexb) in data5.keyParentList" :key="indexb+'u'">
                                     <div class="hechengRowBox" v-if="item.dataKey==4||item.dataKey==5">
                                         <span>{{item.dataKeyName}}</span>
-                                        <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.dataValue}}</div>
+                                        <div class="hechengRowBoxRow" style="width:1030px;overflow-y:auto">{{item.dataValue}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -312,7 +325,7 @@
             <div v-for="(item, indexz) in pageDataJson[9]" :key="indexz+'y'">
                 <div class="hechengRowBox" v-if="(classId11?indexz<3:true)&&item.id!=6&&item.isShow">
                     <span>{{item.stKey}}</span>
-                    <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.value}}</div>
+                    <div class="hechengRowBoxRow" style="width:1030px;overflow-y:auto">{{item.value}}</div>
                 </div>
             </div>
         </div>
@@ -373,12 +386,12 @@
             <div class="borderTL imgDatailsList">
                 <template v-for="(item,index) in pageDataJson[9]">
                     <ul :key="index+'12w'" class="clearFloat" v-if="item.id==6">
-                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'">
+                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'" :style="{'border-right':(indexm==4?'none':'')}">
                             <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                             <img class="spareImg" :src="itm!=null?base.sq+itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.tips}}</div>
                         </li>
-                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'">
+                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'" :style="{'border-right':(indexr==4?'none':'')}">
                             <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                         </li>
                     </ul>
@@ -397,7 +410,7 @@
             <div v-for="(item, indexz) in pageDataJson[13]" :key="indexz+'y'">
                 <div class="hechengRowBox" v-if="item.id!==61&&item.id!==96&&(classId13?indexz<3:true)">
                     <span>{{item.stKey}}</span>
-                    <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.value}}</div>
+                    <div class="hechengRowBoxRow" style="width:1030px;overflow-y:auto">{{item.value}}</div>
                 </div>
             </div>
         </div>
@@ -442,7 +455,7 @@
             <div v-for="(item, indexz) in pageDataJson[14]" :key="indexz+'y'">
                 <div class="hechengRowBox" v-if="item.id!==23&&(classId14?indexz<3:true)">
                     <span v-html="item.stKey">{{item.stKey}}</span>
-                    <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.value}}</div>
+                    <div class="hechengRowBoxRow" style="width:1030px;overflow-y:auto">{{item.value}}</div>
                 </div>
             </div>
         </div>
@@ -454,12 +467,12 @@
             <div class="borderTL imgDatailsList" style="margin-top:20px">
                 <template v-for="(item,index) in pageDataJson[14]">
                     <ul :key="index+'12w'" class="clearFloat" v-if="item.id==23">
-                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'">
+                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'" :style="{'border-right':(indexm==4?'none':'')}">
                             <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                             <img class="spareImg" :src="itm!=null?base.sq+itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.tips}}</div>
                         </li>
-                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'">
+                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'" :style="{'border-right':(indexr==4?'none':'')}">
                             <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                         </li>
                     </ul>
@@ -479,7 +492,7 @@
             <div v-for="(item, indexz) in pageDataJson[15]" :key="indexz+'y'">
                 <div class="hechengRowBox" v-if="item.id!==63&&(classId15?indexz<3:true)">
                     <span>{{item.stKey}}</span>
-                    <div class="hechengRowBoxRow" style="width:1030px;overflow-y:scroll">{{item.value}}</div>
+                    <div class="hechengRowBoxRow" style="width:1030px;overflow-y:auto">{{item.value}}</div>
                 </div>
             </div>
         </div>
@@ -490,12 +503,12 @@
             <div class="borderTL imgDatailsList" style="margin-top:20px">
                 <template v-for="(item,index) in pageDataJson[15]">
                     <ul :key="index+'12w'" class="clearFloat" v-if="item.id==63">
-                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'">
+                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'" :style="{'border-right':(indexm==4?'none':'')}">
                             <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                             <img class="spareImg" :src="itm!=null?base.sq+itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.tips}}</div>
                         </li>
-                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'">
+                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'" :style="{'border-right':(indexr==4?'none':'')}">
                             <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                         </li>
                     </ul>
@@ -527,6 +540,7 @@ export default {
     name: 'searchResult',
     data() {
         return {
+            // principal,
             base:base,
             bigImgBox:false,
             bigIframeBox:false,
@@ -561,6 +575,7 @@ export default {
             ],
             searchKeyWord:this.$route.query.id,
             dataPid:this.$route.query.dataPid,
+            dataMain:this.$route.query.dataMain,
             nowPagetype:this.$route.query.type,
             paramLenght:{dataChildList:[]},
             paramAngle:{dataChildList:[]},
@@ -776,6 +791,8 @@ export default {
                 this.dataSourceObj = _dataSourceObj
             })
             this.$api.searchResult(canshu).then(res=>{
+                console.log('principal',res)
+                // principal
                 let resData = res.data.data.keyParentList
                 let _pageData = {}
                 this.dataTips = res.data.data.description

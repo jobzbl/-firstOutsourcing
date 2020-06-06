@@ -9,10 +9,18 @@
           </div>
           <div class="searchBox">
             <div style="width:380px" class="inputBox">
-              <el-input placeholder="输入关键字搜索" v-model="input3" class="input-with-select">
+              <el-input placeholder="输入关键字搜索" v-model="input3" @blur="searchBlur" class="input-with-select">
                 <el-button slot="append" @click="searchBut()" class="searchBut" icon="el-icon-search"></el-button>
               </el-input>
-            </div>
+            
+            <ul class="sousuokuang" v-if="sousuojieguo.length">
+                <li v-for="data in sousuojieguo" :key="data.dataId+'m'">
+                  <router-link :to="{path:'/result',query:{'id':data.dataContail,'dataTips':data.dataDescription,'dataPid':data.dataPid,'dataValue':data.param2,'dataMain':data.dataMain}}">
+                  {{data.dataContail}}-{{data.param106}}-{{data.param107}}-{{data.param108}}
+                  </router-link>
+                </li>
+              </ul>
+          </div>
             <div class="userButton">
               <span :title="userName" style="display: inline-block;
                     width: 55px;
@@ -50,6 +58,7 @@ export default {
   name: 'layOut',
   data() {
     return {
+      sousuojieguo:[],
       headerMenu:1,
       input3:'',
       name:'',
@@ -63,6 +72,9 @@ export default {
       this.init()
   },
   methods: {
+    searchBlur(){
+       this.sousuojieguo =[]
+    },
     searchBut(){
       if(this.input3==''){
         this.$message({
@@ -72,16 +84,8 @@ export default {
         return
       }
       this.$api.getSysDataList({page:1,limit:10,dataContail:this.input3}).then( res => {
-        if(res.data.page.list.length){
-          // 'content':data.dataContent,'element':data.dataElement
-          this.$router.push('/result?id='+res.data.page.list[0].dataContail
-          +'&dataTips='+JSON.stringify(res.data.page.list[0].dataDescription)
-          +'&dataPid='+JSON.stringify(res.data.page.list[0].dataPid)
-          +'&dataValue='+JSON.stringify(res.data.page.list[0].param2)
-          )
-        }else{
-          this.$router.push('/result?id=0')
-        }
+        this.sousuojieguo = res.data.page.list
+        console.log(this.sousuojieguo)
       })
     },
     menuClick(e) {

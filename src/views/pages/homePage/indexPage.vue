@@ -6,14 +6,10 @@
 			</div>
 			<div class="sqlText">
 				<p>
-					本数据库主要涵盖SiC<sub>f</sub>/SiC陶瓷基复合材料中BN基、PyC基典型界面相和新型稀土硅酸盐抗氧化界面相材料晶体结构、<router-link :to="{path:'/explain',query:{'id':'1'}}">力学性能</router-link>、热学性能数据及其相关<router-link :to="{path:'/explain',query:{'id':'0'}}">复合材料制备方法</router-link>、力学性能和抗氧化腐蚀性能等。数据库总结了国内外SiC<sub>f</sub>/SiC陶瓷基复合材料的制备、组织结构和宏观性能等研究成果，重点突出界
-				面相的成分、微观结构和性能对复合材料的重要影响，涵盖典型界面相和新型抗氧化界面相的基础物性和显微结构等信息，可用于指导陶瓷基复合材
-				料界面的组分与结构优化并实现高效调控，是基于材料基因工程方法加速陶瓷基复合材料研发周期的重要数据基础和支撑平台。
+					本数据库主要涵盖SiC<sub>f</sub>/SiC陶瓷基复合材料中BN基、PyC基典型界面相和新型稀土硅酸盐抗氧化界面相材料晶体结构、<router-link :to="{path:'/explain',query:{'id':'1'}}">力学性能</router-link>、热学性能数据及其相关<router-link :to="{path:'/explain',query:{'id':'0'}}">复合材料制备方法</router-link>、力学性能和抗氧化腐蚀性能等。数据库总结了国内外SiC<sub>f</sub>/SiC陶瓷基复合材料的制备、组织结构和宏观性能等研究成果，重点突出界面相的成分、微观结构和性能对复合材料的重要影响，涵盖典型界面相和新型抗氧化界面相的基础物性和显微结构等信息，可用于指导陶瓷基复合材料界面的组分与结构优化并实现高效调控，是基于材料基因工程方法加速陶瓷基复合材料研发周期的重要数据基础和支撑平台。
 				</p>
 				<p>
-					本数据库项目属于国家重点研发计划“陶瓷基复合材料的高通量模拟计算、制备研发及示范应用”(2017YFB0703200)项目中“陶瓷基复合材料界面设计与高通量计算” (2017Y
-				FB0703201)课题的成果。项目由工业和信息化部资助、中国科学院上海硅酸盐研究所牵头，课题由中国科学院金属研究所、沈阳材料科学国家研究中
-				心的陶瓷及复合材料研究部承担。
+					本数据库项目属于国家重点研发计划“陶瓷基复合材料的高通量模拟计算、制备研发及示范应用”(2017YFB0703200)项目中“陶瓷基复合材料界面设计与高通量计算” (2017YFB0703201)课题的成果。项目由工业和信息化部资助、中国科学院上海硅酸盐研究所牵头，课题由中国科学院金属研究所、沈阳材料科学国家研究中心的陶瓷及复合材料研究部承担。
 				</p>
 				
 			</div>
@@ -69,7 +65,7 @@
 				<div class="searchConBox">
 					<div class="searchConBoxOver">
 						<div v-for="(data, index) in searchData.list" :key="index">
-							<router-link :to="{path:'/result',query:{'id':data.dataContail,'dataTips':data.dataDescription,'dataPid':data.dataPid,'dataValue':data.param2}}">
+							<router-link :to="{path:'/result',query:{'id':data.dataContail,'dataTips':data.dataDescription,'dataPid':data.dataPid,'dataValue':data.param2,'dataMain':data.dataMain}}">
 							{{data.dataContail}}-{{data.param106}}-{{data.param107}}-{{data.param108}}
 							</router-link>
 						</div>
@@ -244,6 +240,13 @@ export default {
 			console.log(res)
 			if(res.data.code==500){
 				this.searchData.list=[]
+				this.searchData={
+					totalCount:0,
+					pageSize:1,
+					totalPage:0,
+					currPage:60,
+					list:[]
+				}
 			}else{
 				this.searchData = res.data.page
 			}
