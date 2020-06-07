@@ -23,8 +23,8 @@
                         <el-select v-model="formInline.dataContail" style="width:100%" placeholder="请选择界面相主成分">
                             <el-option label="BN" value="BN"></el-option>
                             <el-option label="C" value="C"></el-option>
-                            <el-option label="RE2SiO5" value="RE2SiO5"></el-option>
-                            <el-option label="RE2Si2O7" value="RE2Si2O7"></el-option>
+                            <el-option label="RE2SiO5" value="RE2SiO5">RE<sub>2</sub>SiO<sub>5</sub></el-option>
+                            <el-option label="RE2Si2O7" value="RE2Si2O7">RE<sub>2</sub>Si<sub>2</sub>O<sub>7</sub></el-option>
                             <el-option label="BN/SiC" value="BN/SiC"></el-option>
                             <el-option label="BN/C" value="BN/C"></el-option>
                             <el-option label="C/SiC" value="C/SiC"></el-option>

@@ -83,7 +83,8 @@ export default {
         });
         return
       }
-      this.$api.getSysDataList({page:1,limit:10,dataContail:this.input3}).then( res => {
+      const _inputValue = this.input3.split('').join(",")
+      this.$api.getSysDataList({page:1,limit:10,dataContail:_inputValue}).then( res => {
         this.sousuojieguo = res.data.page.list
         console.log(this.sousuojieguo)
       })

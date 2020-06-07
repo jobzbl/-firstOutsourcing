@@ -232,10 +232,30 @@ export default {
 			dataId:this.selectList.dataId,
 			dataPid:this.selectList.dataPid
 		}
-		console.log(params)
-		if(params.dataContail==''){
-          delete params.dataContail
+		if(params.dataId == 5){
+			if(params.dataContail==''){
+				params.dataPid = 5
+				params.dataId = 34
+				params.dataContail='C,O,Si'
+			}
+		} else if(params.dataId == 7){
+			if(params.dataContail==''){
+				params.dataPid = 7
+				params.dataId = 54
+				params.dataContail='B,N,O,Si'
+			}
+		} else if(params.dataContail==''){
+			delete params.dataContail
 		}
+		// if(params.dataId == 9){
+		// 	if(params.dataContail==''){
+		// 		params.dataContail=='B,N,O,Si'
+		// 	}
+		// }
+		// if(params.dataContail==''){
+        //   delete params.dataContail
+		// }
+		console.log(params)
 		this.$api.getSysDataList(params).then( res => {
 			console.log(res)
 			if(res.data.code==500){

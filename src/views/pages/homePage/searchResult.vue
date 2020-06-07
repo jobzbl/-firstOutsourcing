@@ -379,6 +379,43 @@
                 <li v-for="(it) in 5" :key="it+'jas2q'" :data-type="it">--</li>
             </ul>
         </div>
+        <div class="erpTit" style="overflow:hidden">
+                <div class="fl parameterTit" style="border-right:1px solid #fff;width:400px">界面相材料XRD图谱</div>
+                <div class="fl parameterTit" style="border-right:1px solid #fff;width:400px">界面相材料拉曼图谱</div>
+                <!-- <div class="fl parameterTit" style="border-right:1px solid #fff;width:20%">电子能态密度</div>
+                <div class="fl parameterTit" style="border-right:1px solid #fff;width:20%">电子能态密度</div> -->
+                <div class="fl parameterTit" style="width:400px">界面相材料红外图谱</div>
+            </div>
+            <div class="erpBigBox" style="width:100%;height:380px">
+                <div class="fl" style="border-right:1px solid #ddd;width:400px">
+                    <template v-for="(item,i) in pageData9ImgList">
+                        <img v-if="item.dataKey=='119'" :key="i" @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                        <img v-if="item.dataKey=='119'" :key="i" class="nonePosition zhongxintupian2" :src="item.dataValue!=null?base.sq+item.dataValue:'../../../assets/images/nomore.png'" :style="item.dataValue?'width:80%;min-height: 184px;':'width:25%;'" alt="">
+                    </template>
+                    <img class="nonePosition zhongxintupian" src="../../../assets/images/nomore.png" style="" alt="">
+                </div>
+                <div class="fl" style="border-right:1px solid #ddd;width:400px">
+                    <template v-for="(item,i) in pageData9ImgList">
+                        <img v-if="item.dataKey=='121'" :key="i" @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                        <img v-if="item.dataKey=='121'" :key="i" class="nonePosition zhongxintupian2" :src="item.dataValue!=null?base.sq+item.dataValue:'../../../assets/images/nomore.png'" :style="item.dataValue?'width:80%;min-height: 184px;':'width:25%;'" alt="">
+                    </template>
+                    <img class="nonePosition zhongxintupian" src="../../../assets/images/nomore.png" style="" alt="">
+                </div>
+                <!-- <div class="fl" style="border-right:1px solid #ddd;width:20%">
+                    <img class="nonePosition" src="../../../assets/images/nomore.png" style="margin-top:110px" alt="">
+                </div> -->
+                <!-- <div class="fl" style="border-right:1px solid #ddd;width:20%">
+                    <img class="nonePosition" src="../../../assets/images/nomore.png" style="margin-top:110px" alt="">
+                </div>
+                 -->
+                 <div class="fl" style="width:398px;position:relative;">
+                     <template v-for="(item,i) in pageData9ImgList">
+                        <img v-if="item.dataKey=='122'" :key="i" @click="bigImgBox=true,nowImg=item.dataValue" class="fangda" src="../../../assets/images/fangda000.png" alt="">
+                        <img v-if="item.dataKey=='122'" :key="i" class="nonePosition zhongxintupian2" :src="item.dataValue!=null?base.sq+item.dataValue:'../../../assets/images/nomore.png'" :style="item.dataValue?'width:80%;min-height: 184px;':'width:25%;'" alt="">
+                    </template>
+                    <img class="nonePosition zhongxintupian" src="../../../assets/images/nomore.png" style="" alt="">
+                </div>
+            </div>
         <div>
             <template v-for="(item,index) in pageDataJson[9]">
                 <div class="parameterTit" :key="index+'qqwsdf'" v-if="item.id==6" style="border-right:1px solid #fff;margin-top:60px">{{item.stKey}}</div>
@@ -386,18 +423,19 @@
             <div class="borderTL imgDatailsList">
                 <template v-for="(item,index) in pageDataJson[9]">
                     <ul :key="index+'12w'" class="clearFloat" v-if="item.id==6">
-                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'" :style="{'border-right':(indexm==4?'none':'')}">
+                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'">
                             <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                             <img class="spareImg" :src="itm!=null?base.sq+itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.tips}}</div>
                         </li>
-                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'" :style="{'border-right':(indexr==4?'none':'')}">
+                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'">
                             <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                         </li>
                     </ul>
                 </template>
             </div>
         </div>
+        
     </div>
 
     <div class="wrap" v-if="pageDataJson[13]">
@@ -467,12 +505,12 @@
             <div class="borderTL imgDatailsList" style="margin-top:20px">
                 <template v-for="(item,index) in pageDataJson[14]">
                     <ul :key="index+'12w'" class="clearFloat" v-if="item.id==23">
-                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'" :style="{'border-right':(indexm==4?'none':'')}">
+                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'">
                             <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                             <img class="spareImg" :src="itm!=null?base.sq+itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.tips}}</div>
                         </li>
-                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'" :style="{'border-right':(indexr==4?'none':'')}">
+                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'" >
                             <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                         </li>
                     </ul>
@@ -503,12 +541,12 @@
             <div class="borderTL imgDatailsList" style="margin-top:20px">
                 <template v-for="(item,index) in pageDataJson[15]">
                     <ul :key="index+'12w'" class="clearFloat" v-if="item.id==63">
-                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'" :style="{'border-right':(indexm==4?'none':'')}">
+                        <li v-for="(itm, indexm) in item.value" :key="indexm+'fg'">
                             <img @click="bigImgBox=true,nowImg=itm" class="fangda" src="../../../assets/images/fangda000.png" alt="">
                             <img class="spareImg" :src="itm!=null?base.sq+itm:'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                             <div style="text-align:left;padding:15px 10px 10px 10px;font-size:14px;color:#4d4d4d">{{item.tips}}</div>
                         </li>
-                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'" :style="{'border-right':(indexr==4?'none':'')}">
+                        <li v-for="(itm, indexr) in 5-item.value.length" :key="indexr+'wee'">
                             <img class="spareImg" :src="'../../../assets/images/nomore.png'" style="max-width:80%;margin:0 auto;max-height:190px;" alt="">
                         </li>
                     </ul>
@@ -680,6 +718,7 @@ export default {
             gangroujuzhen:{},
            cifNameString:'',
            tableChengfen:'',
+           pageData9ImgList:[], // 复合材料结构和成分下面的图片
      }
     },
     created() {
@@ -851,6 +890,7 @@ export default {
                 }
                 if(Object.keys(_pageData[9]).length){ // 复合材料结构成分
                     let pageData9 = Object.values(_pageData[9])
+                    this.pageData9ImgList = pageData9
                     for(let i=0;i<this.fuhecailiao.length;i++){
                         let _value = pageData9.filter(x=>x.dataKey==this.fuhecailiao[i].id)
                         let _tips = pageData9.filter(x=>x.dataKey==this.fuhecailiao[i].id)
@@ -991,6 +1031,16 @@ export default {
     }
 </style>
 <style scoped>
+    .zhongxintupian2{
+        position: relative!important;
+        z-index: 9;
+    }
+    .zhongxintupian{
+        position:absolute!important;
+        left:50%;top:30%;
+        transform: translate(-50%,-50%);
+        z-index:0
+    }
     .goTop{
         position: fixed;
         right: 50px;
@@ -999,6 +1049,7 @@ export default {
         width: 50px
     }
     .topA{
+        
         color: #fff
         /* position: absolute; */
     }
@@ -1095,7 +1146,7 @@ export default {
         position: relative;
         border-right: 1px solid #ddd;
         border-bottom: 1px solid #ddd;
-        width: 239px;
+        width: 240px;
         height: 100%;
         float: left;
         padding-top: 60px;
@@ -1105,7 +1156,7 @@ export default {
         width: 233px
     }
     .imgDatailsList ul{
-        width: 1205px;
+        width: 1215px;
         height: 100%;
     }
     .borderTL{
