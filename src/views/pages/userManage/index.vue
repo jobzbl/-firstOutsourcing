@@ -59,12 +59,12 @@
                 :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="username" sortable label="用户名" width="100"></el-table-column>
-                <el-table-column prop="name" sortable label="姓名" width="77"></el-table-column>
-                <el-table-column prop="company" sortable label="单位" width="153"></el-table-column>
+                <el-table-column prop="username" sortable='custom' label="用户名" width="100"></el-table-column>
+                <el-table-column prop="name" sortable='custom' label="姓名" width="77"></el-table-column>
+                <el-table-column prop="company" sortable='custom' label="单位" width="153"></el-table-column>
                 <el-table-column prop="department" label="部门" width="84"></el-table-column>
                 <el-table-column prop="email" label="邮箱" width="177"></el-table-column>
-                <el-table-column prop="role" sortable label="用户类型" width="111">
+                <el-table-column prop="role" sortable='custom' label="用户类型" width="111">
                     <!-- <template slot-scope="scope">
                         <span v-for="item in scope.row.role" :key="item.roleId">{{userRoleArr[item]}}</span>
                     </template> -->
