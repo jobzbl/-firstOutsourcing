@@ -55,6 +55,7 @@
         <div class="tableBox userMange">
             <el-table ref="multipleTable"
                 header-row-class-name="tableHeader"
+                @sort-change="sortChange($event)"
                 :data="tableData.list" tooltip-effect="dark" style="width: 100%" 
                 @selection-change="handleSelectionChange" border row-class-name="tableTr">
                 <el-table-column type="selection" width="55"></el-table-column>
@@ -212,7 +213,9 @@ export default {
             userRoleArr:[],
             nowCheckedArr:[],
             deleteMultiple:false, // 批量删除
-            removeId:''
+            removeId:'',
+            sortName:'',
+            sortType:''
         }
     },
     created(){
@@ -220,6 +223,17 @@ export default {
         this.getArrObj()
     },
     methods:{
+        sortChange(e){
+            this.sortName = e.prop
+            if(e.order == 'ascending'){
+                this.sortType = 'ASC'
+            }else if(e.order == 'descending'){
+                this.sortType = 'DESC'
+            }else{
+                this.sortType = ''
+            }
+            this.getListData()
+        },
         onDown(){
             if(this.nowCheckedArr.length==0){
                 this.$message({
@@ -301,7 +315,9 @@ export default {
                 department:this.formInline.department,
                 status:this.formInline.status,
                 roleIdArray:this.formInline.roleIdArray.toString()?'['+this.formInline.roleIdArray.toString()+']':'',
-                menuIdArray:this.formInline.menu.toString()?'['+this.formInline.menu.toString()+']':''
+                menuIdArray:this.formInline.menu.toString()?'['+this.formInline.menu.toString()+']':'',
+                sortName:this.sortName,
+                sortType:this.sortType,
             }
             this.$api.getUserList(parmas).then(res=>{
                     this.tableData = res.data.page
