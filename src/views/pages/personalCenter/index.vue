@@ -7,7 +7,7 @@
             </el-breadcrumb>
         </div>
         <div>
-            <el-radio-group v-model="tabPosition" class="tabPosition" style="margin-bottom:20px;font-size:16px">
+            <el-radio-group v-model="tabPosition" class="tabPosition" @change="handleClick" style="margin-bottom:20px;font-size:16px">
                 <el-radio-button label="left">基本信息</el-radio-button>
                 <el-radio-button label="right">修改密码</el-radio-button>
             </el-radio-group>
@@ -16,6 +16,7 @@
             <div v-if="tabPosition=='left'" >
                 <el-form :model="details" autocomplete="off" :rules="detailsRules" ref="detailsRule" label-width="100px" class="demo-ruleForm">
                     <el-form-item label="用户名" prop="username">
+                        <el-input style="position:fixed;bottom:-999999px" type="password"></el-input>
                         <el-input v-model="details.username" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="姓名" prop="name">
@@ -160,7 +161,24 @@ export default {
     },
     methods:{
         resetForm(){
-        this.getUserInfo()
+            this.editPassword.newPassword = '';
+            this.editPassword.password = '';
+            this.editPassword.newPassword2 = '';
+            this.getUserInfo()
+        },
+        handleClick(e){
+            console.log(e)
+            // this.$refs['editPassword'].clearValidate();
+            if(e=='left'){
+                this.$refs['detailsRule'].clearValidate();
+            }else{
+                this.$refs['editPassword'].clearValidate();
+            }
+            // this.clearValidate('editPassword')
+            // this.clearValidate('detailsRule')
+        },
+        clearValidate(formName) {
+            this.$refs[formName].clearValidate();
         },
         pasFocus1Cl(){
             this.pasFocus1 = true

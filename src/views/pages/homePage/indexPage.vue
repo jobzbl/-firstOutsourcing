@@ -75,8 +75,8 @@
 				<div class="paginationDiv">
 					<el-pagination 
 					@current-change="handleCurrentChange"
-						:current-page.sync="searchData.currPage"
-						:page-size="searchData.pageSize"
+						:current-page.sync="searchData.pageSize"
+						:page-size="searchData.currPage"
 						layout="prev, pager, next, jumper"
 						:total="searchData.totalCount">
 					</el-pagination>
@@ -307,6 +307,8 @@ export default {
 		this.animationSwitch = !this.animationSwitch
 	},
     handleCurrentChange(val) {
+		console.log('searchData-------------',this.searchData)
+
 	console.log(`当前页: ${val}`)
 	console.log(this.searchData)
 	// this.threeLeveCli(this.selectList.nowElement,this.selectList.threeLeveArr,this.selectList)
