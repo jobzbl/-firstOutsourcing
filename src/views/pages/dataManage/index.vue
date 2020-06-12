@@ -6,9 +6,9 @@
                     <el-row>
                         <el-col :span="8"><div class="formLabel" style="padding-right:10px">数据编号</div></el-col>
                         <el-col :span="16">
-                            <el-input v-model="formInline.beginNum" style="width:45%" placeholder="最小值"></el-input>
+                            <el-input type='number' v-model="formInline.beginNum" style="width:45%" placeholder="最小值"></el-input>
                             -
-                            <el-input v-model="formInline.endNum" style="width:45%" placeholder="最大值"></el-input>
+                            <el-input type='number' v-model="formInline.endNum" style="width:45%" placeholder="最大值"></el-input>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -68,9 +68,9 @@
                     <el-row>
                         <el-col :span="8"><div class="formLabel" style="line-height:16px;padding-right:10px">界面相材料密度 （g/cm<sup>3</sup>)</div></el-col>
                         <el-col :span="16">
-                            <el-input v-model="formInline.param30[0]" style="width:45%" placeholder="最小值"></el-input>
+                            <el-input type='number' v-model="formInline.param30[0]" style="width:45%" placeholder="最小值"></el-input>
                             -
-                            <el-input v-model="formInline.param30[1]" style="width:45%" placeholder="最大值"></el-input>
+                            <el-input type='number' v-model="formInline.param30[1]" style="width:45%" placeholder="最大值"></el-input>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -81,9 +81,9 @@
                     <el-row>
                         <el-col :span="8"><div class="formLabel" style="line-height:16px;padding-right:10px">界面相材料杨氏模量 Ev(GPa)</div></el-col>
                         <el-col :span="16">
-                            <el-input v-model="formInline.param39[0]" style="width:45%" placeholder="最小值"></el-input>
+                            <el-input type='number' v-model="formInline.param39[0]" style="width:45%" placeholder="最小值"></el-input>
                             -
-                            <el-input v-model="formInline.param39[1]" style="width:45%" placeholder="最大值"></el-input>
+                            <el-input type='number' v-model="formInline.param39[1]" style="width:45%" placeholder="最大值"></el-input>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -128,9 +128,9 @@
                     <el-row>
                         <el-col :span="9"><div class="formLabel" style="padding-right:10px">弯曲强度 （MPa)</div></el-col>
                         <el-col :span="15">
-                            <el-input v-model="formInline.param99[0]" style="width:45%" placeholder="最小值"></el-input>
+                            <el-input type='number' v-model="formInline.param99[0]" style="width:45%" placeholder="最小值"></el-input>
                             -
-                            <el-input v-model="formInline.param99[1]" style="width:45%" placeholder="最大值"></el-input>
+                            <el-input type='number' v-model="formInline.param99[1]" style="width:45%" placeholder="最大值"></el-input>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -517,6 +517,14 @@ export default {
                     //     }
                     // }
                     console.log(this.tableData.list)
+                }else{
+                    this.tableData = {
+                        totalCount:0,
+                        pageSize:10,
+                        totalPage:0,
+                        currPage:1,
+                        list:[]
+                    }
                 }
             })
         },

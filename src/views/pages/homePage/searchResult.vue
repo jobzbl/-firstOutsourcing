@@ -19,7 +19,7 @@
             <div class="fl" style="margin-left:5px" v-if="searchKeyWord!=0">
                 <span>界面相主成分：</span>
                 <span style="color:#33B0B5" v-if="searchKeyWord!=0">
-                    <span>{{searchKeyWord}}，</span>
+                    <span>{{dataMain}}，</span>
 				</span>
             </div>
             <div class="fl" style="margin-left:5px" v-if="searchKeyWord!=0">
